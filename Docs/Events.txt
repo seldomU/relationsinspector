@@ -1,0 +1,10 @@
+EditorWindow.OnEnable()
+EditorWindow.OnDisable()
+EditorWindow.OnDestroy()
+EditorWindow.OnGUI()
+EditorWindow.Update()
+EditorWindow.OnSelectionChange()
+EditorWindow.OnFocus()
+EditorWindow.OnLostFocus()
+EditorWindow.OnProjectChange()
+EditorWindow.SendEvent()	lets outsiders send stuff to the window

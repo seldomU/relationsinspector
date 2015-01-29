@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8564B945-82F3-4C72-9661-3D6A6B311764}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <AssemblyName>RelationsInspector</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>RelationsInspector</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Demo|AnyCPU'">
+    <OutputPath>bin\Demo\</OutputPath>
+    <DefineConstants>RIDEMO</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEditor">
+      <HintPath>C:\Program Files (x86)\Unity\Editor\Data\Managed\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>C:\Program Files (x86)\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DemoRestriction.cs" />
+    <Compile Include="RelationDrawer\BasicRelation.cs" />
+    <Compile Include="RelationDrawer\RelationDrawUtil.cs" />
+    <Compile Include="EdgePlacement\EdgePlacement.cs" />
+    <Compile Include="EdgePlacement\IEdgePlacementProvider.cs" />
+    <Compile Include="EdgePlacement\StraightCirclePlacementProvider.cs" />
+    <Compile Include="EdgePlacement\StraightRectPlacementProvider.cs" />
+    <Compile Include="Graph\Edge.cs" />
+    <Compile Include="Graph\Graph.cs" />
+    <Compile Include="Graph\GraphExtensions.cs" />
+    <Compile Include="Graph\GraphWithRoots.cs" />
+    <Compile Include="Graph\VertexData.cs" />
+    <Compile Include="IRelationsInspectorAPI.cs" />
+    <Compile Include="Layout\GraphLayoutAlgorithm.cs" />
+    <Compile Include="Layout\GraphLayout.cs" />
+    <Compile Include="Layout\LayoutParams.cs" />
+    <Compile Include="Layout\LayoutType.cs" />
+    <Compile Include="Layout\TreeLayoutAlgorithm.cs" />
+    <Compile Include="ProjectSettings.cs" />
+    <Compile Include="RelationsInspectorAttribute.cs" />
+    <Compile Include="RelationsInspectorWindow.cs" />
+    <Compile Include="Style\Skin.cs" />
+    <Compile Include="Style\SkinManager.cs" />
+    <Compile Include="Tools\DebugSettings.cs" />
+    <Compile Include="Tools\EditorCoroutine\ContinueConditions.cs" />
+    <Compile Include="Tools\EditorCoroutine\EditorCoroutine.cs" />
+    <Compile Include="Tools\EditorCoroutine\EditorCoroutineManager.cs" />
+    <Compile Include="Tools\EditorCoroutine\EditorWindowExtensions.cs" />
+    <Compile Include="Tools\Extensions\LinqExtensions.cs" />
+    <Compile Include="Tools\Extensions\RectExtensions.cs" />
+    <Compile Include="Tools\Extensions\StringExtensions.cs" />
+    <Compile Include="Tools\Extensions\TypeExtensions.cs" />
+    <Compile Include="Tools\Extensions\Vector2Extensions.cs" />
+    <Compile Include="Tools\GLMaterials.cs" />
+    <Compile Include="Tools\GraphBuilder.cs" />
+    <Compile Include="Tools\GUIUtil.cs" />
+    <Compile Include="Tools\InspectorWindow.cs" />
+    <Compile Include="Tools\ReflectionUtil.cs" />
+    <Compile Include="Tools\RNG.cs" />
+    <Compile Include="Tools\Tuple.cs" />
+    <Compile Include="Tools\Transform2d.cs" />
+    <Compile Include="Tools\Util.cs" />
+    <Compile Include="View\IRelationDrawer.cs" />
+    <Compile Include="View\IGraphView.cs" />
+    <Compile Include="View\IMView.cs" />
+    <Compile Include="View\IViewParent.cs" />
+    <Compile Include="View\Minimap.cs" />
+    <Compile Include="View\ViewUtil.cs" />
+    <Compile Include="WorkSpace\IGraphBackend.cs" />
+    <Compile Include="WorkSpace\IWorkspace.cs" />
+    <Compile Include="WorkSpace\Workspace.cs" />
+    <Compile Include="WorkSpace\WorkspaceToolbar.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
+  <ProjectExtensions>
+    <VisualStudio AllowExistingFolder="true" />
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) "I:\code\RelationsInspector\Assets\RelationsInspector\Editor"
+copy "$(TargetDir)$(TargetName).pdb" "I:\code\RelationsInspector\Assets\RelationsInspector\Editor"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

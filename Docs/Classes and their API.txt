@@ -1,0 +1,79 @@
+Classes and their API
+
+RelationsInspectorWindow
+	AddSeeds(Object[])
+	SetSeeds(Object[])
+
+IWorkSpace	// created by window from cfg
+	void OnGUI()
+	void Update()
+	void SetGraph(object Graph)
+	void ResetGraph(Object[] seeds)
+
+IViewParent<T>
+	void RepaintView()
+	Rect GetViewRect()
+	void MoveVertex(T vertex, Vector2 delta)
+	void RemoveVertex()
+	void AddEdge(T source, T target)
+	void RemoveEdge(Edge<T> edge)
+
+IGraphView<T>
+	void OnGUI();
+	void UpdateVertexPos(T vertex, Vector2 pos);
+	void AddVertex(T vertex, Vector2 pos);
+	void RemoveVertex(T vertex);
+	void AddEdge(Edge<T> edge);
+	void RemoveEdge(Edge<T> edge);
+	
+	Rect GetViewRect();
+	T GetVertexAtPosition(Vector2 pos);
+	Vector2 GetGraphPosition(Vector2 windowPos);
+
+GraphData
+	public void RunLayout(LayoutType layoutType, LayoutParams layoutParams)
+
+RelationsInspectorConfig
+
+DeserializedConfig
+
+IEdgeDrawer
+	Rect DrawEdge( EdgePlacement placement );
+	Rect DrawSelfEdge( EdgePlacement placement );
+	EdgePlacement GetEdgePlacement(Rect sourceRect, Rect targetRect);
+
+EdgeViewData
+	void Draw(bool targetsSelf)
+
+IVertexDrawer
+	void Draw(Vector2 center, bool isSelected);
+	Vector2 Extents();
+
+IVertexSelectionHandler
+	void OnSelected();
+	void OnDeselected();
+
+Minimap
+	void Draw(IEnumerable<Vector2> windowPositions, Rect drawRect, Rect graphViewRect, bool showGraphBounds)
+
+VertexViewData
+	Bounds
+	void Draw(bool isSelected)
+	UpdateDrawPos(Vector2 translation, float scale)
+	void OnSelected()
+	void OnDeselected()
+
+WindowGraphLayout
+	Dictionary<T, Vector2> Run(BidirectionalGraph<T, Edge<T>> graph, LayoutType layoutType, LayoutParams layoutParams)
+
+LayoutParams
+
+IGraphConstruct<T>
+	IEnumerable<T> GetSuccessors(T item);
+
+IGraphStructure<T>
+	bool CreateVertex(out T vertex);
+	bool AddVertex(T vertex);
+	bool RemoveVertex(T vertex);
+	bool AddEdge(T source, T target);
+	bool RemoveEdge(Edge<T> edge);
