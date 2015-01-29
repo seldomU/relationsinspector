@@ -87,7 +87,7 @@ namespace RelationsInspector
 		{
 			var backendInterface = ReflectionUtil.GetGenericInterface(backend, typeof(IGraphBackend<,>));
 			if (backendInterface == null)
-				throw new ArgumentException(backend + "does not implement backend");
+				throw new ArgumentException(backend + " does not implement backend");
 			return backendInterface.GetGenericArguments();
 		}
 
@@ -123,7 +123,7 @@ namespace RelationsInspector
 			if (fallbackBackend == null)
 				fallbackBackend = validBackends.FirstOrDefault();
 
-			selectedBackend = GUIUtil.GetPrefsType(PrefsKeyDefaultBackend, fallbackBackend );
+			selectedBackend = GUIUtil.GetPrefsType(PrefsKeyDefaultBackend) ?? fallbackBackend;
 
 			wantsMouseMove = true;	// for dragging edges
 
@@ -155,7 +155,7 @@ namespace RelationsInspector
 			// clear
 			GUI.enabled = targetObjects != null;
 			if (GUILayout.Button(clearButtonContent, EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
-				ExecOnUpdate( ClearWindow );
+				ExecOnUpdate( () => SetTargets(null) );
 			GUI.enabled = true;
 
 			// re-create the workspace from targets
@@ -190,12 +190,6 @@ namespace RelationsInspector
 				return workspace.OnControlsGUI( );
 
 			return GUILayoutUtility.GetRect(0, 0, new[] { GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true) });
-		}
-
-		void ClearWindow()
-		{
-			targetObjects = null;
-			OnTargetChange();
 		}
 
 		void Update()
@@ -286,7 +280,10 @@ namespace RelationsInspector
 
 		public void SetTargets(object[] targets)
 		{
-			targetObjects = new HashSet<object>(targets);
+			if (targets == null)
+				targetObjects = null;
+			else
+				targetObjects = new HashSet<object>(targets);
 			OnTargetChange();
 		}
 
@@ -370,11 +367,6 @@ namespace RelationsInspector
 		}
 
 		#region implementing RelationsInspectorAPI
-
-		void RelationsInspectorAPI.ClearWindow()
-		{
-			ExecOnUpdate( ClearWindow );
-		}
 
 		// draw a fresh view of the graph
 		void RelationsInspectorAPI.Repaint()

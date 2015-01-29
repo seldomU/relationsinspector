@@ -5,9 +5,6 @@ namespace RelationsInspector
 {
 	public interface RelationsInspectorAPI
 	{
-		// wipe the graph
-		void ClearWindow();
-
 		// draw a fresh view of the graph
 		void Repaint();
 

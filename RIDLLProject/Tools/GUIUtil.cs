@@ -65,12 +65,6 @@ namespace RelationsInspector
 			return ReflectionUtil.GetType(typeName);
 		}
 
-		public static Type GetPrefsType(string localKey, Type defaultType)
-		{
-			string typeName = GetPrefsString( localKey, defaultType.ToString() );
-			return ReflectionUtil.GetType(typeName);
-		}
-
 		/*public static T GetPrefsEnum<T>(string localKey) where T : System.Enum
 		{
 			return (T)(Enum)(object)GetPrefsInt(localKey);
