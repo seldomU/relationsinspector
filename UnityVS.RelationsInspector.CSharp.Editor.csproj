@@ -93,7 +93,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\RelationsInspector\Editor\BackendUtility\BackendTools.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\BackendUtility\BackendUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtility\DrawUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtility\MinimalBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtility\ScriptableObjectBackend.cs" />

@@ -11,7 +11,7 @@ namespace RelationsInspector.Backend.SceneHierarchy
 	{
 		public IEnumerable<Object> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
 		{
-			return BackendTools.Convert<Object>(targets);
+			return BackendUtil.Convert<Object>(targets);
 		}
 		
 		// this backend is only for display
@@ -24,7 +24,7 @@ namespace RelationsInspector.Backend.SceneHierarchy
 		// no need for toolbar or controls
 		public Rect OnGUI()
 		{ 
-			return BackendTools.GetMaxRect();
+			return BackendUtil.GetMaxRect();
 		}
 
 		// draw content
