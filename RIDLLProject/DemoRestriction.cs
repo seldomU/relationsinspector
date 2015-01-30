@@ -7,7 +7,7 @@ namespace RelationsInspector
 	static class DemoRestriction
 	{
 		static int inputEventCount = 0;
-		const int inputEventCountThreshold = 30;
+		const int inputEventCountThreshold = 40;
 
 		static float demoMessageTime;
 		const float demoGUIBlockDuration = 8;	// in seconds
