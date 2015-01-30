@@ -93,11 +93,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\RelationsInspector\Editor\BackendUtility\BackendUtil.cs" />
-    <Compile Include="Assets\RelationsInspector\Editor\BackendUtility\DrawUtil.cs" />
-    <Compile Include="Assets\RelationsInspector\Editor\BackendUtility\MinimalBackend.cs" />
-    <Compile Include="Assets\RelationsInspector\Editor\BackendUtility\ScriptableObjectBackend.cs" />
-    <Compile Include="Assets\RelationsInspector\Editor\BackendUtility\ScriptableObjectBackendToolbar.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\BackendUtil.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\DrawUtil.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\MinimalBackend.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ScriptableObjectBackend.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ScriptableObjectBackendToolbar.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\HierarchyExample\SceneHierarchyBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\RelationsInspectorMenuItem.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\SocialNetworkExample\Person.cs" />

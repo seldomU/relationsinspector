@@ -1,0 +1,3 @@
+[submodule "Assets/RelationsInspector/Editor/BackendUtils"]
+	path = Assets/RelationsInspector/Editor/BackendUtils
+	url = https://github.com/seldomU/RIBackendUtil.git
