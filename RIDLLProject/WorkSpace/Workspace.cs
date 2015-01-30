@@ -24,6 +24,12 @@ namespace RelationsInspector
 		LayoutType defaultLayoutType = LayoutType.Graph;
 		HashSet<T> rootEntities;
 
+		static Dictionary<LayoutType, GUIContent> layoutButtonContent = new Dictionary<LayoutType, GUIContent>()
+		{
+			{ LayoutType.Graph, new GUIContent("Graph", "Use graph layout") },
+			{ LayoutType.Tree, new GUIContent("Tree", "Use tree layout") }
+		};
+
 #if DEBUG
 		// debug settings
 		bool permaRepaint;	// repaint permanently
@@ -103,9 +109,9 @@ namespace RelationsInspector
 		}
 
 		public void OnToolbarGUI()
-		{
+		{		
 			EditorGUI.BeginChangeCheck();
-			layoutType = (LayoutType)GUIUtil.EnumToolbar("Layout", layoutType, EditorStyles.miniButton);
+			layoutType = (LayoutType) GUIUtil.EnumToolbar("", layoutType, (t) => layoutButtonContent[(LayoutType)t], EditorStyles.miniButton);
 			if (EditorGUI.EndChangeCheck())
 			{
 				GUIUtil.SetPrefsInt(GetPrefsKeyLayout(), (int)layoutType);

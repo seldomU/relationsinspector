@@ -132,7 +132,7 @@ namespace RelationsInspector
 		public void OnToolbarGUI()
 		{
 			EditorGUI.BeginChangeCheck();
-			entityWidgetType = (EntityWidgetType) GUIUtil.EnumToolbar("Entity widget", entityWidgetType, EditorStyles.miniButton);
+			entityWidgetType = (EntityWidgetType) GUIUtil.EnumToolbar("", entityWidgetType, EditorStyles.miniButton);
 			if (EditorGUI.EndChangeCheck())
 			{
 				GUIUtil.SetPrefsInt(PrefsKeyLayout, (int)entityWidgetType);
@@ -369,8 +369,12 @@ namespace RelationsInspector
 						{
 							if (ev.button == 1)	// right click
 							{
-								var entityPos = transform.Revert(ev.mousePosition);
-								parent.GetBackend().CreateEntity( entityPos );
+								bool controlHeld = (ev.modifiers & EventModifiers.Control) != 0;
+								if (controlHeld)
+								{
+									var entityPos = transform.Revert(ev.mousePosition);
+									parent.GetBackend().CreateEntity(entityPos);
+								}
 							}
 							else
 							{

@@ -83,8 +83,15 @@ namespace RelationsInspector
 		/// Creates a toolbar that is filled from an Enum. (CC-BY-SA, from http://wiki.unity3d.com/index.php?title=EditorGUIExtension)
 		public static Enum EnumToolbar(string prefixLabel, Enum selected, GUIStyle style, params GUILayoutOption[] options)
 		{
-			string[] toolbar = Enum.GetNames(selected.GetType());
-			Array values = Enum.GetValues(selected.GetType());
+			Func<Enum, GUIContent> getContent = (item) => new GUIContent( Enum.GetName(item.GetType(), item) );
+			return EnumToolbar(prefixLabel, selected, getContent, style, options);
+		}
+
+		/// Creates a toolbar that is filled from an Enum. (CC-BY-SA, from http://wiki.unity3d.com/index.php?title=EditorGUIExtension)
+		public static Enum EnumToolbar(string prefixLabel, Enum selected, Func<Enum, GUIContent> getContent, GUIStyle style, params GUILayoutOption[] options)
+		{
+			var values = Enum.GetValues(selected.GetType());
+			var contents = values.OfType<Enum>().Select (val => getContent(val) ).ToArray();
 
 			int selected_index = 0;
 			while (selected_index < values.Length)
@@ -101,7 +108,7 @@ namespace RelationsInspector
 				GUILayout.Space(10);
 			}
 
-			selected_index = GUILayout.Toolbar(selected_index, toolbar, style, options);
+			selected_index = GUILayout.Toolbar(selected_index, contents, style, options);
 			GUILayout.FlexibleSpace();
 			GUILayout.EndHorizontal();
 
