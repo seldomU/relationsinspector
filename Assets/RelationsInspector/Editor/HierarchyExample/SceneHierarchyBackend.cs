@@ -30,9 +30,7 @@ namespace RelationsInspector.Backend.SceneHierarchy
 		// draw content
 		public Rect DrawContent(Object entity, EntityDrawContext drawContext)
 		{
-			GUIContent content = EditorGUIUtility.ObjectContent(entity, entity.GetType());
-			content.tooltip = content.text;
-			return DrawUtil.DrawContent(content, drawContext);
+			return DrawUtil.DrawContent(GetContent(entity), drawContext);
 		}
 
 		// 
@@ -43,7 +41,7 @@ namespace RelationsInspector.Backend.SceneHierarchy
 
 		public string GetTooltip(Object entity)
 		{
-			return EditorGUIUtility.ObjectContent(entity, entity.GetType()).text;
+			return GetContent(entity).tooltip;
 		}
 
 		public void OnEntitySelectionChange(Object[] selection)
