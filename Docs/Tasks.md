@@ -20,19 +20,21 @@ Tasks
 	- light-grey nodes are the target objects (the ones you dragged in)
 	- dark grey nodes are objects that a target is related to, acording to the definition provided by the backend class
 - documentation
- - API reference
-  - link to manual sections
-  - link to higher level code that builds on them
- - offer a trajectory, from minimal backend to fancy stuff
-  - a manual
-   - section 1: getting relations (minimal effort that yields results)
-   - section x: showing content per entity
-   - section y: graph modification
- - shortcuts and shit
+ - link API ref to backend-dev sections 
+  - backend-dev
+   - customizing the entity widget
+	- high level: ShowObjectName()	// use this to draw the name of the object
+	- mid level: ShowContent(GUIContent)	// use this if you want a standard box/circle with your custom content
+	- low level: Rect Draw()				// use this if you want to draw a custom widget with your custom content
+   - multiple relation types
+    - override DefaultBackend.GetRelatedEntities if you only need one kind of relation
+    - otherwise override DefaultBackend.GetRelations
+    - if you want to color-code your relation types, override GetRelationColor
+    - if you want to allow the user to add relations of multiple types, add items to the entity context menu
  - FAQ
   - how do I make the graph update when the data is changed outside the editor window
   - how to restrict relations to a single one
- - github pages for generating the docs? https://pages.github.com/
+  - how to combine free modification with constraints (single relation per entity, graph has to be a tree)
 
 ###Release
 - finanzamt

@@ -1,9 +1,9 @@
 Relations inspector manual
 ==========================
 
-The relations inspector is a Unity editor extension that lets the user visualize and edit relations between all kinds of project data. It will be called **RI** in this manual, to avoid confusion with Unity's inspector window.
+The relations inspector is a Unity editor extension that lets the user visualize and edit relations between all kinds of project data. It will be called *RI* in this manual, to avoid confusion with Unity's inspector window.
 
-[images of gameobject hierarchy, tech tree, class hierarchy]
+![screenshots](http://i.imgur.com/k7BooH6.png "some screenshots")
 
 Each kind of relation graph is driven by a backend class. A backend defines what relations to show for a specific object type.
 
@@ -24,8 +24,9 @@ The rest of the window contains the graph and its minimap, as well as  backend-s
 * dragging the graph-area while the right mouse button is pressed, shifts the graph
 * clicking into the minimap makes the window focus on the clicked location
 * left-clicking an entity widget will select it. Pressing control at the same time adds the entity to the existing selection.
-* dragging the graph-area while the right mouse button is pressed, selects all entities in the drag area
-* right clicking on entity- and relationwidgets is handled by each backend. It may open a context menu. 
+* dragging the graph-area while the left mouse button is pressed, selects all entities in the drag area
+* right-clicking the graph-area while pressing control creates an entity, if the backend permits
+* right clicking on entity- and relationwidgets is handled by each backend. It may open a context menu
 
 
 If you want to create a graph from scratch: clear the window, select your backend and use its controls to create and modify your data.
@@ -48,20 +49,22 @@ First, you need to decide on the type of your entities, relations and how to def
 
 With that, we can implement our backend's first version.
 
-	using UnityEngine;
-	using RelationsInspector.Backend;
-	using System.Collections;
-	using System.Collections.Generic;
+``` csharp
+using UnityEngine;
+using RelationsInspector.Backend;
+using System.Collections;
+using System.Collections.Generic;
 
-	public class GameObjectHierarchyBackend : MinimalBackend<GameObject, string>
+public class GameObjectHierarchyBackend : MinimalBackend<GameObject, string>
+{
+	public override IEnumerable<GameObject> GetRelatedEntities(GameObject entity)
 	{
-		public override IEnumerable<GameObject> GetRelatedEntities(GameObject entity)
-		{
-			// include sub-gameObjects
-			foreach (Transform t in entity.transform)
-				yield return t.gameObject;
-		}
+		// include sub-gameObjects
+		foreach (Transform t in entity.transform)
+			yield return t.gameObject;
 	}
+}
+```
 
 Save that to *Assets\Editor* or any other editor folder, wait for Unity to recompile the dll, and now it should be selectable in the RI.
 
