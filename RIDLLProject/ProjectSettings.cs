@@ -15,9 +15,11 @@ namespace RelationsInspector
 		public const string expectedResourcesBasePath = @"Assets\RelationsInspector\Editor";
 
 		public static string[] obligatoryFileNames = new[]
-	{
-		"ArrowHead.png",
-	};
+		{
+			"ArrowHead.png",
+		};
+
+		public static string ProjectName = Application.dataPath.Split(Path.DirectorySeparatorChar).Reverse().Skip(1).First();
 
 		static string resourcesPath;
 		public static string ResourcesPath
