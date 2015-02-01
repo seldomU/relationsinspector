@@ -20,6 +20,7 @@ The toolbar also contains:
 
 The rest of the window contains the graph and its minimap, as well as  backend-specific GUI controls, if there are any. The graph area responds to the following inputs:
 
+* dragging objects into the window makes them the new inspection targets. If *control* is held down at the same time, the objects are added to the existing inspection targets.
 * moving the mouse wheel zooms in and out
 * dragging the graph-area while the right mouse button is pressed, shifts the graph
 * clicking into the minimap makes the window focus on the clicked location
