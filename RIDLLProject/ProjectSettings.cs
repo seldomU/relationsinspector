@@ -19,8 +19,6 @@ namespace RelationsInspector
 			"ArrowHead.png",
 		};
 
-		public static string ProjectName = Application.dataPath.Split(Path.DirectorySeparatorChar).Reverse().Skip(1).First();
-
 		static string resourcesPath;
 		public static string ResourcesPath
 		{
