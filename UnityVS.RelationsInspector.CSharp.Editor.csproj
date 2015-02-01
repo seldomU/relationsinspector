@@ -7,16 +7,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C38CFD78-FF64-5009-F345-ADBF987E026F}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -146,6 +144,8 @@
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\StringGraph\StringDrawer.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TechTree\Tech.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TechTree\TechTreeBackend.cs" />
+    <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\SubTypesBackend.cs" />
+    <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\SuperTypesBackend.cs" />
     <Compile Include="Assets\Stuff\Editor\CompileLibrary.cs" />
     <Compile Include="Assets\Stuff\Editor\DebugModeShortcuts.cs" />
     <Compile Include="Assets\Stuff\Editor\ExportPackage.cs" />
