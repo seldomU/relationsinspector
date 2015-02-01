@@ -7,16 +7,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E8843C8F-F948-2DA4-4C71-DF4E5632E180}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -99,6 +97,7 @@
     <Compile Include="Assets\UnityTestTools\IntegrationTestsFramework\TestRunner\TestRunnerCallbackList.cs" />
     <Compile Include="Assets\UnityTestTools\IntegrationTestsFramework\TestRunner\TestRunnerConfigurator.cs" />
     <Compile Include="Assets\UnityTestTools\IntegrationTestsFramework\TestingAssets\CallTesting.cs" />
+    <None Include="Assets\RelationsInspector\Editor\README.txt" />
     <None Include="Assets\RelationsInspectorUserLand\Editor\Reward\Tutorial.txt" />
     <None Include="Assets\UnityTestTools\changelog.txt" />
     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\AngryInclude.cginc" />

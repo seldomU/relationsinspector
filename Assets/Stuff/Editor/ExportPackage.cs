@@ -26,6 +26,7 @@ public class ExportPackage
 		AssetDatabase.ExportPackage(includedFilePaths, packagePath, ExportPackageOptions.Recurse);
 	}
 
+	/*
 	[MenuItem("Window/Build/Prepare export")]
 	public static void PrepareGit()
 	{
@@ -47,7 +48,7 @@ public class ExportPackage
 		var targetDir = toTemp ? tempDir : utilsDir;
 		foreach (var fileName in fileNames)
 			File.Move(Path.Combine(sourceDir, fileName), Path.Combine(targetDir, fileName));
-	}
+	}*/
 
 	static void PreparePackageExport()
 	{
