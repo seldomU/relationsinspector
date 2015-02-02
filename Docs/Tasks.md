@@ -2,26 +2,15 @@ Tasks
 =====
 
 ###Demo
-- in the backend dev guide, link to the API references.
-- forum post
-- screenshots
-- gifs (openBroadcastingSoftware, gyfcat)
-- video (openBroadcastingSoftware)
-	- this is an introduction to the relations inspector window.
-	- you can open it by going to Window -> Relations inspector
-	- the window has a target object, just like the inspector. but it does not adapt its target when you change your object selection. In a minute I'll show you why that is.
-	- Here you can pick a backend type, it determines what relations will be displayed. In this case we'll get a graph of all components and child gameObjects owned by the target GameObject.
-	- The target object is set by dragging an object into window.
-	- Now the window will take the target object (marked in light grey) and apply the relation definition from the backend class
-	- drag and drop stuff into it
-	- zoom, shift
-	- light-grey nodes are the target objects (the ones you dragged in)
-	- dark grey nodes are objects that a target is related to, acording to however the active backend defines a relation
-		- show sceneHierarchy, object dependency, social network, benchmark window
-		- contrast hierarchy with graph
-		- contrast scriptableObject relations graph editing
-			- you have to lock the source, drag the target, unlock the source
-			- the inspector only shows you who the target person has feelings for, but not who has feelings for them.
+- write forum post
+ - screenshots: http://i.imgur.com/1OgxgAF.gif
+ - RI file is at https://drive.google.com/file/d/0BwDk5dRw645dSHNXNUNXTS01MjA/view?usp=sharing
+ - https://drive.google.com/uc?export=download&id=0BwDk5dRw645dSHNXNUNXTS01MjA
+ - mention performance issues
+- upload the video to youtube
+- post to the WIP forum
+- tweet it
+
 - documentation
  - link API ref to backend-dev sections 
   - backend-dev
@@ -58,3 +47,4 @@ Tasks
  - https://www.assetstore.unity3d.com/en/#!/content/3872
  - https://www.assetstore.unity3d.com/en/#!/content/22983
  - http://forum.unity3d.com/threads/script-inspector-3.195218/
+- sign up for 24h deals: https://docs.google.com/forms/d/1eL91dQ2uttWV0hyIPjiYizP98BIxQOfrNx95NfJiLqI/viewform
