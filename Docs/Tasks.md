@@ -2,15 +2,6 @@ Tasks
 =====
 
 ###Demo
-- write forum post
- - screenshots: http://i.imgur.com/1OgxgAF.gif
- - RI file is at https://drive.google.com/file/d/0BwDk5dRw645dSHNXNUNXTS01MjA/view?usp=sharing
- - https://drive.google.com/uc?export=download&id=0BwDk5dRw645dSHNXNUNXTS01MjA
- - mention performance issues
-- upload the video to youtube
-- post to the WIP forum
-- tweet it
-
 - documentation
  - link API ref to backend-dev sections 
   - backend-dev
@@ -18,6 +9,7 @@ Tasks
 	- high level: ShowObjectName()	// use this to draw the name of the object
 	- mid level: ShowContent(GUIContent)	// use this if you want a standard box/circle with your custom content
 	- low level: Rect Draw()				// use this if you want to draw a custom widget with your custom content
+   - how to set targets and backend (from within a backend)
    - multiple relation types
     - indicating the hierarchy depth?
     - override DefaultBackend.GetRelatedEntities if you only need one kind of relation
@@ -36,7 +28,6 @@ Tasks
 ###Release
 - finanzamt
 - more examples
- - scriptableObject example
  - ingame API usage
 - more docs
 - more video
@@ -47,4 +38,5 @@ Tasks
  - https://www.assetstore.unity3d.com/en/#!/content/3872
  - https://www.assetstore.unity3d.com/en/#!/content/22983
  - http://forum.unity3d.com/threads/script-inspector-3.195218/
+
 - sign up for 24h deals: https://docs.google.com/forms/d/1eL91dQ2uttWV0hyIPjiYizP98BIxQOfrNx95NfJiLqI/viewform
