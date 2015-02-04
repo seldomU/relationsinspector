@@ -60,7 +60,7 @@ namespace RelationsInspector.Backend.ObjectDependency
 				return null;
 
 			string assetPath = AssetDatabase.GetAssetPath(asUnityObject);
-			if (Path.GetExtension(assetPath) == ".unity")
+			if (Path.GetExtension(assetPath) != ".unity")
 				return null;
 
 			return assetPath;

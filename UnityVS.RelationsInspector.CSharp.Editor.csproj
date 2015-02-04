@@ -139,6 +139,7 @@
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\ObjectDependency\YamlParserWindow.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\ReferenceUtil.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\Reward\Reward.cs" />
+    <Compile Include="Assets\RelationsInspectorUserLand\Editor\SerializationTest\Test.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\StringGraph\GraphConstructTest.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\StringGraph\RadialTestBuilder.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\StringGraph\StringDrawer.cs" />
@@ -146,6 +147,8 @@
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TechTree\TechTreeBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\SubTypesBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\SuperTypesBackend.cs" />
+    <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\TypeInheritenceBackend.cs" />
+    <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\TypeUtility.cs" />
     <Compile Include="Assets\Stuff\Editor\CompileLibrary.cs" />
     <Compile Include="Assets\Stuff\Editor\DebugModeShortcuts.cs" />
     <Compile Include="Assets\Stuff\Editor\ExportPackage.cs" />
