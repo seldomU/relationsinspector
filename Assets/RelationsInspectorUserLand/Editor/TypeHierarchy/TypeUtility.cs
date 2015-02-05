@@ -12,7 +12,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
 		public static IEnumerable<Type> GetSubtypes(Type inspectedType, IEnumerable<Assembly> assemblies)
 		{
-			var assemblyTypes = assemblies.SelectMany(asm => asm.GetExportedTypes());
+			var assemblyTypes = assemblies.SelectMany(asm => asm.GetExportedTypes()).Where(t => t!=null);
 
 			if (inspectedType.IsInterface)
 			{
@@ -22,8 +22,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
 				{
 					if (implementer.BaseType == null)
 						yield return implementer;
-
-					if (!implementer.BaseType.IsAssignableFrom(inspectedType))
+					else if (!implementer.BaseType.IsAssignableFrom(inspectedType))
 						yield return implementer;
 
 					// base type implements the interface, so this type is not directly related
@@ -37,7 +36,8 @@ namespace RelationsInspector.Backend.TypeHierarchy
 			}
 		}
 
-		public static IEnumerable<Type> GetBaseTypeAndInterfaces(Type inspectedType)
+
+		public static IEnumerable<Type> GetInterfaces(Type inspectedType)
 		{
 			if (inspectedType.IsInterface)
 				yield break;
