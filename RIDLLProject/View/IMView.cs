@@ -500,8 +500,15 @@ namespace RelationsInspector
 
 		#endregion
 
-		public Rect GetViewRect(Rect source){ return transform.Revert( source ); }
-		public Vector2 GetGraphPosition(Vector2 source){ return transform.Revert( source ); }
+		public Rect GetViewRect(Rect source)
+		{ 
+			return transform.Revert( source ); 
+		}
+
+		public Vector2 GetGraphPosition(Vector2 source)
+		{ 
+			return transform.Revert( source ); 
+		}
 
 		public void OnWindowSelectionChange() { }
 
@@ -516,6 +523,12 @@ namespace RelationsInspector
 		{
 			dragEdgeSource = new HashSet<T>(sourceEntities);
 			dragEdgeTag = tag;
+		}
+
+		public void SelectEntityNodes(System.Predicate<object> doSelect)
+		{
+			entitySelection = new HashSet<T>( graph.Vertices.Where( v => doSelect(v) ) );
+			OnEntitySelectionChange();
 		}
 	}
 }

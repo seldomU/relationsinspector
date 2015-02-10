@@ -15,5 +15,7 @@ namespace RelationsInspector
 		void CreateEdge(object[] sourceEntities, object tag);
 		void AddEdge(object source, object target, object tag);
 		void RemoveEdge(object source, object target, object tag);
+
+		void SelectEntityNodes(System.Predicate<object> doSelect);
 	}
 }

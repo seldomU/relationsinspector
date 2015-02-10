@@ -11,19 +11,11 @@ namespace RelationsInspector.Backend.TypeHierarchy
 	{
 		public override IEnumerable<Type> GetRelatedEntities(Type entity)
 		{
-			if (entity.IsInterface)
-				yield break;
+			if (entity.BaseType != null)
+				yield return entity.BaseType;
 
-			var baseType = entity.BaseType;
-			IEnumerable<Type> interfaces = entity.GetInterfaces();
-			if (baseType != null)
-			{
-				yield return baseType;
-				interfaces = interfaces.Except( baseType.GetInterfaces() );
-			}
-
-			foreach(var interfaceType in interfaces)
-				yield return interfaceType;
+			foreach (var i in entity.GetInterfaces())
+				yield return i;
 		}
 
 		public override void OnEntityContextClick(IEnumerable<Type> entities)

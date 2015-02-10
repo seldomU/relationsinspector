@@ -11,13 +11,15 @@ namespace RelationsInspector.Backend.TypeHierarchy
 	// we have two kinds of relations in the inheritance graph:
 	public enum TypeRelation { SubType, SuperType};
 
-	public class TypeInheritenceBackend : MinimalBackend<Type, TypeRelation>
+	public class TypeInheritanceBackend : MinimalBackend<Type, TypeRelation>
 	{	
 		static bool includeSuperTypes = true;
 		static bool includeSubTypes = true;
 		static bool includeInterfaces = true;
 
 		static int maxNodes = 60;	// upper limit on number of graph nodes
+
+		string searchstring;
 
 		static Assembly[] gameAssemblies = new[]
 		{
@@ -106,12 +108,33 @@ namespace RelationsInspector.Backend.TypeHierarchy
 				if (EditorGUI.EndChangeCheck())
 					api.ResetTargets(targets);
 
+				//GUILayout.FlexibleSpace();
+				//maxNodes = EditorGUILayout.IntField("max nodes", maxNodes);
+
 				GUILayout.FlexibleSpace();
-				maxNodes = EditorGUILayout.IntField("max nodes", maxNodes);
+				EditorGUI.BeginChangeCheck();
+				searchstring = EditorGUILayout.TextField(searchstring, GUI.skin.FindStyle("ToolbarSeachTextField"));	//EditorStyles.toolbarTextField);
+				bool resetSearchString = GUILayout.Button("", GUI.skin.FindStyle("ToolbarSeachCancelButton"));
+				if (EditorGUI.EndChangeCheck())
+				{
+					if (resetSearchString)
+					{
+						searchstring = string.Empty;
+						GUI.FocusControl(null);
+					}
+
+					if (string.IsNullOrEmpty(searchstring))
+						api.SelectEntityNodes( x => { return false; } );
+					else
+						api.SelectEntityNodes( x => (x as Type).FullName.Contains(searchstring) );
+				}
+
 			}
 			GUILayout.EndHorizontal();
 			return BackendUtil.GetMaxRect();
 		}
+
+
 
 		public override void OnEntityContextClick(IEnumerable<Type> entities)
 		{
@@ -124,6 +147,11 @@ namespace RelationsInspector.Backend.TypeHierarchy
 		public override Color GetRelationColor(TypeRelation relationTagValue)
 		{
 			return relationTypeColors[ relationTagValue ];
+		}
+
+		public override GUIContent GetContent(Type entity)
+		{
+			return new GUIContent(entity.Name, entity.FullName );
 		}
 	}
 }

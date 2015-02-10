@@ -149,8 +149,8 @@
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\ITypeInheritanceDisplay.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\SubTypesBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\SuperTypesBackend.cs" />
+    <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\TypeInheritanceBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\TypeInheritanceDisplay.cs" />
-    <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\TypeInheritenceBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\TypeUtility.cs" />
     <Compile Include="Assets\Stuff\Editor\CompileLibrary.cs" />
     <Compile Include="Assets\Stuff\Editor\DebugModeShortcuts.cs" />

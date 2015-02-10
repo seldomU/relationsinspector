@@ -31,5 +31,8 @@ namespace RelationsInspector
 		void RemoveRelation(object sourceEntity, object targetEntity, object tag);
 
 		#endregion
+
+		// set node selection
+		void SelectEntityNodes(System.Predicate<object> doSelect);
 	}
 }

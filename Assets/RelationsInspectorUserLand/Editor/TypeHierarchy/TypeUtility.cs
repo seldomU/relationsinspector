@@ -1,14 +1,17 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+
 
 namespace RelationsInspector.Backend.TypeHierarchy
 {
 	public static class TypeUtility
 	{
+		public static Assembly GetAssemblyByName(string name)
+		{
+			return System.AppDomain.CurrentDomain.GetAssemblies().Single(assembly => assembly.GetName().Name == name);
+		}
 
 		public static IEnumerable<Type> GetSubtypes(Type inspectedType, IEnumerable<Assembly> assemblies)
 		{
@@ -34,29 +37,6 @@ namespace RelationsInspector.Backend.TypeHierarchy
 				foreach (var type in subTypes)
 					yield return type;
 			}
-		}
-
-
-		public static IEnumerable<Type> GetInterfaces(Type inspectedType)
-		{
-			if (inspectedType.IsInterface)
-				yield break;
-
-			var baseType = inspectedType.BaseType;
-			IEnumerable<Type> interfaces = inspectedType.GetInterfaces();
-			if (baseType != null)
-			{
-				yield return baseType;
-				interfaces = interfaces.Except( baseType.GetInterfaces() );
-			}
-
-			foreach(var interfaceType in interfaces)
-				yield return interfaceType;
-		}
-
-		public static Assembly GetAssemblyByName(string name)
-		{
-			return System.AppDomain.CurrentDomain.GetAssemblies().Single(assembly => assembly.GetName().Name == name);
 		}
 	}
 }

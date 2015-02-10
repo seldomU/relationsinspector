@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -20,5 +20,7 @@ namespace RelationsInspector
 		void CreateEdge(IEnumerable<T> sourceEntities, P tag);
 
 		void OnRemovedEntity(T entity);
+
+		void SelectEntityNodes(System.Predicate<object> doSelect);
 	}
 }

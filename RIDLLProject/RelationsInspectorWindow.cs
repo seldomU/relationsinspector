@@ -426,6 +426,12 @@ namespace RelationsInspector
 			ExecOnUpdate(() => OnSelectBackend(backendType) );
 		}
 
+		void RelationsInspectorAPI.SelectEntityNodes(System.Predicate<object> doSelect)
+		{
+			if (workspace != null)
+				ExecOnUpdate(() => workspace.SelectEntityNodes(doSelect));
+		}
+
 		#endregion
 	}
 }

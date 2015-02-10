@@ -272,6 +272,11 @@ namespace RelationsInspector
 			graph.RemoveEdge(edge);
 		}
 
+		void IWorkspace.SelectEntityNodes(System.Predicate<object> doSelect)
+		{
+			view.SelectEntityNodes(doSelect);
+		}
+
 		#endregion
 
 		#region implemention IViewParent

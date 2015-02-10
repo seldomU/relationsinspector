@@ -7,21 +7,28 @@ namespace RelationsInspector.Backend.TypeHierarchy
 {
 	public class TypeInheritanceDisplay : ITypeInheritanceDisplay
 	{
-		RelationsInspectorAPI riAPI;	// = EditorWindow.GetWindow<RelationsInspectorWindow>() as RelationsInspectorAPI;
-
-		public TypeInheritanceDisplay()
+		RelationsInspectorAPI _riAPI;		
+		RelationsInspectorAPI riAPI
 		{
-			// we can't just use GetWindow here. 
-			// After assembly reload, this code might run before the RI window gets deserialized
-			// GetWindow would instanciate a second one.
-			var window = Resources.FindObjectsOfTypeAll<EditorWindow>().Where(w => w is RelationsInspectorWindow).SingleOrDefault();
-			if (window == null)
-				window = EditorWindow.GetWindow<RelationsInspectorWindow>();
-			riAPI = window as RelationsInspectorAPI;
+			get
+			{
+				if (_riAPI == null || _riAPI.Equals(null) )	// UnityEngine.Object overrides == operator
+				{
+					// we can't just use GetWindow here. 
+					// After assembly reload, this code might run before the RI window gets deserialized
+					// GetWindow would instanciate a second one.
+					var window = Resources.FindObjectsOfTypeAll<EditorWindow>().Where(w => w is RelationsInspectorWindow).FirstOrDefault();
+					if (window == null)
+						window = EditorWindow.GetWindow<RelationsInspectorWindow>();
+					_riAPI = window as RelationsInspectorAPI;
+				}
+				return _riAPI;
+			}
 		}
 
 		public void SetTargetType(Type newTargetType)
 		{
+			riAPI.SetBackend( typeof(TypeInheritanceBackend) );
 			riAPI.ResetTargets( new[] { newTargetType } );
 		}
 	}

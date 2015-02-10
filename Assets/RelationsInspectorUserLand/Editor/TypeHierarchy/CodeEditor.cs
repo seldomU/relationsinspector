@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEditor;
 using System.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace RelationsInspector.Backend.TypeHierarchy
 {
@@ -12,34 +13,27 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
 		void OnEnable()
 		{
-			GetDisplay();
-		}
-
-		void GetDisplay()
-		{
+			// find and instanciate a type that implements ITypeInheritanceDisplay
 			var displayTypes = GetType().Assembly.GetTypes().Where(t => typeof(ITypeInheritanceDisplay).IsAssignableFrom(t) && t.IsClass );
-
-			if (!displayTypes.Any())
-				return;
-
-			Debug.Log(displayTypes.First().Name);
-
-			var ctorInfo = displayTypes.First().GetConstructor( Type.EmptyTypes );
-			if (ctorInfo == null)
-				return;
-
-			display = ctorInfo.Invoke( new object[] { } ) as ITypeInheritanceDisplay;
+			if (displayTypes.Any())
+				display = (ITypeInheritanceDisplay) System.Activator.CreateInstance( displayTypes.First() );
 		}
 
 		void OnGUI()
 		{
-			EditorGUILayout.HelpBox("I am a strong and independent unity extension, looking for a friend to help me visualize relations between things.", MessageType.None);
 			//display-independent code
 			// ...
 			if (display != null)
 			{
+				/*
 				if (GUILayout.Button("show EditorWindow subtypes"))
 					display.SetTargetType( typeof(EditorWindow) );
+
+				if (GUILayout.Button("show List<> subtypes"))
+					display.SetTargetType(typeof(List<>));
+				*/
+				if (GUILayout.Button("inspect XmlCharacterData"))
+					display.SetTargetType(typeof(System.Xml.XmlCharacterData));
 			}
 		}
 
