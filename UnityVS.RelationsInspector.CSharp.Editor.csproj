@@ -147,8 +147,6 @@
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TechTree\TechTreeBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\CodeEditor.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\ITypeInheritanceDisplay.cs" />
-    <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\SubTypesBackend.cs" />
-    <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\SuperTypesBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\TypeInheritanceBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\TypeInheritanceDisplay.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\TypeUtility.cs" />
