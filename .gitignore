@@ -17,3 +17,6 @@ Assets\RelationsInspector\Editor\RelationsInspectorResources\RIWindowLightSkin.a
 Assets\RelationsInspector\Editor\RelationsInspectorResources\RIWindowDarkSkin.asset
 Assets\RelationsInspector\Editor\RelationsInspectorResources\RIWindowDarkSkin.asset.meta
 RelationsInspectorDemo.unitypackage
+Assets/RelationsInspector/Editor/RelationsInspector.dll.mdb
+Assets/RelationsInspector/Editor/RelationsInspector.dll.mdb.meta
+Assets/RelationsInspector/Editor/RelationsInspector.pdb.meta
