@@ -151,7 +151,12 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
 		public override GUIContent GetContent(Type entity)
 		{
-			return new GUIContent(entity.Name, entity.FullName );
+			return new GUIContent
+				(
+				entity.Name,	// name
+				AssetPreview.GetMiniTypeThumbnail(entity), // icon
+				entity.FullName	// tooltil
+				);
 		}
 	}
 }

@@ -34,6 +34,9 @@ namespace RelationsInspector.Backend.TypeHierarchy
 				*/
 				if (GUILayout.Button("inspect XmlCharacterData"))
 					display.SetTargetType(typeof(System.Xml.XmlCharacterData));
+
+				if (GUILayout.Button("inspect UnityEngine.Behaviour"))
+					display.SetTargetType(typeof(UnityEngine.Behaviour));
 			}
 		}
 
