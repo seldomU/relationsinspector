@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -9,8 +9,23 @@ namespace RelationsInspector.Backend.SceneRefBackend
 {
 	public static class ObjectDependencyUtil
 	{
+		public static Dictionary<Object, HashSet<Object>> GetDependencyGraph(string sceneFilePath, IEnumerable<Object> targets)
+		{
+			// get the scene's objects
+			var sceneObjects = UnityEditorInternal.InternalEditorUtility.LoadSerializedFileAndForget(sceneFilePath);
+
+			// get the scene gameObjects
+			var sceneGOs = sceneObjects.Select(obj => obj as GameObject).Where(go => go != null);
+
+			// get the root gameObjects
+			var rootGOs = sceneGOs.Where(go => go.transform.parent == null);
+
+			// build the graph and merge it with the others
+			return ObjectDependencyUtil.GetDependencyGraph(targets, rootGOs);
+		}
+		
 		//returns a graph of dependency relations, from the targets to the rootGO children that depend on them, up to the rootGOs
-		public static Dictionary<Object, HashSet<Object>> GetDependencyGraph(IEnumerable<Object> targets, IEnumerable<GameObject> rootGOs)
+		static Dictionary<Object, HashSet<Object>> GetDependencyGraph(IEnumerable<Object> targets, IEnumerable<GameObject> rootGOs)
 		{
 			var refGraph = GetReferenceGraph(targets, rootGOs);
 
@@ -30,7 +45,7 @@ namespace RelationsInspector.Backend.SceneRefBackend
 		}
 
 		// returns a graph of the reference links down the gameObject hierarchy, from rootGOs down to targets
-		public static Dictionary<Object, HashSet<Object>> GetReferenceGraph(IEnumerable<Object> targets, IEnumerable<GameObject> rootGOs)
+		static Dictionary<Object, HashSet<Object>> GetReferenceGraph(IEnumerable<Object> targets, IEnumerable<GameObject> rootGOs)
 		{
 			var refGraph = new Dictionary<Object, HashSet<Object>>();
 
@@ -76,6 +91,18 @@ namespace RelationsInspector.Backend.SceneRefBackend
 		static IEnumerable<Object> GetReferencedObjects(Object obj)
 		{
 			return EditorUtility.CollectDependencies(new[] { obj });
+		}
+
+		// merge two graphs
+		public static void AddGraph<T>(Dictionary<T, HashSet<T>> graph, Dictionary<T, HashSet<T>> addedGraph) where T : class
+		{
+			foreach (var pair in addedGraph)
+			{
+				if (!graph.ContainsKey(pair.Key))
+					graph[pair.Key] = pair.Value;
+				else
+					graph[pair.Key].UnionWith(pair.Value);
+			}
 		}
 	}
 }
