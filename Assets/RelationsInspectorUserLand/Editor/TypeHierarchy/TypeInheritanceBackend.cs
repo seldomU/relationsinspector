@@ -21,13 +21,13 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
 		string searchstring;
 
-		static Assembly[] gameAssemblies = new[]
+		/*static Assembly[] gameAssemblies = new[]
 		{
 			typeof(GameObject).Assembly,
 			typeof(UnityEditor.Editor).Assembly,
 			TypeUtility.GetAssemblyByName("Assembly-CSharp-Editor"),
 			TypeUtility.GetAssemblyByName("Assembly-CSharp")
-		};
+		};*/
 
 		static Assembly[] allAssemblies = System.AppDomain.CurrentDomain.GetAssemblies();
 

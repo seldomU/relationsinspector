@@ -4,6 +4,7 @@ using UnityEditor;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using RelationsInspector.Extensions;
 
 namespace RelationsInspector.Backend.TypeHierarchy
 {
@@ -37,6 +38,15 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
 				if (GUILayout.Button("inspect UnityEngine.Behaviour"))
 					display.SetTargetType(typeof(UnityEngine.Behaviour));
+				
+				if (GUILayout.Button("inspect EditorWindow"))
+					display.SetTargetType(typeof(EditorWindow));
+
+				if (GUILayout.Button("inspect EditorWindow"))
+				{
+					Debug.Log( Resources.FindObjectsOfTypeAll<EditorWindow>().Select(w => w.GetType().ToString()).ToDelimitedString() );
+				}
+
 			}
 		}
 
