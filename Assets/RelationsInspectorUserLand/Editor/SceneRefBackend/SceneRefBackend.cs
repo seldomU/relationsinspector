@@ -19,13 +19,13 @@ namespace RelationsInspector.Backend.SceneRefBackend
 	[RelationsInspector(typeof(Object))]
 	class SceneRefBackend : MinimalBackend<VisualNode, string>
 	{
-		static Color rootNodeColor = Color.green;
+		static Color targetNodeColor = Color.green;
 		
 		// linking objects to the ones that depend on them
 		Dictionary<VisualNode, HashSet<VisualNode>> dependencyGraph;
 
-		// nodes representing root GameObjects of the scene hierarchy. they are NOT roots of the dependency graph
-		HashSet<VisualNode> rootNodes;
+		// nodes representing the target object. we want to mark them visually
+		HashSet<VisualNode> targetNodes;
 
 		// root directory for scene asset search
 		string sceneDirPath = Application.dataPath;
@@ -60,13 +60,13 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			// find the nodes being referenced
 			var referencedNodes = dependencyGraph.Values.SelectMany(set=>set);
 
-			// find the scene root nodes. they are the ones that have no children (so we can visually mark them)
-			rootNodes = new HashSet<VisualNode>( referencedNodes.Except(dependencyGraph.Keys) );
+			// find the target nodes. they are ones not referencing anything
+			targetNodes = new HashSet<VisualNode>( referencedNodes.Except(dependencyGraph.Keys) );
 
-			// return the targets: they are now root nodes (those that are not referenced)
-			var targetNodes = dependencyGraph.Keys.Except(referencedNodes);
-			foreach (var root in targetNodes)
-				yield return root;
+			// find the scene root nodes in the graph
+			var rootNodes = dependencyGraph.Keys.Except(referencedNodes);
+			foreach (var rootNode in rootNodes)
+				yield return rootNode;
 		}
 
 		// get an object label. for target objects, we add the scene's name
@@ -93,7 +93,6 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			if (dependencyGraph.ContainsKey(entity))
 				return dependencyGraph[entity];
 
-			UnityEngine.Debug.Log("unreferenced: " + entity );
 			return Enumerable.Empty<VisualNode>();
 		}
 
@@ -105,11 +104,11 @@ namespace RelationsInspector.Backend.SceneRefBackend
 		// draw nodes representing scene root GameObject in a special color
 		public override Rect DrawContent(VisualNode entity, EntityDrawContext drawContext)
 		{
-			if (!rootNodes.Contains(entity))
+			if (!targetNodes.Contains(entity))
 				return DrawUtil.DrawContent(GetContent(entity), drawContext);
 
 			var colorBackup = drawContext.style.backgroundColor;
-			drawContext.style.backgroundColor = rootNodeColor;
+			drawContext.style.backgroundColor = targetNodeColor;
 			var rect = DrawUtil.DrawContent(GetContent(entity), drawContext);
 			drawContext.style.backgroundColor = colorBackup;
 			return rect;

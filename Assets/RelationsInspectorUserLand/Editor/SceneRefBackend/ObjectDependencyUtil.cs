@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -21,38 +21,24 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			var rootGOs = sceneGOs.Where(go => go.transform.parent == null);
 
 			// build the graph and merge it with the others
-			return ObjectDependencyUtil.GetDependencyGraph(targets, rootGOs);
-		}
-		
-		//returns a graph of dependency relations, from the targets to the rootGO children that depend on them, up to the rootGOs
-		static Dictionary<Object, HashSet<Object>> GetDependencyGraph(IEnumerable<Object> targets, IEnumerable<GameObject> rootGOs)
-		{
-			var refGraph = GetReferenceGraph(targets, rootGOs);
-
-			// dependency graph is the inverted reference graph
-			var dependencyGraph = new Dictionary<Object, HashSet<Object>>();
-			foreach (var pair in refGraph)
-			{
-				foreach (var item in pair.Value)
-				{
-					if (!dependencyGraph.ContainsKey(item))
-						dependencyGraph[item] = new HashSet<Object>();
-					dependencyGraph[item].Add(pair.Key);
-				}
-			}
-
-			return dependencyGraph;
+			return GetReferenceGraph(targets, rootGOs);
 		}
 
 		// returns a graph of the reference links down the gameObject hierarchy, from rootGOs down to targets
 		static Dictionary<Object, HashSet<Object>> GetReferenceGraph(IEnumerable<Object> targets, IEnumerable<GameObject> rootGOs)
 		{
 			var refGraph = new Dictionary<Object, HashSet<Object>>();
+			var unresolved = new Queue<GameObject>();
 
-			foreach(var rootGO in rootGOs)
-				refGraph[rootGO] = new HashSet<Object>( GetReferencedObjects(rootGO).Intersect(targets) );
-
-			var unresolved = new Queue<GameObject>(rootGOs);
+			foreach (var rootGO in rootGOs)
+			{
+				var referencedTargets = GetReferencedObjects(rootGO).Intersect(targets);
+				if (!referencedTargets.Any())
+					continue;
+				
+				refGraph[rootGO] = new HashSet<Object>(referencedTargets);
+				unresolved.Enqueue(rootGO);
+			}	
 
 			while (unresolved.Any())
 			{
@@ -64,17 +50,23 @@ namespace RelationsInspector.Backend.SceneRefBackend
 					child.transform.parent = null;
 
 					// add map entry for child
-					refGraph[child] = new HashSet<Object>( GetReferencedObjects(child).Intersect(targets) );
+					var referencedTargets = GetReferencedObjects(child).Intersect(targets);
+					if (referencedTargets.Any())
+					{
+						refGraph[child] = new HashSet<Object>(referencedTargets);
 
-					// remove child targets from parent
-					refGraph[go].ExceptWith( refGraph[child] );
+						// remove child targets from parent
+						refGraph[go].ExceptWith(referencedTargets);
 
-					// add parent->child reference
-					refGraph[go].Add(child);
+						// add parent->child reference
+						refGraph[go].Add(child);
+
+						// child has to be resolved too
+						unresolved.Enqueue(child);
+					}
 
 					//re-attach to parent
 					child.transform.parent = go.transform;
-					unresolved.Enqueue( child );
 				}
 			}
 
