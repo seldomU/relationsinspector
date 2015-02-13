@@ -9,28 +9,22 @@ using RelationsInspector.Extensions;
 
 namespace RelationsInspector.Backend.SceneRefBackend
 {
-	
-	class VisualNode
-	{
-		public string label { get; private set; }
-		public VisualNode(string label) { this.label = label; }
-	}
 
 	[RelationsInspector(typeof(Object))]
-	class SceneRefBackend : MinimalBackend<VisualNode, string>
+	class SceneRefBackend : MinimalBackend<SceneObjectNode, string>
 	{
 		static Color targetNodeColor = Color.green;
 		
-		// linking objects to the ones that depend on them
-		Dictionary<VisualNode, HashSet<VisualNode>> dependencyGraph;
+		// linking objects to the ones they reference
+		Dictionary<SceneObjectNode, HashSet<SceneObjectNode>> referenceGraph;
 
 		// nodes representing the target object. we want to mark them visually
-		HashSet<VisualNode> targetNodes;
+		HashSet<SceneObjectNode> targetNodes;
 
 		// root directory for scene asset search
 		string sceneDirPath = Application.dataPath;
 		
-		public override IEnumerable<VisualNode> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
+		public override IEnumerable<SceneObjectNode> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
 		{
 			this.api = api;
 			if (targets == null || !targets.Any())
@@ -43,66 +37,43 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			// get all scene files
 			var sceneFilePaths = Directory.GetFiles(sceneDirPath, "*.unity", SearchOption.AllDirectories);
 
-			dependencyGraph = new Dictionary<VisualNode, HashSet<VisualNode>>();
+			referenceGraph = new Dictionary<SceneObjectNode, HashSet<SceneObjectNode>>();
 			foreach (var path in sceneFilePaths)
 			{
-				// get the dependency graph in terms of objects
-				var objDependencyGraph = ObjectDependencyUtil.GetDependencyGraph(path, targetObjs);
-
-				// convert it to a VisualNode graph
-				string fileName = System.IO.Path.GetFileName(path);
-				var visualGraph = Convert(objDependencyGraph, obj => GetVisualNodeName(obj, targetObjs, fileName));
+				// get the reference graph
+				var graph = ObjectDependencyUtil.GetReferenceGraph(path, targetObjs);
 
 				// merge it with the other scene's graphs
-				ObjectDependencyUtil.AddGraph<VisualNode>(dependencyGraph, visualGraph);
+				ObjectDependencyUtil.AddGraph<SceneObjectNode>(referenceGraph, graph);
 			}
 
 			// find the nodes being referenced
-			var referencedNodes = dependencyGraph.Values.SelectMany(set=>set);
+			var referencedNodes = referenceGraph.Values.SelectMany(set=>set);
 
 			// find the target nodes. they are ones not referencing anything
-			targetNodes = new HashSet<VisualNode>( referencedNodes.Except(dependencyGraph.Keys) );
+			targetNodes = new HashSet<SceneObjectNode>( referencedNodes.Except(referenceGraph.Keys) );
 
 			// find the scene root nodes in the graph
-			var rootNodes = dependencyGraph.Keys.Except(referencedNodes);
+			var rootNodes = referenceGraph.Keys.Except(referencedNodes);
 			foreach (var rootNode in rootNodes)
 				yield return rootNode;
 		}
 
-		// get an object label. for target objects, we add the scene's name
-		static string GetVisualNodeName(Object obj, HashSet<Object> targetObjs, string sceneName)
+		public override IEnumerable<SceneObjectNode> GetRelatedEntities(SceneObjectNode entity)
 		{
-			return targetObjs.Contains(obj) ? obj.name + "\nscene " + sceneName : obj.name;
+			if (referenceGraph.ContainsKey(entity))
+				return referenceGraph[entity];
+
+			return Enumerable.Empty<SceneObjectNode>();
 		}
 
-		// turn object graph into VisualNode graph (mapping obj -> name)
-		static Dictionary<VisualNode, HashSet<VisualNode>> Convert(Dictionary<Object, HashSet<Object>> objGraph, System.Func<Object,string> getObjectName)
-		{
-			// get all graph objects
-			var allObjs = new HashSet<Object>( objGraph.Keys).Union( objGraph.Values.SelectMany(set => set) );
-
-			// map them to VisualNodes
-			var objToNode = allObjs.ToDictionary(obj => obj, obj => new VisualNode( getObjectName(obj) ) );
-			
-			// convert graph dictionary
-			return objGraph.ToDictionary( pair => objToNode[pair.Key], pair => new HashSet<VisualNode>( pair.Value.Select( obj => objToNode[obj]) ) );
-		}
-
-		public override IEnumerable<VisualNode> GetRelatedEntities(VisualNode entity)
-		{
-			if (dependencyGraph.ContainsKey(entity))
-				return dependencyGraph[entity];
-
-			return Enumerable.Empty<VisualNode>();
-		}
-
-		public override GUIContent GetContent(VisualNode entity)
+		public override GUIContent GetContent(SceneObjectNode entity)
 		{
 			return new GUIContent(entity.label, entity.label);
 		}
 
 		// draw nodes representing scene root GameObject in a special color
-		public override Rect DrawContent(VisualNode entity, EntityDrawContext drawContext)
+		public override Rect DrawContent(SceneObjectNode entity, EntityDrawContext drawContext)
 		{
 			if (!targetNodes.Contains(entity))
 				return DrawUtil.DrawContent(GetContent(entity), drawContext);

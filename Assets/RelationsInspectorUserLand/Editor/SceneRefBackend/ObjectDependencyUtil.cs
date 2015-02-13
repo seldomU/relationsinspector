@@ -9,7 +9,7 @@ namespace RelationsInspector.Backend.SceneRefBackend
 {
 	public static class ObjectDependencyUtil
 	{
-		public static Dictionary<Object, HashSet<Object>> GetDependencyGraph(string sceneFilePath, IEnumerable<Object> targets)
+		public static Dictionary<SceneObjectNode, HashSet<SceneObjectNode>> GetReferenceGraph(string sceneFilePath, HashSet<Object> targets)
 		{
 			// get the scene's objects
 			var sceneObjects = UnityEditorInternal.InternalEditorUtility.LoadSerializedFileAndForget(sceneFilePath);
@@ -20,69 +20,65 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			// get the root gameObjects
 			var rootGOs = sceneGOs.Where(go => go.transform.parent == null);
 
-			// build the graph and merge it with the others
-			return GetReferenceGraph(targets, rootGOs);
+			//var nodeGraph = new Dictionary<SceneObjectNode, HashSet<SceneObjectNode>>();
+			//{
+				// build the Object graph
+				var objGraph = new Dictionary<Object, HashSet<Object>>();
+				foreach (var rootGO in rootGOs)
+					AddToReferenceGraph(rootGO, objGraph, targets);
+
+				// convert it to a SceneObjectNode graph, so we can destroy the objects
+				string fileName = System.IO.Path.GetFileName(sceneFilePath);
+				var nodeGraph = ConvertObjectToNodeGraph(objGraph, obj => GetSceneObjectNodeName(obj, targets, fileName));
+			//}
+
+			// destroy the Objects
+			for (int i = 0; i < sceneObjects.Length; i++)
+				Object.DestroyImmediate(sceneObjects[i]);
+
+			return nodeGraph;
 		}
 
-		// returns a graph of the reference links down the gameObject hierarchy, from rootGOs down to targets
-		static Dictionary<Object, HashSet<Object>> GetReferenceGraph(IEnumerable<Object> targets, IEnumerable<GameObject> rootGOs)
+		// adds go and its children to the reference graph
+		// expects none of them to already be vertices
+		static void AddToReferenceGraph(GameObject go, Dictionary<Object, HashSet<Object>> graph, IEnumerable<Object> targets)
 		{
-			var refGraph = new Dictionary<Object, HashSet<Object>>();
-			var unresolved = new Queue<GameObject>();
+			var dependencies = EditorUtility.CollectDependencies( new Object[] { go } );
+			var referencedTargets = dependencies.Intersect( targets );
 
-			foreach (var rootGO in rootGOs)
+			if (!referencedTargets.Any())
+				return;
+
+			graph[go] = new HashSet<Object>(referencedTargets);
+
+			var parent = go.transform.parent;
+			if (parent != null)
 			{
-				var referencedTargets = GetReferencedObjects(rootGO).Intersect(targets);
-				if (!referencedTargets.Any())
-					continue;
-				
-				refGraph[rootGO] = new HashSet<Object>(referencedTargets);
-				unresolved.Enqueue(rootGO);
-			}	
-
-			while (unresolved.Any())
-			{
-				var go = unresolved.Dequeue();
-				var goChildren = GetChildren(go).ToArray();
-				foreach (var child in goChildren)
-				{
-					// detatch from parent
-					child.transform.parent = null;
-
-					// add map entry for child
-					var referencedTargets = GetReferencedObjects(child).Intersect(targets);
-					if (referencedTargets.Any())
-					{
-						refGraph[child] = new HashSet<Object>(referencedTargets);
-
-						// remove child targets from parent
-						refGraph[go].ExceptWith(referencedTargets);
-
-						// add parent->child reference
-						refGraph[go].Add(child);
-
-						// child has to be resolved too
-						unresolved.Enqueue(child);
-					}
-
-					//re-attach to parent
-					child.transform.parent = go.transform;
-				}
+				graph[parent.gameObject].ExceptWith(referencedTargets);
+				graph[parent.gameObject].Add(go);
 			}
 
-			return refGraph;
+			foreach (Transform child in go.transform)
+				AddToReferenceGraph(child.gameObject, graph, targets);
 		}
 
-		static IEnumerable<GameObject> GetChildren(GameObject go)
+		// turn object graph into VisualNode graph (mapping obj -> name)
+		static Dictionary<SceneObjectNode, HashSet<SceneObjectNode>> ConvertObjectToNodeGraph(Dictionary<Object, HashSet<Object>> objGraph, System.Func<Object, string> getObjectName)
 		{
-			foreach (Transform t in go.transform)
-				yield return t.gameObject;
+			// get all graph objects
+			var allObjs = new HashSet<Object>(objGraph.Keys).Union(objGraph.Values.SelectMany(set => set));
+
+			// map them to VisualNodes
+			var objToNode = allObjs.ToDictionary(obj => obj, obj => new SceneObjectNode(getObjectName(obj)));
+
+			// convert graph dictionary
+			return objGraph.ToDictionary(pair => objToNode[pair.Key], pair => new HashSet<SceneObjectNode>(pair.Value.Select(obj => objToNode[obj])));
 		}
 
-		// returns those targets that the candidate references
-		static IEnumerable<Object> GetReferencedObjects(Object obj)
+		// get an object label. for target objects, we add the scene's name
+		static string GetSceneObjectNodeName(Object obj, HashSet<Object> targetObjs, string sceneName)
 		{
-			return EditorUtility.CollectDependencies(new[] { obj });
+			return targetObjs.Contains(obj) ? obj.name + "\nscene " + sceneName : obj.name;
 		}
 
 		// merge two graphs
