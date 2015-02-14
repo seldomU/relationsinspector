@@ -15,7 +15,6 @@ namespace RelationsInspector.Backend.SceneRefBackend
 	class SceneRefBackend : MinimalBackend<SceneObjectNode, string>
 	{
 		static Color targetNodeColor = new Color(0.29f, 0.53f, 0.28f);
-		static bool includeIntermediateNodes = true;
 
 		Object[] currentTargets;
 		
@@ -47,7 +46,7 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			foreach (var path in sceneFilePaths)
 			{
 				// get the reference graph
-				var graph = ObjectDependencyUtil.GetReferenceGraph(path, targetObjs, includeIntermediateNodes);
+				var graph = ObjectDependencyUtil.GetReferenceGraph(path, targetObjs);
 
 				// merge it with the other scene's graphs
 				ObjectDependencyUtil.AddGraph<SceneObjectNode>(referenceGraph, graph);
@@ -93,15 +92,6 @@ namespace RelationsInspector.Backend.SceneRefBackend
 
 		public override Rect OnGUI()
 		{
-			GUILayout.BeginHorizontal();
-
-			EditorGUI.BeginChangeCheck();
-			includeIntermediateNodes = GUILayout.Toggle(includeIntermediateNodes, "Include intermediate GameObjects");
-			if (EditorGUI.EndChangeCheck())
-				if (currentTargets != null)
-					api.ResetTargets(currentTargets);
-
-			GUILayout.EndHorizontal();
 			return BackendUtil.GetMaxRect();
 		}
 	}
