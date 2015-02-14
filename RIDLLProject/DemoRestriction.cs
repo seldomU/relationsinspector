@@ -7,10 +7,10 @@ namespace RelationsInspector
 	static class DemoRestriction
 	{
 		static int inputEventCount = 0;
-		const int inputEventCountThreshold = 40;
+		const int inputEventCountThreshold = 50;
 
 		static float demoMessageTime;
-		const float demoGUIBlockDuration = 8;	// in seconds
+		const float demoGUIBlockDuration = 5;	// in seconds
 		
 		public static bool IsActive( System.Action<GUIContent> showMessage )
 		{
@@ -21,7 +21,6 @@ namespace RelationsInspector
 			{
 				case EventType.MouseUp:
 				case EventType.MouseDown:
-				case EventType.ScrollWheel:
 					inputEventCount++;
 					break;
 			}
