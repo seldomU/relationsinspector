@@ -14,7 +14,10 @@ namespace RelationsInspector.Backend.SceneRefBackend
 	[RelationsInspector(typeof(Object))]
 	class SceneRefBackend : MinimalBackend<SceneObjectNode, string>
 	{
-		static Color targetNodeColor = Color.green;
+		static Color targetNodeColor = new Color(0.29f, 0.53f, 0.28f);
+		static bool includeIntermediateNodes = true;
+
+		Object[] currentTargets;
 		
 		// linking objects to the ones they reference
 		ObjNodeGraph referenceGraph;
@@ -35,6 +38,8 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			if (!targetObjs.Any())
 				yield break;
 
+			currentTargets = targetObjs.ToArray();
+
 			// get all scene files
 			var sceneFilePaths = Directory.GetFiles(sceneDirPath, "*.unity", SearchOption.AllDirectories);
 
@@ -42,7 +47,7 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			foreach (var path in sceneFilePaths)
 			{
 				// get the reference graph
-				var graph = ObjectDependencyUtil.GetReferenceGraph(path, targetObjs);
+				var graph = ObjectDependencyUtil.GetReferenceGraph(path, targetObjs, includeIntermediateNodes);
 
 				// merge it with the other scene's graphs
 				ObjectDependencyUtil.AddGraph<SceneObjectNode>(referenceGraph, graph);
@@ -84,6 +89,20 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			var rect = DrawUtil.DrawContent(GetContent(entity), drawContext);
 			drawContext.style.backgroundColor = colorBackup;
 			return rect;
+		}
+
+		public override Rect OnGUI()
+		{
+			GUILayout.BeginHorizontal();
+
+			EditorGUI.BeginChangeCheck();
+			includeIntermediateNodes = GUILayout.Toggle(includeIntermediateNodes, "Include intermediate GameObjects");
+			if (EditorGUI.EndChangeCheck())
+				if (currentTargets != null)
+					api.ResetTargets(currentTargets);
+
+			GUILayout.EndHorizontal();
+			return BackendUtil.GetMaxRect();
 		}
 	}
 }

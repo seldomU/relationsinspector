@@ -12,7 +12,7 @@ namespace RelationsInspector.Backend.SceneRefBackend
 	
 	public static class ObjectDependencyUtil
 	{
-		public static ObjNodeGraph GetReferenceGraph(string sceneFilePath, HashSet<Object> targets)
+		public static ObjNodeGraph GetReferenceGraph(string sceneFilePath, HashSet<Object> targets, bool includeIntermediateNodes)
 		{
 			// get the scene's objects
 			var sceneObjects = UnityEditorInternal.InternalEditorUtility.LoadSerializedFileAndForget(sceneFilePath);
@@ -26,7 +26,7 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			// build the Object graph
 			var objGraph = new ObjGraph();
 			foreach (var rootGO in rootGOs)
-				AddToReferenceGraph(rootGO, objGraph, targets);
+				AddToReferenceGraph(rootGO, objGraph, targets, includeIntermediateNodes);
 
 			// convert it to a SceneObjectNode graph, so we can destroy the objects
 			string fileName = System.IO.Path.GetFileName(sceneFilePath);
@@ -41,7 +41,7 @@ namespace RelationsInspector.Backend.SceneRefBackend
 
 		// adds go and its children to the reference graph
 		// expects none of them to already be vertices
-		static void AddToReferenceGraph(GameObject go, ObjGraph graph, IEnumerable<Object> targets)
+		static void AddToReferenceGraph(GameObject go, ObjGraph graph, IEnumerable<Object> targets, bool includeIntermediateNodes)
 		{
 			var dependencies = EditorUtility.CollectDependencies( new Object[] { go } );
 			var referencedTargets = dependencies.Intersect( targets );
@@ -51,6 +51,9 @@ namespace RelationsInspector.Backend.SceneRefBackend
 
 			graph[go] = new HashSet<Object>(referencedTargets);
 
+			if (!includeIntermediateNodes)
+				return;
+
 			var parent = go.transform.parent;
 			if (parent != null)
 			{
@@ -59,7 +62,7 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			}
 
 			foreach (Transform child in go.transform)
-				AddToReferenceGraph(child.gameObject, graph, targets);
+				AddToReferenceGraph(child.gameObject, graph, targets, includeIntermediateNodes);
 		}
 
 		// turn object graph into VisualNode graph (mapping obj -> name)
