@@ -9,6 +9,7 @@ using RelationsInspector.Extensions;
 
 namespace RelationsInspector.Backend.SceneRefBackend
 {
+	using ObjNodeGraph = Dictionary<SceneObjectNode, HashSet<SceneObjectNode>>;
 
 	[RelationsInspector(typeof(Object))]
 	class SceneRefBackend : MinimalBackend<SceneObjectNode, string>
@@ -16,7 +17,7 @@ namespace RelationsInspector.Backend.SceneRefBackend
 		static Color targetNodeColor = Color.green;
 		
 		// linking objects to the ones they reference
-		Dictionary<SceneObjectNode, HashSet<SceneObjectNode>> referenceGraph;
+		ObjNodeGraph referenceGraph;
 
 		// nodes representing the target object. we want to mark them visually
 		HashSet<SceneObjectNode> targetNodes;
@@ -37,7 +38,7 @@ namespace RelationsInspector.Backend.SceneRefBackend
 			// get all scene files
 			var sceneFilePaths = Directory.GetFiles(sceneDirPath, "*.unity", SearchOption.AllDirectories);
 
-			referenceGraph = new Dictionary<SceneObjectNode, HashSet<SceneObjectNode>>();
+			referenceGraph = new ObjNodeGraph();
 			foreach (var path in sceneFilePaths)
 			{
 				// get the reference graph
