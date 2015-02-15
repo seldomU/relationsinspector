@@ -8,3 +8,9 @@ content on the web:
 	type inheritance demo: 
 		https://www.youtube.com/watch?v=r88eVGPc83g
 		http://bit.ly/18So5Bu
+		searchbar video: http://gfycat.com/PoliticalEducatedAcaciarat
+
+	Asset reference code:
+		https://github.com/seldomU/AssetReferenceBackend/archive/master.zip
+		http://youtu.be/PqZJJne9DkY
+
