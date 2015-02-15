@@ -139,9 +139,6 @@
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\ObjectDependency\YamlParserWindow.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\ReferenceUtil.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\Reward\Reward.cs" />
-    <Compile Include="Assets\RelationsInspectorUserLand\Editor\SceneRefBackend\ObjectDependencyUtil.cs" />
-    <Compile Include="Assets\RelationsInspectorUserLand\Editor\SceneRefBackend\SceneObjectNode.cs" />
-    <Compile Include="Assets\RelationsInspectorUserLand\Editor\SceneRefBackend\SceneRefBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\SerializationTest\Test.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\StringGraph\GraphConstructTest.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\StringGraph\RadialTestBuilder.cs" />
