@@ -14,3 +14,7 @@ content on the web:
 		https://github.com/seldomU/AssetReferenceBackend/archive/master.zip
 		http://youtu.be/PqZJJne9DkY
 
+	Roguelike board configs:
+		http://forum.unity3d.com/threads/2d-roguelike-q-a.297180/#post-1973681
+		https://www.youtube.com/watch?v=lE5_2n6x4V0
+		I:\code\NeoScavengers
