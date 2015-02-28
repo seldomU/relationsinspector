@@ -101,6 +101,7 @@
     <Compile Include="Tools\RNG.cs" />
     <Compile Include="Tools\Tuple.cs" />
     <Compile Include="Tools\Transform2d.cs" />
+    <Compile Include="Tools\Tweener.cs" />
     <Compile Include="Tools\Util.cs" />
     <Compile Include="View\IRelationDrawer.cs" />
     <Compile Include="View\IGraphView.cs" />

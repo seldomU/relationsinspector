@@ -155,6 +155,7 @@
     <Compile Include="Assets\Stuff\Editor\ExportPackage.cs" />
     <Compile Include="Assets\Stuff\Editor\IOUtil.cs" />
     <Compile Include="Assets\Stuff\Editor\SpawnScriptableObjectWindow.cs" />
+    <Compile Include="Assets\Stuff\Editor\TweenerTest.cs" />
     <Compile Include="Assets\UnitTests\Editor\ExtensionTests.cs" />
     <Compile Include="Assets\UnitTests\Editor\GenericInterfaceTests.cs" />
     <Compile Include="Assets\UnitTests\Editor\MyFirstTest.cs" />
