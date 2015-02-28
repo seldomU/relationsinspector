@@ -75,10 +75,30 @@ namespace RelationsInspector
 
 		public void Update()
 		{
+			bool doRepaint = false;
+			doRepaint |= UpdateLayout();
 #if DEBUG
 			if (permaRepaint)
-				editorWindow.Repaint();
+				doRepaint = true;
 #endif
+			if(doRepaint)
+				editorWindow.Repaint();
+		}
+
+		bool UpdateLayout()
+		{
+			if (layoutEnumerator == null)
+				return false;
+
+			//var previousVertexPositions = graph.GetVertexPositions();
+			if (!layoutEnumerator.MoveNext())
+			{
+				layoutEnumerator = null;
+				return false;
+			}
+
+			view.FitViewRectToGraph();
+			return true;
 		}
 
 		public void OnGUI(Rect drawRect)
@@ -176,8 +196,6 @@ namespace RelationsInspector
 			else
 			{
 				layoutEnumerator = GraphLayout<T, P>.Run(graph, layoutType, layoutParams);
-				while (layoutEnumerator.MoveNext());	// iterate until finished
-				layoutEnumerator = null;
 			}
 
 			view = new IMView<T, P>(graph, this);

@@ -63,10 +63,9 @@ namespace RelationsInspector
 
 			entityWidgetType = (EntityWidgetType)GUIUtil.GetPrefsInt(PrefsKeyLayout, (int)defaultWidgetType);
 			InitEntityWidget();
-			
-			// initialize the transform such that it can display the whole graph in the parent rect
-			var entityPositions = graph.VerticesData.Values.Select(v => v.pos);
-			transform = ViewUtil.FitPointsIntoRect(entityPositions, parent.GetViewRect(), 0.3f);
+
+			// make the graph fill the view
+			FitViewRectToGraph();
 		}
 
 		void InitEntityWidget()
@@ -79,6 +78,13 @@ namespace RelationsInspector
 			{
 				edgePlacementProvider = new StraightCirclePlacementProvider();
 			}
+		}
+
+		// set the transform such that it can display the whole graph in the parent rect
+		public void FitViewRectToGraph()
+		{
+			var entityPositions = graph.VerticesData.Values.Select(v => v.pos);
+			transform = ViewUtil.FitPointsIntoRect(entityPositions, parent.GetViewRect(), 0.3f);
 		}
 
 		IEnumerable<Tuple<IEnumerable<Edge<T, P>>, IEnumerable<Edge<T, P>>>> GetEdgesPerEntityPair()

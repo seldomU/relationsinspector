@@ -22,5 +22,6 @@ namespace RelationsInspector
 		void OnRemovedEntity(T entity);
 
 		void SelectEntityNodes(System.Predicate<object> doSelect);
+		void FitViewRectToGraph();
 	}
 }
