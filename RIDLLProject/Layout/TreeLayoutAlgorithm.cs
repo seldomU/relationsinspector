@@ -26,24 +26,26 @@ namespace RelationsInspector
 			if (root == null)
 				yield break;
 
-			graph.SetPos(root, RootPos);
-			PositionChildren(root);
+			var positions = new Dictionary<T, Vector2>();
+			positions[root] = RootPos;
+			PositionChildren(root, positions);
+			yield return positions;
 		}
 
 		// set the positions of the entity's children (recursively), so that they are centered below entity
-		void PositionChildren(T entity)
+		void PositionChildren(T entity, Dictionary<T,Vector2> positions)
 		{
 			var children = graph.GetChildren(entity);
 			var totalWidth = children.Sum( c => GetTreeWidth(c) );
-			Vector2 entityPos = graph.VerticesData[entity].pos;
+			Vector2 entityPos = positions[entity];
 			float xpos = entityPos.x - totalWidth / 2f;
 			float height = entityPos.y + entityHeight;
 			foreach (var child in children)
 			{
 				float childWidth = GetTreeWidth(child);
-				graph.VerticesData[child].pos = new Vector2(xpos + childWidth / 2f, height);
+				positions[child] = new Vector2(xpos + childWidth / 2f, height);
 				xpos += childWidth;
-				PositionChildren(child);
+				PositionChildren(child, positions);
 			}
 		}
 

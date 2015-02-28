@@ -75,8 +75,10 @@ namespace RelationsInspector
 
 		public void Update()
 		{
+			UpdateLayout();
+
 			bool doRepaint = false;
-			doRepaint |= UpdateLayout();
+			doRepaint |= Tweener.IsActive();
 #if DEBUG
 			if (permaRepaint)
 				doRepaint = true;
@@ -85,28 +87,31 @@ namespace RelationsInspector
 				editorWindow.Repaint();
 		}
 
-		bool UpdateLayout()
+		void UpdateLayout()
 		{
 			if (layoutEnumerator == null)
-				return false;
+				return;
 
-			//var previousVertexPositions = graph.GetVertexPositions();
 			if (!layoutEnumerator.MoveNext())
 			{
 				layoutEnumerator = null;
-				return false;
+				return;
 			}
 
-			view.FitViewRectToGraph();
-			return true;
+			var positions = layoutEnumerator.Current as Dictionary<T, Vector2>;
+			foreach (var pair in positions)
+				Tweener.MoveVertexTo<T, P>(graph.VerticesData[pair.Key], pair.Value, 0.4f);
 		}
 
 		public void OnGUI(Rect drawRect)
-		{
+		{					
 			this.drawRect = drawRect;
 
 			if (view != null)
 			{
+				if (Tweener.IsActive())
+					view.FitViewRectToGraph();
+				
 				try
 				{
 					view.Draw();

@@ -12,7 +12,7 @@ namespace RelationsInspector
 		{
 			Rect pointsBounds = Util.GetBounds( points );
 			// make sure the extents are non-zero
-			pointsBounds = pointsBounds.ClampExtents(1, 1, float.MaxValue, float.MaxValue);
+			pointsBounds = pointsBounds.ClampExtents(0.1f, 0.1f, float.MaxValue, float.MaxValue);
 
 			// scale: fit points into outer rect
 			float bestScale = Util.MinScale(pointsBounds.GetExtents(), outerRect.GetExtents());

@@ -15,6 +15,7 @@ namespace RelationsInspector
 		const float gravityStrength = 0.7f;
 
 		Graph<T, P> graph;
+		Dictionary<T, Vector2> positions;
 		Dictionary<T, Vector2> forces;
 		private RNG rng;
 		Vector2 graphCenter;
@@ -23,6 +24,7 @@ namespace RelationsInspector
 		public GraphLayoutAlgorithm(Graph<T, P> graph)
 		{
 			this.graph = graph;
+			positions = graph.GetVertexPositions();
 			forces = new Dictionary<T, Vector2>();
 		}
 
@@ -35,7 +37,7 @@ namespace RelationsInspector
 			{
 				float maxMove = initalMaxMove * ( 1 - ((float)iterationId / (float)numIterations) );
 				RunIteration(maxMove);
-				yield return null;
+				yield return positions;
 			}
 		}
 
@@ -43,16 +45,16 @@ namespace RelationsInspector
 		{
 			rng = new RNG(4);	// chosen by fair dice role. guaranteed to be random.
 
-			foreach (var vertexData in graph.VerticesData.Values)
-				vertexData.pos = new Vector2(rng.Range(0, posInitRange), rng.Range(0, posInitRange));
+			foreach(var vertex in graph.Vertices)
+				positions[vertex] = new Vector2(rng.Range(0, posInitRange), rng.Range(0, posInitRange));
 
 			UpdateCenter();
 		}
 
 		void UpdateCenter()
 		{
-			var posSum = graph.VerticesData.Values.Aggregate(Vector2.zero, (sum, vertex) => sum + vertex.pos);
-			graphCenter = posSum * 1 / graph.VertexCount;
+			var posSum = positions.Values.Aggregate(Vector2.zero, (sum, pos) => sum + pos);
+			graphCenter = posSum * (1 / positions.Count);
 		}
 
 		void RunIteration(float maxMove)
@@ -95,13 +97,8 @@ namespace RelationsInspector
 				if (force.SqrMagnitude() > SqrMaxMove)
 					force *= (maxMove / force.magnitude);
 
-				graph.VerticesData[vertex].pos += force;
+				positions[vertex] += force;
 			}
-
-
-			// apply forces
-			//foreach (var vertex in forces.Keys)
-			//	graph.VerticesData[vertex].pos += forces[vertex];
 
 			UpdateCenter();
 		}
@@ -109,7 +106,7 @@ namespace RelationsInspector
 		// get force repulsing the edge source vertex from the edge target vertex
 		Vector2 GetRepulsion(T source, T target)
 		{
-			Vector2 displacement = graph.GetPos(target) - graph.GetPos(source);
+			Vector2 displacement = positions[target] - positions[source];
 			if (displacement == Vector2.zero)
 				displacement = minimalDisplacement;
 
@@ -123,7 +120,7 @@ namespace RelationsInspector
 		// get force attracting the edge source vertex to the edge target vertex
 		Vector2 GetAttraction(Edge<T, P> edge)
 		{
-			Vector2 displacement = graph.GetPos(edge.Target) - graph.GetPos(edge.Source);
+			Vector2 displacement = positions[edge.Target] - positions[edge.Source];
 			float distance = Mathf.Max(displacement.magnitude, Mathf.Epsilon);	// avoid division by 0
 			Vector2 direction = displacement / distance;
 
@@ -133,7 +130,7 @@ namespace RelationsInspector
 
 		Vector2 GetGravity(T vertex)
 		{
-			Vector2 displacement = graphCenter - graph.GetPos(vertex);
+			Vector2 displacement = graphCenter - positions[vertex];
 			float distance = Mathf.Max(displacement.magnitude, Mathf.Epsilon);	// avoid division by 0
 			Vector2 direction = displacement / distance;
 
