@@ -444,7 +444,10 @@ namespace RelationsInspector
 					break;
 
 				case EventType.ScrollWheel:
-					Zoom(ev.delta.y > 0, ev.mousePosition);
+					bool zoomIn = ev.delta.y > 0;
+					//transform = Zoom(transform, zoomIn, ev.mousePosition);
+					Tweener.gen.MoveTransform2dTo(transform, t => Zoom(t, zoomIn, ev.mousePosition) , 0.1f, TweenCollisionHandling.Stack);
+
 					ev.Use();
 					parent.RepaintView();
 					break;
@@ -463,15 +466,17 @@ namespace RelationsInspector
 			return true;
 		}
 
-		void Zoom(bool zoomIn, Vector2 fixPosition)
+		static Transform2d Zoom(Transform2d transform, bool zoomIn, Vector2 fixPosition)
 		{
 			// adjust the offset such that the window stays centered on the same graph position
 			var fixPositionBase = transform.Revert(fixPosition);
 
-			transform.scale *= zoomIn ? 3f / 2 : 2f / 3;
+			var targetTransform = new Transform2d(transform);
+			targetTransform.scale *= zoomIn ? 3f / 2 : 2f / 3;
 
-			var newfixPosition = transform.Apply(fixPositionBase);
-			transform.translation += fixPosition - newfixPosition;
+			var newfixPosition = targetTransform.Apply(fixPositionBase);
+			targetTransform.translation += fixPosition - newfixPosition;
+			return targetTransform;
 		}
 
 		void Shift(Vector2 delta)

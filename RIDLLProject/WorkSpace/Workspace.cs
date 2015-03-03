@@ -23,6 +23,7 @@ namespace RelationsInspector
 		LayoutType layoutType;
 		LayoutType defaultLayoutType = LayoutType.Graph;
 		HashSet<T> rootEntities;
+		TweenCollection graphPosTweens;
 
 		static Dictionary<LayoutType, GUIContent> layoutButtonContent = new Dictionary<LayoutType, GUIContent>()
 		{
@@ -45,6 +46,7 @@ namespace RelationsInspector
 			this.debugSettings = ScriptableObject.CreateInstance<DebugSettings>();
 			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);
 			rootEntities = new HashSet<T>();
+			graphPosTweens = new TweenCollection();
 
 			InitGraph(targets);
 		}
@@ -76,9 +78,11 @@ namespace RelationsInspector
 		public void Update()
 		{
 			UpdateLayout();
+			graphPosTweens.Update();
 
 			bool doRepaint = false;
-			doRepaint |= Tweener.IsActive();
+			doRepaint |= !graphPosTweens.IsExpired();
+			doRepaint |= !Tweener.gen.IsExpired();
 #if DEBUG
 			if (permaRepaint)
 				doRepaint = true;
@@ -100,7 +104,7 @@ namespace RelationsInspector
 
 			var positions = layoutEnumerator.Current as Dictionary<T, Vector2>;
 			foreach (var pair in positions)
-				Tweener.MoveVertexTo<T, P>(graph.VerticesData[pair.Key], pair.Value, 0.4f);
+				graphPosTweens.MoveVertexTo<T, P>(graph.VerticesData[pair.Key], pair.Value, 0.4f);
 		}
 
 		public void OnGUI(Rect drawRect)
@@ -109,7 +113,7 @@ namespace RelationsInspector
 
 			if (view != null)
 			{
-				if (Tweener.IsActive())
+				if (!graphPosTweens.IsExpired())
 					view.FitViewRectToGraph();
 				
 				try

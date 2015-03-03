@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections;
 using RelationsInspector;
 
-public class TestWindow : EditorWindow
+public class TweenerTest : EditorWindow
 {
 	RectObj rectObj = new RectObj(new Rect(20, 30, 30, 30));
 
@@ -16,7 +16,8 @@ public class TestWindow : EditorWindow
 		if (Event.current.type == EventType.mouseDown)
 		{
 			// tween the rectObj
-			Tweener.MoveRectTo(rectObj, Event.current.mousePosition, 1f);
+			Tweener.gen.MoveRectTo(rectObj, Event.current.mousePosition, 1f);
+			Debug.Log("moving");
 		}
 	}
 
@@ -25,9 +26,15 @@ public class TestWindow : EditorWindow
 		Repaint();
 	}
 
-	[MenuItem("Window/test")]
+	[MenuItem("Window/tween/test")]
 	static void Spawn()
 	{
-		GetWindow<TestWindow>();
+		GetWindow<TweenerTest>();
+	}
+
+	[MenuItem("Window/tween/circleTest")]
+	static void SpawnCircleTest()
+	{
+		GetWindow<TweenCircleTest>();
 	}
 }

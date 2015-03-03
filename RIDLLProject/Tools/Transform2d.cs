@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using RelationsInspector.Extensions;
 
@@ -17,6 +17,13 @@ namespace RelationsInspector
 			this.translation = translation;
 			this.scale = scale;
 			this.rotation = rotation;
+		}
+
+		public Transform2d(Transform2d other)
+		{
+			this.translation = other.translation;
+			this.scale = other.scale;
+			this.rotation = other.rotation;
 		}
 
 		public Vector2 Apply(Vector2 source)
