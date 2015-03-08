@@ -125,6 +125,8 @@
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\EdgeDrawer\BezierRelationDrawer\BezierRelationDrawer.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\EdgeDrawer\FunkyRelationDrawer\NearestCornerRelationDrawer.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\EdgeDrawer\TexturedRelationDrawer\StraightLineTextureRelation.cs" />
+    <Compile Include="Assets\RelationsInspectorUserLand\Editor\Food\FoodBackend.cs" />
+    <Compile Include="Assets\RelationsInspectorUserLand\Editor\Food\FoodItem.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\GameObjectHierarchy\GameObjectHierarchyBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\ObjectDependency\Data\TestBehaviour.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\ObjectDependency\FileIdHelper.cs" />
