@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using RelationsInspector.Extensions;
+using RelationsInspector.Tween;
 using Type = System.Type;
 using System.Collections;
 

@@ -1,3 +1,4 @@
+/*
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
@@ -87,3 +88,4 @@ public class TweenCircleTest : EditorWindow
 		GetWindow<TweenCircleTest>();
 	}
 }
+*/

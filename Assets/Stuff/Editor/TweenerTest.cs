@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+/*
+using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using RelationsInspector;
@@ -38,3 +39,4 @@ public class TweenerTest : EditorWindow
 		GetWindow<TweenCircleTest>();
 	}
 }
+*/

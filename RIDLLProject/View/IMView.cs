@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using RelationsInspector.Extensions;
+using RelationsInspector.Tween;
 
 namespace RelationsInspector
 {
@@ -46,6 +47,10 @@ namespace RelationsInspector
 		// rect selection
 		Vector2 selectionRectOrigin;
 		bool selectionRectActive;
+
+#if DEBUG
+		bool showScale;
+#endif
 
 		public IMView(Graph<T,P> graph, IViewParent<T, P> parent )
 		{
@@ -146,6 +151,13 @@ namespace RelationsInspector
 				InitEntityWidget();
 				parent.RepaintView();
 			}
+#if DEBUG
+			showScale = GUILayout.Toggle(showScale, "showScale");
+			if (showScale)
+			{
+				GUILayout.Label(transform.scale.ToString());
+			}
+#endif
 		}
 
 		public void Draw( )
@@ -445,8 +457,8 @@ namespace RelationsInspector
 
 				case EventType.ScrollWheel:
 					bool zoomIn = ev.delta.y > 0;
-					//transform = Zoom(transform, zoomIn, ev.mousePosition);
-					Tweener.gen.MoveTransform2dTo(transform, t => Zoom(t, zoomIn, ev.mousePosition) , 0.1f, TweenCollisionHandling.Stack);
+					var zoomedTransform =  Zoom(transform, zoomIn, ev.mousePosition);
+					Tweener.gen.MoveTransform2dTo(transform, zoomedTransform, 0.1f);
 
 					ev.Use();
 					parent.RepaintView();

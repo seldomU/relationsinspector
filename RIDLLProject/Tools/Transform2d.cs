@@ -26,6 +26,13 @@ namespace RelationsInspector
 			this.rotation = other.rotation;
 		}
 
+		public static void Copy(Transform2d from, Transform2d to)
+		{
+			to.translation	= from.translation;
+			to.scale		= from.scale;
+			to.rotation		= from.rotation;
+		}
+
 		public Vector2 Apply(Vector2 source)
 		{
 			return new Vector2(source.x * scale.x + translation.x, source.y * scale.y + translation.y);
