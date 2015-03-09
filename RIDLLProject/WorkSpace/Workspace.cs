@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using RelationsInspector.Extensions;
 using RelationsInspector.Tween;
 using Type = System.Type;
+using Stopwatch = System.Diagnostics.Stopwatch;
 using System.Collections;
 
 namespace RelationsInspector
@@ -25,6 +26,13 @@ namespace RelationsInspector
 		LayoutType defaultLayoutType = LayoutType.Graph;
 		HashSet<T> rootEntities;
 		TweenCollection graphPosTweens;
+
+		//layout
+		Stopwatch layoutTimer = new Stopwatch();
+		float nextVertexPosTweenUpdate;
+		const float maxFrameDuration = 0.004f;	// seconds
+		const float vertexPosTweenDuration = 0.4f; // seconds
+		const float vertexPosTweenUpdateInterval = 0.25f; // seconds
 
 		static Dictionary<LayoutType, GUIContent> layoutButtonContent = new Dictionary<LayoutType, GUIContent>()
 		{
@@ -97,15 +105,26 @@ namespace RelationsInspector
 			if (layoutEnumerator == null)
 				return;
 
-			if (!layoutEnumerator.MoveNext())
+			layoutTimer.Reset();
+			layoutTimer.Start();
+			bool generatorActive;
+			do
 			{
-				layoutEnumerator = null;
-				return;
-			}
+				generatorActive = layoutEnumerator.MoveNext();
+			} while (generatorActive && (layoutTimer.ElapsedTicks/(float)Stopwatch.Frequency) < maxFrameDuration);
 
 			var positions = layoutEnumerator.Current as Dictionary<T, Vector2>;
-			foreach (var pair in positions)
-				graphPosTweens.MoveVertexTo<T, P>(graph.VerticesData[pair.Key], pair.Value, 0.4f, true);
+			bool gotFinalPositions = !generatorActive;
+			if (!generatorActive)
+				layoutEnumerator = null;
+
+			var time = EditorApplication.timeSinceStartup;
+			if (gotFinalPositions || time > nextVertexPosTweenUpdate)
+			{
+				nextVertexPosTweenUpdate = (float)time + vertexPosTweenUpdateInterval;
+				foreach (var pair in positions)
+					graphPosTweens.MoveVertexTo<T, P>(graph.VerticesData[pair.Key], pair.Value, vertexPosTweenDuration, false);
+			}
 		}
 
 		public void OnGUI(Rect drawRect)
