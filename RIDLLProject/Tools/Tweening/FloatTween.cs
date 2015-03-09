@@ -3,17 +3,67 @@ using System;
 
 namespace RelationsInspector.Tween
 {
-	public interface IFloatInterpolation
+	public class RectObj
 	{
-		float Eval(float time);
+		public Rect rect;
+		public RectObj(Rect rect) { this.rect = rect; }
 	}
 
-	public class TwoValueInterpolation : IFloatInterpolation
+	public class RectObjTween : ITween
+	{
+		RectObj obj;
+		Vector2Tween posTween;
+		float endTime;
+
+		// move from current to target position
+		public RectObjTween(RectObj rectObj, Vector2 targetPosition, float duration, Easing2 func)
+		{
+			float time = (float)UnityEditor.EditorApplication.timeSinceStartup;
+			endTime = time + duration;
+
+			this.obj = rectObj;
+			this.posTween = new Vector2Tween(rectObj.rect.center, targetPosition, time, endTime, func);
+		}
+
+		// move from current to target position, while taking the previous target into account (e.g. bezier)
+		public RectObjTween(RectObj rectObj, RectObjTween predecessor, Vector2 targetPosition, float duration, Easing3 func)
+		{
+			float time = (float)UnityEditor.EditorApplication.timeSinceStartup;
+			endTime = time + duration;
+
+			this.obj = rectObj;
+			var pos1 = rectObj.rect.center;
+			var pos2 = predecessor.posTween.endValue;
+			var pos3 = targetPosition;
+			this.posTween = new Vector2Tween(pos1, pos2, pos3, time, endTime, func);
+		}
+
+		public void Update(float time)
+		{
+			obj.rect.center = posTween.GetUpdated(time);
+		}
+
+		public bool IsExpired(float time)
+		{
+			return time > endTime;
+		}
+	}
+
+	public delegate float Easing2(float a, float b, float time);
+	public delegate float Easing3(float a, float b, float c, float time);
+	
+	public interface IFloatEasing
+	{
+		float Eval(float time);
+		float GetEndValue();
+	}
+
+	public class TwoValueEasing : IFloatEasing
 	{
 		float a, b;
-		Func<float, float, float, float> func;
+		Easing2 func;
 
-		public TwoValueInterpolation(float a, float b, Func<float, float, float, float> func)
+		public TwoValueEasing(float a, float b, Easing2 func)
 		{
 			this.a = a;
 			this.b = b;
@@ -24,14 +74,19 @@ namespace RelationsInspector.Tween
 		{
 			return func(a, b, t);
 		}
+
+		public float GetEndValue()
+		{
+			return b;
+		}
 	}
 
-	public class ThreeValueInterpolation : IFloatInterpolation
+	public class ThreeValueEasing : IFloatEasing
 	{
 		float a, b, c;
-		Func<float, float, float, float, float> func;
+		Easing3 func;
 
-		public ThreeValueInterpolation(float a, float b, float c, Func<float, float, float, float, float> func)
+		public ThreeValueEasing(float a, float b, float c, Easing3 func)
 		{
 			this.a = a;
 			this.b = b;
@@ -43,14 +98,20 @@ namespace RelationsInspector.Tween
 		{
 			return func(a, b, c, t);
 		}
+
+		public float GetEndValue()
+		{
+			return c;
+		}
 	}
 
 	public class FloatTween
 	{
-		float startTime, duration;
-		IFloatInterpolation interpolation;
+		float startTime;
+		float duration;
+		IFloatEasing interpolation;
 
-		public FloatTween(float startTime, float duration, IFloatInterpolation interpolation)
+		public FloatTween(float startTime, float duration, IFloatEasing interpolation)
 		{
 			this.startTime = startTime;
 			this.duration = duration;
@@ -91,14 +152,26 @@ namespace RelationsInspector.Tween
 
 	public class Vector2Tween
 	{
-		FloatTween xTween, yTween;
-		Vector2 current;
+		FloatTween xTween;
+		FloatTween yTween;
+		public Vector2 endValue { get; private set; }
 
-		public Vector2Tween(Vector2 startValue, float startTime, Vector2 endValue, float endTime)
+		public Vector2Tween(Vector2 startValue, Vector2 endValue, float startTime, float endTime, Easing2 func)
 		{
-			var xInterpolation = new TwoValueInterpolation(startValue.x, endValue.x, TweenUtil.Linear);
-			var yInterpolation = new TwoValueInterpolation(startValue.y, endValue.y, TweenUtil.Linear);
+			var xInterpolation = new TwoValueEasing(startValue.x, endValue.x, func);
+			var yInterpolation = new TwoValueEasing(startValue.y, endValue.y, func);
+			this.endValue = endValue;
             float duration = endTime - startTime;
+			xTween = new FloatTween(startTime, duration, xInterpolation);
+			yTween = new FloatTween(startTime, duration, yInterpolation);
+		}
+
+		public Vector2Tween(Vector2 pos1, Vector2 pos2, Vector2 pos3, float startTime, float endTime, Easing3 func)
+		{
+			var xInterpolation = new ThreeValueEasing(pos1.x, pos2.x, pos3.x, func);
+			var yInterpolation = new ThreeValueEasing(pos1.y, pos2.y, pos3.y, func);
+			this.endValue = pos3;
+			float duration = endTime - startTime;
 			xTween = new FloatTween(startTime, duration, xInterpolation);
 			yTween = new FloatTween(startTime, duration, yInterpolation);
 		}

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,11 +120,19 @@ namespace RelationsInspector.Tween
 		}
 
 
-		/*public ITween MoveRectTo(RectObj rectObj, Vector2 targetPosition, float duration)
+		public ITween MoveRectTo(RectObj rectObj, Vector2 targetPosition, float duration, bool merge)
 		{
-			objTweens[rectObj] = new RectObjTween(rectObj, targetPosition, duration);
+			if (merge && objTweens.ContainsKey(rectObj))
+			{
+				var predecessor = objTweens[rectObj] as RectObjTween;
+				objTweens[rectObj] = new RectObjTween(rectObj, predecessor, targetPosition, duration, TweenUtil.BezierQuadratic);
+			}
+			else
+			{
+				objTweens[rectObj] = new RectObjTween(rectObj, targetPosition, duration, TweenUtil.Linear);
+			}
 			return objTweens[rectObj];
-		}*/
+		}
 	}
 
 }

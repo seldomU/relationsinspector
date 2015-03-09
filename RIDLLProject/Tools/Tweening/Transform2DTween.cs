@@ -19,9 +19,9 @@ namespace RelationsInspector.Tween
 			float time = (float)EditorApplication.timeSinceStartup;
 			endTime = time + duration;
 
-			scaleTween = new Vector2Tween(transform.scale, time, endValue.scale, endTime);
-			translationTween = new Vector2Tween(transform.translation, time, endValue.translation, endTime);
-			rotationTween = new FloatTween(time, endTime, new TwoValueInterpolation(transform.rotation, endValue.rotation, TweenUtil.Linear));
+			scaleTween = new Vector2Tween(transform.scale, endValue.scale, time, endTime, TweenUtil.Linear);
+			translationTween = new Vector2Tween(transform.translation, endValue.translation, time, endTime, TweenUtil.Linear);
+			rotationTween = new FloatTween(time, endTime, new TwoValueEasing(transform.rotation, endValue.rotation, TweenUtil.Linear));
 		}
 
 		public void Update(float time)

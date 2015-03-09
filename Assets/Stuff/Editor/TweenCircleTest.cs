@@ -1,8 +1,9 @@
-/*
+
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using RelationsInspector;
+using RelationsInspector.Tween;
 
 public class TweenCircleTest : EditorWindow
 {
@@ -72,7 +73,7 @@ public class TweenCircleTest : EditorWindow
 			if (time >= lastTargetSetTime + updateTargetInterval)
 			{
 				int targetID = lastTargetSet + 1;
-				Tweener.gen.MoveRectTo(rectObj, targets[targetID], tweenDuration);
+				Tweener.gen.MoveRectTo(rectObj, targets[targetID], tweenDuration, true);
 
 				lastTargetSetTime = (float)time;
 				lastTargetSet = targetID;
@@ -88,4 +89,3 @@ public class TweenCircleTest : EditorWindow
 		GetWindow<TweenCircleTest>();
 	}
 }
-*/

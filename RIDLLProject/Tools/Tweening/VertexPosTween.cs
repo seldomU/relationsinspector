@@ -15,7 +15,7 @@ namespace RelationsInspector.Tween
 			endTime = time + duration;
 
 			this.obj = vData;
-			this.posTween = new Vector2Tween(vData.pos, time, targetPosition, endTime);
+			this.posTween = new Vector2Tween(vData.pos, targetPosition, time, endTime, TweenUtil.Linear);
 		}
 
 		public void Update(float time)

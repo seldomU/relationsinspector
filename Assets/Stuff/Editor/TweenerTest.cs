@@ -1,8 +1,9 @@
-/*
+
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using RelationsInspector;
+using RelationsInspector.Tween;
 
 public class TweenerTest : EditorWindow
 {
@@ -17,7 +18,7 @@ public class TweenerTest : EditorWindow
 		if (Event.current.type == EventType.mouseDown)
 		{
 			// tween the rectObj
-			Tweener.gen.MoveRectTo(rectObj, Event.current.mousePosition, 1f);
+			Tweener.gen.MoveRectTo(rectObj, Event.current.mousePosition, 1f, true);
 			Debug.Log("moving");
 		}
 	}
@@ -39,4 +40,4 @@ public class TweenerTest : EditorWindow
 		GetWindow<TweenCircleTest>();
 	}
 }
-*/
+
