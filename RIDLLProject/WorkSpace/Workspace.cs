@@ -105,7 +105,7 @@ namespace RelationsInspector
 
 			var positions = layoutEnumerator.Current as Dictionary<T, Vector2>;
 			foreach (var pair in positions)
-				graphPosTweens.MoveVertexTo<T, P>(graph.VerticesData[pair.Key], pair.Value, 0.4f);
+				graphPosTweens.MoveVertexTo<T, P>(graph.VerticesData[pair.Key], pair.Value, 0.4f, true);
 		}
 
 		public void OnGUI(Rect drawRect)

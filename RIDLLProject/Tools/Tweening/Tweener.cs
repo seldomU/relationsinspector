@@ -28,8 +28,6 @@ namespace RelationsInspector.Tween
 		}
 	}
 
-	public enum TweenCollisionHandling { Stack, Replace, Drop };
-
 	/*
 	public class RectObj
 	{

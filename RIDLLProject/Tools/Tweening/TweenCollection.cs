@@ -51,74 +51,43 @@ namespace RelationsInspector.Tween
 			VertexData<T, P> vertexData,
 			Vector2 targetPosition,
 			float duration,
-			TweenCollisionHandling collisionHandling = TweenCollisionHandling.Replace
+			bool merge
 			) where T : class
 		{
-			objTweens[vertexData] = new VertexPosTween<T, P>(vertexData, targetPosition, duration);
-			return objTweens[vertexData];
-			/*
-			if (objTweens.ContainsKey(vertexData))
+			if (merge && objTweens.ContainsKey(vertexData))
 			{
-				switch (collisionHandling)
-				{
-					case TweenCollisionHandling.Replace:
-						objTweens[vertexData] = tween;
-						break;
-					case TweenCollisionHandling.Stack:
-						objTweens[vertexData].Stack(tween);
-						break;
-					case TweenCollisionHandling.Drop:
-					default:
-						break;
-				}
+				var predecessor = objTweens[vertexData] as VertexPosTween<T, P>;
+				objTweens[vertexData] = new VertexPosTween<T, P>(vertexData, predecessor, targetPosition, duration);
 			}
 			else
 			{
-				objTweens[vertexData] = tween;
+				objTweens[vertexData] = new VertexPosTween<T, P>(vertexData, targetPosition, duration);
 			}
-
 			return objTweens[vertexData];
-			*/
 		}
 
 		public ITween MoveTransform2dTo
 			(
 			Transform2d transform,
-			Transform2d endValue,
+			//Transform2d endValue,
+			Transform2DTween.GetEndValue getEndValue,
 			float duration,
-			TweenCollisionHandling collisionHandling = TweenCollisionHandling.Replace
+			bool merge
 			)
 		{
-			objTweens[transform] = new Transform2DTween(transform, endValue, duration);
-			return objTweens[transform];
-
-			/*
-			if (objTweens.ContainsKey(transform))
+			if (merge && objTweens.ContainsKey(transform))
 			{
-				switch (collisionHandling)
-				{
-					case TweenCollisionHandling.Replace:
-						objTweens[transform] = new Transform2DTween(transform, endValue, duration);
-						break;
-					case TweenCollisionHandling.Stack:
-						// copy the tween's current state to transform
-						Transform2d.Copy((objTweens[transform] as Transform2DTween).GetCurrent(), transform);
-						objTweens[transform] = new Transform2DTween(transform, endValue, duration);
-						break;
-					case TweenCollisionHandling.Drop:
-					default:
-						break;
-				}
+				var predecessor = objTweens[transform] as Transform2DTween;
+				var endValue = getEndValue(predecessor.endValue);
+				objTweens[transform] = new Transform2DTween(transform, predecessor, endValue, duration);
 			}
 			else
 			{
-				objTweens[transform] = new Transform2DTween(transform, endValue, duration);
+				objTweens[transform] = new Transform2DTween(transform, getEndValue(transform), duration);
 			}
 
 			return objTweens[transform];
-			*/
 		}
-
 
 		public ITween MoveRectTo(RectObj rectObj, Vector2 targetPosition, float duration, bool merge)
 		{
