@@ -249,8 +249,6 @@ namespace RelationsInspector
 			if (selectionRectActive)
 			{
 				var rect = Util.GetBounds( new[] { Event.current.mousePosition, selectionRectOrigin } );
-				var color = parent.GetSkin().windowColor;
-				color.a *= 0.5f;
 				if (Event.current.type == EventType.Repaint)
 					GUI.skin.GetStyle("SelectionRect").Draw(rect, GUIContent.none, false, false, false, false);
 			}
