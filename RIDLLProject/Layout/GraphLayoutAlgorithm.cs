@@ -53,6 +53,9 @@ namespace RelationsInspector
 
 		void UpdateCenter()
 		{
+			if (!positions.Any())
+				return;
+
 			var posSum = positions.Values.Aggregate(Vector2.zero, (sum, pos) => sum + pos);
 			graphCenter = posSum * (1 / positions.Count);
 		}
