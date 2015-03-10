@@ -122,8 +122,15 @@ namespace RelationsInspector
 			if (gotFinalPositions || time > nextVertexPosTweenUpdate)
 			{
 				nextVertexPosTweenUpdate = (float)time + vertexPosTweenUpdateInterval;
-				foreach (var pair in positions)
-					graphPosTweens.MoveVertexTo<T, P>(graph.VerticesData[pair.Key], pair.Value, vertexPosTweenDuration, false);
+				if( positions != null)
+				{
+					foreach (var pair in positions)
+					{
+						VertexData<T, P> vData = null;
+						if( graph.VerticesData.TryGetValue(pair.Key, out vData) )
+							graphPosTweens.MoveVertexTo<T, P>(vData, pair.Value, vertexPosTweenDuration, false);
+					}
+				}
 			}
 		}
 
