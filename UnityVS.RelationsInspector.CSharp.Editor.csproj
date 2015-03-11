@@ -224,6 +224,7 @@
     <Compile Include="Assets\UnityTestTools\UnitTesting\Editor\UnityUnitTest.cs" />
     <None Include="Assets\RelationsInspector\Editor\README.txt" />
     <None Include="Assets\RelationsInspectorUserLand\Editor\Reward\Tutorial.txt" />
+    <None Include="Assets\RelationsInspectorUserLand\Editor\RogueLikeItemTree\Icons\license.txt.txt" />
     <None Include="Assets\UnityTestTools\changelog.txt" />
     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\AngryInclude.cginc" />
     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\CharacterSelfIlluminationReflective.shader" />
