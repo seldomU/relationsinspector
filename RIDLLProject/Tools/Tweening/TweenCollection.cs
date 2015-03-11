@@ -23,8 +23,13 @@ namespace RelationsInspector.Tween
 
 			// remove them
 			if (expired.Any())
+			{
 				foreach (var exp in expired.ToArray())
+				{
+					objTweens[exp].Finish();
 					objTweens.Remove(exp);
+				}
+			}
 
 			// update the remaining
 			foreach (var tween in objTweens.Values)

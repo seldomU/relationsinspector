@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 
 namespace RelationsInspector.Tween
@@ -41,6 +41,11 @@ namespace RelationsInspector.Tween
 		public bool IsExpired(float time)
 		{
 			return time > endTime;
+		}
+
+		public void Finish()
+		{
+			Update(endTime);
 		}
 	}
 }

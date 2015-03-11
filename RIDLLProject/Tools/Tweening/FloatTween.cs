@@ -47,6 +47,11 @@ namespace RelationsInspector.Tween
 		{
 			return time > endTime;
 		}
+
+		public void Finish()
+		{
+			Update(endTime);
+		}
 	}
 
 	public delegate float Easing2(float a, float b, float time);

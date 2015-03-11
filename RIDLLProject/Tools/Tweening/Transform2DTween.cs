@@ -72,5 +72,10 @@ namespace RelationsInspector.Tween
 		{
 			return time > endTime;
 		}
+
+		public void Finish()
+		{
+			Update(endTime);
+		}
 	}
 }
