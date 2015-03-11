@@ -16,7 +16,7 @@ namespace RelationsInspector
 		GraphWithRoots<T,P> graph;
 		IGraphView<T,P> view;
 		LayoutParams layoutParams;
-		RelationsInspectorWindow editorWindow;	// parent window (for BeginWindows() and EndWindows())
+		RelationsInspectorWindow editorWindow;	// parent window
 		IGraphBackend<T,P> graphBackend;
 		DebugSettings debugSettings;
 		Rect minimapRect = new Rect(30, 30, 100, 100);
