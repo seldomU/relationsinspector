@@ -18,3 +18,6 @@ content on the web:
 		http://forum.unity3d.com/threads/2d-roguelike-q-a.297180/#post-1973681
 		https://www.youtube.com/watch?v=lE5_2n6x4V0
 		I:\code\NeoScavengers
+
+	Smooth transitions:
+		http://youtu.be/QOd9LDMWyiQ
