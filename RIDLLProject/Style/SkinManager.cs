@@ -13,26 +13,26 @@ namespace RelationsInspector
 		static string LightSkinPath = Path.Combine(ProjectSettings.ResourcesPath, lightSkinName + ".asset");
 		static string DarkSkinPath = Path.Combine(ProjectSettings.ResourcesPath, darkSkinName + ".asset");
 
-		static RelationInspectorSkin LightSkin = LoadSkin(light: true);
-		static RelationInspectorSkin DarkSkin = LoadSkin(light: false);
+		static RelationInspectorSkin LightSkin = LoadSkin(lightSkin: true);
+		static RelationInspectorSkin DarkSkin = LoadSkin(lightSkin: false);
 
 		public static RelationInspectorSkin GetSkin()
 		{
 			return EditorGUIUtility.isProSkin ? DarkSkin : LightSkin;
 		}
 
-		public static RelationInspectorSkin LoadSkin(bool light)
+		public static RelationInspectorSkin LoadSkin(bool lightSkin)
 		{
-			bool useDarkSkin = !light;
-			string path = useDarkSkin ? DarkSkinPath : LightSkinPath;
+			string path = lightSkin ? LightSkinPath : DarkSkinPath;
+			path = path.Replace('\\', '/');
 			if (File.Exists(path))
 				return Util.LoadAsset<RelationInspectorSkin>(path);
 
 			var skin = ScriptableObject.CreateInstance<RelationInspectorSkin>();
-			if (useDarkSkin)
-				PopulateDarkSkinAsset(skin);
-			else
+			if (lightSkin)
 				PopulateLightSkinAsset(skin);
+			else
+				PopulateDarkSkinAsset(skin);		
 
 			UnityEditor.AssetDatabase.CreateAsset(skin, path);
 			UnityEditor.AssetDatabase.SaveAssets();
