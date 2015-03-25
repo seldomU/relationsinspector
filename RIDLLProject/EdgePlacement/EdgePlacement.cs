@@ -3,6 +3,8 @@ using System.Collections;
 
 namespace RelationsInspector
 {
+	public delegate EdgePlacement EdgePlacementProvider(Rect sourceRect, Rect targetRect, float gapSize);
+	
 	public struct EdgePlacement
 	{
 		public Vector2 startPos;

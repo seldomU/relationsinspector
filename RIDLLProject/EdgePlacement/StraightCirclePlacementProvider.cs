@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 namespace RelationsInspector
 {
-	public class StraightCirclePlacementProvider : IEdgePlacementProvider
+	public class StraightCirclePlacementProvider
 	{
-		public EdgePlacement GetEdgePlacement(Rect sourceRect, Rect targetRect, float gapSize)
+		public static EdgePlacement GetEdgePlacement(Rect sourceRect, Rect targetRect, float gapSize)
 		{
 			if (sourceRect == targetRect)
 				return GetSelfEdgePlacement(sourceRect);

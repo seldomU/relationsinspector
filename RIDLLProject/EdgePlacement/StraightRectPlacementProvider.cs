@@ -3,11 +3,11 @@ using System.Collections;
 
 namespace RelationsInspector
 {
-	public class StraightRectPlacementProvider : IEdgePlacementProvider
+	public class StraightRectPlacementProvider
 	{
 		static float selfEdgeOffset = 10;	// edge anchor distances from rect corner
 
-		public EdgePlacement GetEdgePlacement(Rect sourceRect, Rect targetRect, float gapSize)
+		public static EdgePlacement GetEdgePlacement(Rect sourceRect, Rect targetRect, float gapSize)
 		{
 			if (sourceRect == targetRect)
 				return GetSelfEdgePlacement(sourceRect);

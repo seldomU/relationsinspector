@@ -51,7 +51,7 @@ namespace RelationsInspector
 		Dictionary<Edge<T, P>, Rect> edgeMarkerBounds;
 
 		IRelationDrawer<T,P> tagDrawer;
-		IEdgePlacementProvider edgePlacementProvider;
+		EdgePlacementProvider getEdgePlacement;
 		float edgeGapSize = 4;	// size of the gap between entity drawer bounds and edge
 
 		T draggedEntity;
@@ -98,13 +98,14 @@ namespace RelationsInspector
 
 		void InitEntityWidget()
 		{
-			if (entityWidgetType == EntityWidgetType.Rect)
+			switch (entityWidgetType)
 			{
-				edgePlacementProvider = new StraightRectPlacementProvider();
-			}
-			else
-			{
-				edgePlacementProvider = new StraightCirclePlacementProvider();
+				case EntityWidgetType.Rect:
+					getEdgePlacement = StraightRectPlacementProvider.GetEdgePlacement;
+					break;
+				default:
+					getEdgePlacement = StraightCirclePlacementProvider.GetEdgePlacement;
+					break;
 			}
 		}
 
@@ -264,7 +265,7 @@ namespace RelationsInspector
 				bool isSelfEdge = sourceRect.Contains(Event.current.mousePosition);
 				var targetRect = isSelfEdge ? sourceRect : fakeTargetRect;
 
-				var placement = edgePlacementProvider.GetEdgePlacement(sourceRect, targetRect, edgeGapSize);
+				var placement = getEdgePlacement(sourceRect, targetRect, edgeGapSize);
 				tagDrawer.DrawPseudoRelation(placement, isSelfEdge, relationDrawerStyle);
 			}
 
@@ -326,9 +327,10 @@ namespace RelationsInspector
 			if (!entityDrawerBounds.ContainsKey(edge.Source) || !entityDrawerBounds.ContainsKey(edge.Target))
 				throw new System.ArgumentException("missing bounds for edge vertices");
 
+
 			var sourceBounds = entityDrawerBounds[edge.Source];
 			var targetBounds = entityDrawerBounds[edge.Target];
-			return edgePlacementProvider.GetEdgePlacement(sourceBounds, targetBounds, edgeGapSize);
+			return getEdgePlacement(sourceBounds, targetBounds, edgeGapSize);
 		}
 
 		public IMViewItem<T, P> GetItemAtPosition(Vector2 position)

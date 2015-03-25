@@ -64,7 +64,6 @@
     <Compile Include="RelationDrawer\BasicRelation.cs" />
     <Compile Include="RelationDrawer\RelationDrawUtil.cs" />
     <Compile Include="EdgePlacement\EdgePlacement.cs" />
-    <Compile Include="EdgePlacement\IEdgePlacementProvider.cs" />
     <Compile Include="EdgePlacement\StraightCirclePlacementProvider.cs" />
     <Compile Include="EdgePlacement\StraightRectPlacementProvider.cs" />
     <Compile Include="Graph\Edge.cs" />
