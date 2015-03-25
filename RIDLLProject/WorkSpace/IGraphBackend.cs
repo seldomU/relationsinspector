@@ -18,6 +18,7 @@ namespace RelationsInspector
 		Rect OnGUI();
 
 		string GetTooltip(T entity);
+		string GetTooltip(P tag);
 		Rect DrawContent(T entity, EntityDrawContext drawContext);
 
 		void OnEntityContextClick(IEnumerable<T> entities);

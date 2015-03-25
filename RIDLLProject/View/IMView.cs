@@ -19,6 +19,29 @@ namespace RelationsInspector
 		public EntityWidgetStyle style;
 	}
 
+	internal class IMViewItem<T, P> where T : class
+	{
+		enum Type { Entity, Tag };
+		Type type;
+		public T entity { get; private set; }
+		public P tag { get; private set; }
+
+		public bool IsTag { get { return type == Type.Tag; } }
+		public bool IsEntity { get { return type == Type.Entity; } }
+
+		internal IMViewItem(T entity)
+		{
+			this.entity = entity;
+			this.type = Type.Entity;
+		}
+
+		internal IMViewItem(P tag)
+		{
+			this.tag = tag;
+			this.type = Type.Tag;
+		}
+	}
+
 	// Stores its own version of the graph. Handles entity- and tag drawing and transformations.
 	internal class IMView<T, P> : IGraphView<T, P> where T : class
 	{
@@ -36,7 +59,7 @@ namespace RelationsInspector
 		HashSet<T> dragEdgeSource;
 		P dragEdgeTag;
 		IViewParent<T, P> parent;
-		T hoverEntity;
+		IMViewItem<T,P> hoverItem;
 
 		EntityWidgetType entityWidgetType;
 		const string PrefsKeyLayout = "IMViewLayout";
@@ -125,16 +148,16 @@ namespace RelationsInspector
 
 			dragEdgeSource.Remove(entity);
 
-			if (hoverEntity == entity)
-				hoverEntity = null;
+			if (hoverItem.IsEntity && hoverItem.entity == entity)
+				hoverItem = null;
 		}
 
 		public void ClearMissingRefs()
 		{
 			if (draggedEntity != null && draggedEntity.Equals(null))
 				draggedEntity = null;
-			if (hoverEntity != null && hoverEntity.Equals(null))
-				hoverEntity = null;
+			if (hoverItem != null && hoverItem.IsEntity && hoverItem.entity.Equals(null))
+				hoverItem = null;
 
 			entitySelection.RemoveWhere(entity => Util.IsBadRef(entity));
 			dragEdgeSource.RemoveWhere( entity => Util.IsBadRef(entity) );
@@ -254,9 +277,11 @@ namespace RelationsInspector
 			}
 
 			// draw the tooltip
-			if( hoverEntity != null )
+			if( hoverItem != null )
 			{
-				var tooltip = parent.GetBackend().GetTooltip(hoverEntity);
+				var tooltip = hoverItem.IsEntity ?
+					parent.GetBackend().GetTooltip(hoverItem.entity) :
+					parent.GetBackend().GetTooltip(hoverItem.tag);
 				if ( !string.IsNullOrEmpty(tooltip) )
 				{
 					if(Event.current.type == EventType.Repaint)
@@ -306,6 +331,19 @@ namespace RelationsInspector
 			return edgePlacementProvider.GetEdgePlacement(sourceBounds, targetBounds, edgeGapSize);
 		}
 
+		public IMViewItem<T, P> GetItemAtPosition(Vector2 position)
+		{
+			var entity = GetEntityAtPosition(position);
+			if (entity != null)
+				return new IMViewItem<T, P>(entity);
+
+			var edge = GetEdgeAtPosition(position);
+			if (edge != null)
+				return new IMViewItem<T, P>(edge.Tag);
+
+			return null;
+		}
+
 		public T GetEntityAtPosition(Vector2 position)
 		{
 			foreach(var pair in entityDrawerBounds)
@@ -315,7 +353,7 @@ namespace RelationsInspector
 			return null;
 		}
 
-		Edge<T, P> GetEdgeMarkerAtPosition(Vector2 position)
+		Edge<T, P> GetEdgeAtPosition(Vector2 position)
 		{
 			foreach (var pair in edgeMarkerBounds)
 				if (pair.Value.Contains(position))
@@ -372,7 +410,7 @@ namespace RelationsInspector
 					}
 					else // clickEntity == null
 					{
-						var clickEdge = GetEdgeMarkerAtPosition(ev.mousePosition);
+						var clickEdge = GetEdgeAtPosition(ev.mousePosition);
 						if (clickEdge != null)
 						{
 							if (ev.button == 1)	// right click
@@ -413,10 +451,10 @@ namespace RelationsInspector
 
 				case EventType.MouseMove:
 
-					// update hover entity and repaint if it changed
-					var newHoverEntity = GetEntityAtPosition(ev.mousePosition);
-					bool doRepaint = hoverEntity!=null || hoverEntity != newHoverEntity;	// movement over the hover-entity requires a repainted tooltip
-					hoverEntity = newHoverEntity;
+					// update hover item and repaint if it changed
+					var newHoverItem = GetItemAtPosition(ev.mousePosition);
+					bool doRepaint = hoverItem!=null || hoverItem != newHoverItem;	// movement over the hover-item requires a repainted tooltip
+					hoverItem = newHoverItem;
 
 					// also repaint if we are dragging an edge
 					doRepaint |= dragEdgeSource.Any();

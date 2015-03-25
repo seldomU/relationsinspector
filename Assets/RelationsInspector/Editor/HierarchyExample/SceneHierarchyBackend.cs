@@ -44,6 +44,11 @@ namespace RelationsInspector.Backend.SceneHierarchy
 			return GetContent(entity).tooltip;
 		}
 
+		public string GetTooltip(string tag)
+		{
+			return tag;
+		}
+
 		public void OnEntitySelectionChange(Object[] selection)
 		{
 			// forward our selection to unity's selection
