@@ -20,8 +20,14 @@ namespace RelationsInspector
 
 		static Tuple<Vector2, Vector2> GetExitPoint(Rect rect, Vector2 direction, float gapSize)
 		{
-			float xScale = Mathf.Abs(rect.width / 2 / direction.x);
-			float yScale = Mathf.Abs(rect.height / 2 / direction.y);
+			float xScale = Mathf.Abs(rect.width / 2);
+			if (direction.x != 0)
+				xScale = Mathf.Abs(xScale / direction.x);
+
+			float yScale = Mathf.Abs(rect.height / 2);
+			if (direction.y != 0)
+				yScale = Mathf.Abs( yScale / direction.y);
+
 			bool useXscale = xScale < yScale;
 			Vector2 normal = useXscale ? Vector2.right : Vector2.up;
 			normal *= (useXscale ? direction.x > 0 : direction.y > 0) ? 1 : -1;
