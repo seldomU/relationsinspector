@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Name: BaseRing 55
   m_EditorClassIdentifier: 
   icon: {fileID: 21300110, guid: eba56276da8dc6945b6f56ad5da6170a, type: 3}
-  children:
-  - {fileID: 11400000, guid: bcd70fd4d072118439d24cade87bdb97, type: 2}
+  children: []
