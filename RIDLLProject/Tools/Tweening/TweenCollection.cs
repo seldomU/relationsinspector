@@ -8,6 +8,7 @@ namespace RelationsInspector.Tween
 	public class TweenCollection
 	{
 		Dictionary<object, ITween> objTweens = new Dictionary<object, ITween>();
+        public bool HasChanges { get; private set; }    // true if the last update changed any tweened values
 
 		public void Update()
 		{
@@ -16,12 +17,16 @@ namespace RelationsInspector.Tween
 
 		public void Update(float time)
 		{
-			// find the expired
+            // if the collection contains any tweens, there will be value changes
+            // even the expired tweens still change values (setting the final ones)
+            HasChanges = objTweens.Any();
+
+            // find the expired
 			var expired = objTweens
 				.Where(t => t.Value.IsExpired(time))
 				.Select(pair => pair.Key);
 
-			// remove them
+			// finalize and remove them
 			if (expired.Any())
 			{
 				foreach (var exp in expired.ToArray())
@@ -34,16 +39,6 @@ namespace RelationsInspector.Tween
 			// update the remaining
 			foreach (var tween in objTweens.Values)
 				tween.Update(time);
-		}
-
-		public bool IsExpired()
-		{
-			return IsExpired((float)EditorApplication.timeSinceStartup);
-		}
-
-		public bool IsExpired(float time)
-		{
-			return !objTweens.Any() || !objTweens.Values.Any(t => !t.IsExpired(time));
 		}
 
 		public void Clear()

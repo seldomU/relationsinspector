@@ -26,6 +26,7 @@ namespace RelationsInspector
 		LayoutType defaultLayoutType = LayoutType.Graph;
 		HashSet<T> rootEntities;
 		TweenCollection graphPosTweens;
+        bool hasGraphPosChanges;
 
 		//layout
 		Stopwatch layoutTimer = new Stopwatch();
@@ -90,8 +91,9 @@ namespace RelationsInspector
 			graphPosTweens.Update();
 
 			bool doRepaint = false;
-			doRepaint |= !graphPosTweens.IsExpired();
-			doRepaint |= !Tweener.gen.IsExpired();
+            hasGraphPosChanges = graphPosTweens.HasChanges;
+            doRepaint |= hasGraphPosChanges;
+            doRepaint |= Tweener.gen.HasChanges;
 #if DEBUG
 			if (permaRepaint)
 				doRepaint = true;
@@ -140,7 +142,7 @@ namespace RelationsInspector
 
 			if (view != null)
 			{
-				if (!graphPosTweens.IsExpired())
+				if (hasGraphPosChanges)
 					view.FitViewRectToGraph();
 				
 				try
