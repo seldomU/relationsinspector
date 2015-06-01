@@ -67,14 +67,16 @@ namespace RelationsInspector
 			foreach (var root in roots)
 			{
 				visited.Add(root);
-				var children = new Queue<T>(graph.GetChildren(root));
+				var children = new HashSet<T>(graph.GetChildren(root));
 				while (children.Any())
 				{
-					var child = children.Dequeue();
+					var child = children.First();
+                    children.Remove(child);
+
 					if (visited.Contains(child))
-						return true;
+						return false;
 					visited.Add(child);
-					children.Enqueue( graph.GetChildren(child) );
+                    children.UnionWith(graph.GetChildren(child) );
 				}
 			}
 
