@@ -167,6 +167,7 @@
     <Compile Include="Assets\Stuff\Editor\TweenerTest.cs" />
     <Compile Include="Assets\UnitTests\Editor\ExtensionTests.cs" />
     <Compile Include="Assets\UnitTests\Editor\GenericInterfaceTests.cs" />
+    <Compile Include="Assets\UnitTests\Editor\GraphTest.cs" />
     <Compile Include="Assets\UnitTests\Editor\MyFirstTest.cs" />
     <Compile Include="Assets\UnitTests\Editor\ReflectUtilTests.cs" />
     <Compile Include="Assets\UnityTestTools\Assertions\Editor\AssertionComponentEditor.cs" />
