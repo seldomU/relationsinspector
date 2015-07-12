@@ -87,7 +87,7 @@ namespace RelationsInspector.Backend.BenchmarkTool
 			return dict;
 		}
 
-		public IEnumerable<Tuple<Number, NumberRelation>> GetRelations(Number item)
+		public IEnumerable<Tuple<Number, NumberRelation>> GetRelated(Number item)
 		{
 			return explicitRelations[item];
 		}

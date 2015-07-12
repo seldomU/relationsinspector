@@ -52,10 +52,10 @@ namespace RelationsInspector.Backend.TypeHierarchy
 			return targetTypes;
 		}
 
-		public override IEnumerable<Tuple<Type, TypeRelation>> GetRelations(Type entity)
+		public override IEnumerable<Tuple<Type, TypeRelation>> GetRelated(Type entity)
 		{
 			//
-			foreach (var tuple in GetRelationTuples(entity))
+			foreach (var tuple in GetRelatedTuples(entity))
 			{
 				if (nodeCount >= maxNodes)
 					yield break;
@@ -65,7 +65,20 @@ namespace RelationsInspector.Backend.TypeHierarchy
 			}
 		}
 
-		IEnumerable<Tuple<Type, TypeRelation>> GetRelationTuples(Type entity)
+        public override IEnumerable<Tuple<Type, TypeRelation>> GetRelating(Type entity)
+        {
+            //
+            foreach (var tuple in GetRelatingTuples(entity))
+            {
+                if (nodeCount >= maxNodes)
+                    yield break;
+
+                yield return tuple;
+                nodeCount++;
+            }
+        }
+
+		IEnumerable<Tuple<Type, TypeRelation>> GetRelatedTuples(Type entity)
 		{
 			if (includeSubTypes && touchedSubTypes.Contains(entity))
 			{
@@ -74,7 +87,10 @@ namespace RelationsInspector.Backend.TypeHierarchy
 				foreach (var t in subTypes)
 					yield return new Tuple<Type, TypeRelation>(t, TypeRelation.SubType);
 			}
+        }
 
+        IEnumerable<Tuple<Type, TypeRelation>> GetRelatingTuples(Type entity)
+        {
 			if (includeSuperTypes && touchedSuperTypes.Contains(entity))
 			{
 				var superTypes = new List<Type>();

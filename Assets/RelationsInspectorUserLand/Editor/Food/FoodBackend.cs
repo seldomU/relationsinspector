@@ -8,7 +8,7 @@ namespace RelationsInspector.Backend.Food
 {
 	public class FoodBackend : ScriptableObjectBackend<FoodItem, string>
 	{
-		public override IEnumerable<Tuple<FoodItem, string>> GetRelations(FoodItem entity)
+		public override IEnumerable<Tuple<FoodItem, string>> GetRelated(FoodItem entity)
 		{
 			if (entity.dependentFoods == null)
 				entity.dependentFoods = new List<FoodItem>();

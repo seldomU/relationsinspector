@@ -75,7 +75,7 @@ namespace RelationsInspector
 			if (targets == null)
 				return;
 
-			graph = GraphBuilder<T, P>.Build(rootEntities, graphBackend.GetRelations, int.MaxValue);
+			graph = GraphBuilder<T, P>.Build(rootEntities, graphBackend.GetRelated, graphBackend.GetRelating, int.MaxValue);
 			if (graph != null)
 				ExecOnUpdate(DoAutoLayout);
 		}

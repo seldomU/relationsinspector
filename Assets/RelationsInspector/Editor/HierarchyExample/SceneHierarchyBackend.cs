@@ -55,7 +55,7 @@ namespace RelationsInspector.Backend.SceneHierarchy
 			Selection.objects = selection.ToArray();
 		}		
 
-		public IEnumerable<Tuple<Object, string>> GetRelations(Object entity)
+		public IEnumerable<Tuple<Object, string>> GetRelated(Object entity)
 		{
 			var asGameObject = entity as GameObject;
 			if (asGameObject == null)
@@ -69,6 +69,11 @@ namespace RelationsInspector.Backend.SceneHierarchy
 			foreach (var c in asGameObject.GetComponents<Component>())
 				yield return new Tuple<Object, string>(c, string.Empty);
 		}
+
+        public IEnumerable<Tuple<Object, string>> GetRelating(Object entity)
+        {
+            yield break;
+        }
 
 		public GUIContent GetContent(Object entity)
 		{

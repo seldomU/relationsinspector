@@ -11,7 +11,7 @@ namespace RelationsInspector.Backend.ItemTree
 	{
 		static Dictionary<Sprite, Texture2D> textures = new Dictionary<Sprite, Texture2D>();
 
-		public override IEnumerable<Tuple<InventoryItemType, string>> GetRelations(InventoryItemType entity)
+		public override IEnumerable<Tuple<InventoryItemType, string>> GetRelated(InventoryItemType entity)
 		{
 			if (entity.children == null)
 				entity.children = new List<InventoryItemType>();

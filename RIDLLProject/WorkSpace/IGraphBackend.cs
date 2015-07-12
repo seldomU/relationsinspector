@@ -11,7 +11,8 @@ namespace RelationsInspector
 		IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api);
 
 		// 
-		IEnumerable<Tuple<T,P>> GetRelations(T entity);
+		IEnumerable<Tuple<T,P>> GetRelated(T entity);
+        IEnumerable<Tuple<T, P>> GetRelating(T entity);
 		void CreateEntity(Vector2 position);
 		void CreateRelation(T source, T target, P tag);
 		void OnEntitySelectionChange(T[] selection);
@@ -24,11 +25,5 @@ namespace RelationsInspector
 		void OnEntityContextClick(IEnumerable<T> entities);
 		void OnRelationContextClick(T source, T target, P tag);
 		Color GetRelationColor(P relationTagValue);
-	}
-
-	public class EntityMenuItem
-	{
-		public GUIContent content;
-		public GenericMenu.MenuFunction action;
 	}
 }

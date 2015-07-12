@@ -9,7 +9,7 @@ namespace RelationsInspector
 	{
 		public delegate IEnumerable<Tuple<T,P>> GetRelations(T item);
 
-		public static GraphWithRoots<T,P> Build(IEnumerable<T> roots, GetRelations GetRelations, int recursionSteps)
+		public static GraphWithRoots<T,P> Build(IEnumerable<T> roots, GetRelations GetRelated, GetRelations GetRelating, int recursionSteps)
 		{
 			var graph = new GraphWithRoots<T, P>();
 			
@@ -23,29 +23,57 @@ namespace RelationsInspector
 			// process elements that are in the graph already
 			// add their successors (that are not in the graph yet) 
 			// and add an edge between the element and its successor
-			var processQueue = new System.Collections.Generic.Queue<T>( roots );
-
-			while (processQueue.Any())
+			var successorQueue = new System.Collections.Generic.Queue<T>( roots );
+            int sucRecSteps = recursionSteps;
+			while (successorQueue.Any())
 			{
-				T vertex = processQueue.Dequeue();
-				recursionSteps--;
+				T vertex = successorQueue.Dequeue();
+                sucRecSteps--;
 
-				foreach (var relation in GetRelations(vertex))
+				foreach (var relation in GetRelated(vertex))
 				{
-					var target = relation._1;
+					var successor = relation._1;
 					var tag = relation._2;
 
-					if (target == null)
+					if (successor == null)
 						continue;
 
-					if (!graph.ContainsVertex(target))
+					if (!graph.ContainsVertex(successor))
 					{
-						graph.AddVertex(target);
-						if( recursionSteps > 0 )
-							processQueue.Enqueue(target);
+						graph.AddVertex(successor);
+                        if (sucRecSteps > 0)
+							successorQueue.Enqueue(successor);
 					}
 
-					graph.AddEdge( new Edge<T,P>(vertex, target, tag) );
+					graph.AddEdge( new Edge<T,P>(vertex, successor, tag) );
+				}
+			}
+
+            // add root predecessors (that are not in the graph yet) 
+            // and add edges from predecessors to vertices
+            var predecessorQueue = new System.Collections.Generic.Queue<T>( roots );
+            int predRecSteps = recursionSteps;
+            while (predecessorQueue.Any())
+			{
+                T vertex = predecessorQueue.Dequeue();
+                predRecSteps--;
+
+                foreach (var relation in GetRelating(vertex))
+				{
+					var predecessor = relation._1;
+					var tag = relation._2;
+
+					if (predecessor == null)
+						continue;
+
+					if (!graph.ContainsVertex(predecessor))
+					{
+						graph.AddVertex(predecessor);
+                        if (predRecSteps > 0)
+                            predecessorQueue.Enqueue(predecessor);
+					}
+
+                    graph.AddEdge(new Edge<T, P>(predecessor, vertex, tag));
 				}
 			}
 

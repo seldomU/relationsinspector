@@ -10,7 +10,7 @@ namespace RelationsInspector.Backend.DialogGraph
 {
 	public class DialogGraphBackend : ScriptableObjectBackend<DialogItem, string>
 	{
-		public override IEnumerable<Tuple<DialogItem, string>> GetRelations(DialogItem entity)
+		public override IEnumerable<Tuple<DialogItem, string>> GetRelated(DialogItem entity)
 		{
 			if (entity.options == null)
 				yield break;

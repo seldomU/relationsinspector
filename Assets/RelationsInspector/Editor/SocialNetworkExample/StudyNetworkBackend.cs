@@ -9,7 +9,7 @@ namespace RelationsInspector.Backend.SocialNetwork
 {
 	public class StudyNetworkBackend : ScriptableObjectBackend<Person, string>
 	{
-		public override IEnumerable<Tuple<Person, string>> GetRelations(Person person)
+		public override IEnumerable<Tuple<Person, string>> GetRelated(Person person)
 		{
 			if (person.studyPartners == null)
 				yield break;

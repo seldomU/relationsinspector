@@ -26,7 +26,7 @@ namespace RelationsInspector.Backend.Techtree
 	{
 		public class RewardBackend : ScriptableObjectBackend<RewardItem, string>
 		{
-			public override IEnumerable<Tuple<RewardItem, string>> GetRelations(RewardItem rewardItem)
+			public override IEnumerable<Tuple<RewardItem, string>> GetRelated(RewardItem rewardItem)
 			{
 				if (rewardItem.successors == null)
 					yield break;

@@ -8,7 +8,7 @@ namespace RelationsInspector.Backend.Techtree
 {
 	public class TechTreeBackend : ScriptableObjectBackend<Tech, string>
 	{
-		public override IEnumerable<Tuple<Tech, string>> GetRelations(Tech entity)
+		public override IEnumerable<Tuple<Tech, string>> GetRelated(Tech entity)
 		{
 			if (entity.dependentTechs == null)
 				yield break;
