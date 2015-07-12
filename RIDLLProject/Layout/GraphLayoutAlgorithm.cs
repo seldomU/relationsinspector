@@ -28,9 +28,10 @@ namespace RelationsInspector
 			forces = new Dictionary<T, Vector2>();
 		}
 
-		public IEnumerator Compute()
+		public IEnumerator Compute(bool rndInitPos)
 		{
-			InitVertexPositions();
+            if (rndInitPos)
+                InitVertexPositions();
 
 			int iterationId = 0;
 			while (iterationId++ < 200)

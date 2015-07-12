@@ -77,7 +77,7 @@ namespace RelationsInspector
 
 			graph = GraphBuilder<T, P>.Build(rootEntities, graphBackend.GetRelated, graphBackend.GetRelating, int.MaxValue);
 			if (graph != null)
-				ExecOnUpdate(DoAutoLayout);
+				ExecOnUpdate( () => DoAutoLayout(true) );
 		}
 
 		void ExecOnUpdate( System.Action action )
@@ -173,7 +173,7 @@ namespace RelationsInspector
 			if (EditorGUI.EndChangeCheck())
 			{
 				GUIUtil.SetPrefsInt(GetPrefsKeyLayout(), (int)layoutType);
-				ExecOnUpdate( DoAutoLayout );
+				ExecOnUpdate( () => DoAutoLayout() );
 			}
 #if DEBUG
 			// option to repaint constantly
@@ -182,7 +182,7 @@ namespace RelationsInspector
 			// option to run the layout
 			if (GUILayout.Button("Run layout", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
 			{
-				ExecOnUpdate( DoAutoLayout );
+				ExecOnUpdate( () => DoAutoLayout() );
 			}
 
 			/*
@@ -224,7 +224,7 @@ namespace RelationsInspector
 				view.OnWindowSelectionChange();
 		}
 
-		void DoAutoLayout()
+		void DoAutoLayout(bool firstTime = false )
 		{
 			if (graph == null)
 				return;
@@ -233,7 +233,7 @@ namespace RelationsInspector
 				Debug.LogError("canvas auto-layout: missing params");
 			else
 			{
-				layoutEnumerator = GraphLayout<T, P>.Run(graph, layoutType, layoutParams);
+				layoutEnumerator = GraphLayout<T, P>.Run(graph,  firstTime, layoutType, layoutParams);
 			}
 
 			view = new IMView<T, P>(graph, this);
