@@ -35,7 +35,7 @@ namespace RelationsInspector
 					var successor = relation._1;
 					var tag = relation._2;
 
-					if (successor == null)
+					if ( Util.IsBadRef(successor) )
 						continue;
 
 					if (!graph.ContainsVertex(successor))
@@ -63,7 +63,7 @@ namespace RelationsInspector
 					var predecessor = relation._1;
 					var tag = relation._2;
 
-					if (predecessor == null)
+					if ( Util.IsBadRef(predecessor) )
 						continue;
 
 					if (!graph.ContainsVertex(predecessor))
