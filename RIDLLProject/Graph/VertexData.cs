@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,19 +37,28 @@ namespace RelationsInspector
 		}*/
 	}
 
+    // incomming or outgoing edges of one vertex
 	public class EdgeSet<T, P> where T : class
 	{
-		T subject;
-		bool isSource;
-		// store edges per corresponent
+        // the vertex this edgeset belongs to
+        private T subject;
+
+        // if true, byCorespondent contains outgoing edges. if false, they are incomming edges
+        private bool isSource;  
+
+		// per corresponent vertex, the set of edges between subject and the vertex. 
+        // depending on isSource they are either outgoing or incomming, from subject's PoV
 		private Dictionary<T, HashSet<Edge<T,P>>> byCorespondent = new Dictionary<T, HashSet<Edge<T,P>>>();
 
+        // ctor
 		public EdgeSet(T subject, bool isSource)
 		{
 			this.subject = subject;
 			this.isSource = isSource;
 		}
 
+        // returns all edges between subject and corresponent
+        // returns ALL edges if correspondent is null
 		public IEnumerable<Edge<T,P>> Get( T correspondent = null)
 		{
 			if( correspondent == null)
@@ -61,16 +70,19 @@ namespace RelationsInspector
 			return byCorespondent[correspondent];
 		}
 
+        // returns all edge sets
 		public IEnumerable<HashSet<Edge<T, P>>> GetSets()
 		{
 			return byCorespondent.Values;
 		}
 
+        // returns all vertices this edgeset knows
 		public IEnumerable<T> GetCorrespondents()
 		{
 			return byCorespondent.Where(pair => pair.Value.Any()).Select(pair => pair.Key);
 		}
 
+        // add edge to the set
 		public void Add(Edge<T, P> edge)
 		{
 			if (edge == null)
@@ -91,6 +103,7 @@ namespace RelationsInspector
 			byCorespondent[correspondent].Add( edge );
 		}
 
+        // remove edge from the set
 		public void Remove(Edge<T, P> edge)
 		{
 			if(edge == null)
