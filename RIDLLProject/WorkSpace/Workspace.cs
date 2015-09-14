@@ -202,8 +202,18 @@ namespace RelationsInspector
 				window.Show();
 			}
 
+            if(GUILayout.Button("Save", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
+            {
+                GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetType());
+            }
+
+            if (GUILayout.Button("Load", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
+            {
+                GraphPosSerialization.LoadGraphLayout(graph, graphBackend.GetType());
+            }
+
 #endif
-			if (view != null)
+            if (view != null)
 			{
 				GUILayout.FlexibleSpace();
 				view.OnToolbarGUI();

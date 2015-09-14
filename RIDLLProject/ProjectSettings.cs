@@ -12,7 +12,8 @@ namespace RelationsInspector
 		public const string EditorPrefsProjectPrefix = "Relations inspector";
 
 		public const string resourcesDirectoryName = "RelationsInspectorResources";
-		public const string expectedResourcesBasePath = @"Assets\RelationsInspector\Editor";
+        public const string layoutCacheDirectoryName = "LayoutCaches";
+		public const string expectedRIBasePath = @"Assets\RelationsInspector\Editor";
 
 		public static string[] obligatoryFileNames = new[]
 		{
@@ -25,22 +26,39 @@ namespace RelationsInspector
 			get
 			{
 				if (resourcesPath == null)
-					resourcesPath = FindResourcesPath();
+					resourcesPath = FindRIDirectoryPath(resourcesDirectoryName);
 				return resourcesPath;
 			}
 		}
 
-		public static string FindResourcesPath()
-		{
-			// try the expected path first
-			var expectedResourcePath = Path.Combine(expectedResourcesBasePath, resourcesDirectoryName);
-			if (Directory.Exists(expectedResourcePath))
-				return expectedResourcePath;
+        static string layoutCachesPath;
+        public static string LayoutCachesPath
+        {
+            get
+            {
+                if (layoutCachesPath == null)
+                    layoutCachesPath = FindRIDirectoryPath(layoutCacheDirectoryName);
+                return layoutCachesPath;
+            }
+        }
 
-			// search all subdirectories of Assets
-			var searchPattern = @"*" + resourcesDirectoryName;
-			return Directory.GetDirectories("Assets", searchPattern, SearchOption.AllDirectories).FirstOrDefault();
-		}
+        // change this: demand that RelationsInspector\Editor exists, it just doesn't have to be in "Assets"
+        public static string FindRIDirectoryPath(string directoryName)
+        {
+            // try the expected path first
+            string expectedPath = Path.Combine(expectedRIBasePath, directoryName);
+            if (Directory.Exists(expectedPath))
+                return expectedPath;
+
+            // search all subdirectories of Assets
+            var searchPattern = @"*" + directoryName;
+            string path = Directory.GetDirectories("Assets", searchPattern, SearchOption.AllDirectories).FirstOrDefault();
+            if (path != null)
+                return path;
+
+            Directory.CreateDirectory(expectedPath);
+            return expectedPath;
+        }
 
 		internal static string CheckDependentFiles()
 		{

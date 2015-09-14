@@ -80,6 +80,9 @@
     <Compile Include="ProjectSettings.cs" />
     <Compile Include="RelationsInspectorAttribute.cs" />
     <Compile Include="RelationsInspectorWindow.cs" />
+    <Compile Include="Serialization\GraphPosSerialization.cs" />
+    <Compile Include="Serialization\VertexPosition.cs" />
+    <Compile Include="Serialization\VertexPositionStorage.cs" />
     <Compile Include="Style\Skin.cs" />
     <Compile Include="Style\SkinManager.cs" />
     <Compile Include="Tools\DebugSettings.cs" />
