@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
+# Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.RelationsInspector.CSharp", "UnityVS.RelationsInspector.CSharp.csproj", "{E8843C8F-F948-2DA4-4C71-DF4E5632E180}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.RelationsInspector.CSharp.Editor", "UnityVS.RelationsInspector.CSharp.Editor.csproj", "{C38CFD78-FF64-5009-F345-ADBF987E026F}"
