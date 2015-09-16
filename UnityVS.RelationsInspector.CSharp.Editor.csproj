@@ -66,9 +66,6 @@
     <Reference Include="RelationsInspector">
       <HintPath>Assets\RelationsInspector\Editor\RelationsInspector.dll</HintPath>
     </Reference>
-    <Reference Include="YamlDotNet">
-      <HintPath>Assets\RelationsInspectorUserLand\Editor\ObjectDependency\YamlDotNet.dll</HintPath>
-    </Reference>
     <Reference Include="NSubstitute">
       <HintPath>Assets\UnityTestTools\UnitTesting\Editor\NSubstitute\NSubstitute.dll</HintPath>
     </Reference>
@@ -95,6 +92,9 @@
     </Reference>
     <Reference Include="UnityVS.VersionSpecific">
       <HintPath>Assets\UnityVS\Editor\UnityVS.VersionSpecific.dll</HintPath>
+    </Reference>
+    <Reference Include="YamlDotNet">
+      <HintPath>Assets\RelationsInspectorUserLand\Editor\ObjectDependency\YamlDotNet.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-UnityScript">
       <HintPath>Library\ScriptAssemblies\Assembly-UnityScript.dll</HintPath>
