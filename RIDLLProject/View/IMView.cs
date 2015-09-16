@@ -495,10 +495,9 @@ namespace RelationsInspector
 
 				case EventType.ScrollWheel:
 					bool zoomIn = ev.delta.y > 0;
-					var zoomedTransform = Zoom(transform, zoomIn, ev.mousePosition);
-					Tweener.gen.MoveTransform2dTo(transform, t=>Zoom(t, zoomIn, ev.mousePosition), 0.1f, true);	//zoomedTransform, 0.1f, true);
+					Tweener.gen.MoveTransform2dTo(transform, t=>Zoom(t, zoomIn, ev.mousePosition), 0.1f, true);
 
-					ev.Use();
+                    ev.Use();
 					parent.RepaintView();
 					break;
 			}
