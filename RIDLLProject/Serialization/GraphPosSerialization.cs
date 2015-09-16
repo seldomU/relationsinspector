@@ -48,7 +48,7 @@ namespace RelationsInspector
             return hash;
         }
 
-        static string GetPath(int hashId)
+        static string GetStorageFilePath(int hashId)
         {
             string fileName = FileNamePrefix + hashId.ToString() + ".asset";
             return System.IO.Path.Combine(ProjectSettings.LayoutCachesPath, fileName);
@@ -64,23 +64,24 @@ namespace RelationsInspector
             return storage;
         }
 
-        // storage -> graph
-
-
+        // save graph vertex positions to file
         public static void SaveGraphLayout<T,P>(Graph<T,P> graph, Type backendType) where T : class
         {
+            if (graph == null || !graph.Vertices.Any())
+                return;
+
             var storage = GetVertexPositionStorage(graph);
-            string path = GetPath( GetViewId(graph, backendType) );
-            AssetDatabase.CreateAsset(storage, path );
-            AssetDatabase.SaveAssets();
+            string path = GetStorageFilePath( GetViewId(graph, backendType) );
+            AssetDatabase.CreateAsset(storage, path );          
         }
 
-        public static void LoadGraphLayout<T, P>(Graph<T, P> graph, Type backendType) where T : class
+        // load graph vertex positions from file
+        public static bool LoadGraphLayout<T, P>(Graph<T, P> graph, Type backendType) where T : class
         {
-            string path = GetPath(GetViewId(graph, backendType));
+            string path = GetStorageFilePath(GetViewId(graph, backendType));
             var storage = Util.LoadAsset<VertexPositionStorage>(path);
             if (storage == null || storage.vertexPositions == null)
-                return;
+                return false;
 
             // get a dictionary: id -> pos
             var idToPosition = storage.vertexPositions.ToDictionary(pair => pair.vertexId);
@@ -93,6 +94,8 @@ namespace RelationsInspector
                     graph.SetPos(vertex, idToPosition[id].vertexPosition);
                 }
             }
+
+            return true;
         }
     }
 }

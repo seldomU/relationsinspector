@@ -9,8 +9,9 @@ namespace RelationsInspector
 		void OnGUI( Rect drawRect );
 		void Update();
 		void OnSelectionChange();
+        void OnDestroy();
 
-		void AddEntity(object vertex, Vector2 position);
+        void AddEntity(object vertex, Vector2 position);
 		void RemoveEntity(object vertex);
 		void CreateEdge(object[] sourceEntities, object tag);
 		void AddEdge(object source, object target, object tag);

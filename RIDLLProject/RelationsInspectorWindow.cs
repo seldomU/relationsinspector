@@ -73,15 +73,12 @@ namespace RelationsInspector
 				workspace.OnSelectionChange();
 		}
 
-		void ResetWindow()
-		{			
-			selectedBackend = null;
-			validBackends = null;
-			allBackends = null;
-			workspace = null;
-			targetObjects = null;
-			OnUpdate = null;
-		}
+        void OnDestroy()
+        {
+            if (workspace != null)
+                workspace.OnDestroy();
+            AssetDatabase.SaveAssets();
+        }
 
 		static Type[] GetGenericArguments(Type backend)
 		{
@@ -343,7 +340,10 @@ namespace RelationsInspector
 
 		bool InitWorkspace()
 		{
-			if (selectedBackend == null )
+            if (workspace != null)
+                workspace.OnDestroy();
+
+            if (selectedBackend == null )
 			{
 				workspace = null;
 				return false;

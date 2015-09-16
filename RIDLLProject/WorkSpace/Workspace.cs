@@ -76,8 +76,17 @@ namespace RelationsInspector
 				return;
 
 			graph = GraphBuilder<T, P>.Build(rootEntities, graphBackend.GetRelated, graphBackend.GetRelating, int.MaxValue);
-			if (graph != null)
-				ExecOnUpdate( () => DoAutoLayout(true) );
+            if (graph != null)
+            {
+                bool didLoadLayout = GraphPosSerialization.LoadGraphLayout(graph, graphBackend.GetType());
+                if (didLoadLayout)
+                {
+                    // delay the view construction, so this.drawRect can be set before that runs.
+                    ExecOnUpdate( () => view = new IMView<T, P>(graph, this) );
+                }
+                else
+                    ExecOnUpdate(() => DoAutoLayout(true));
+            }				
 		}
 
 		void ExecOnUpdate( System.Action action )
@@ -233,6 +242,12 @@ namespace RelationsInspector
 			if (view != null)
 				view.OnWindowSelectionChange();
 		}
+
+        public void OnDestroy()
+        {
+            if (graph != null)
+                GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetType());
+        }
 
 		void DoAutoLayout(bool firstTime = false )
 		{
