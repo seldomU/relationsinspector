@@ -176,6 +176,12 @@ namespace RelationsInspector
 			return System.IO.File.Exists( AssetToSystemPath(path ) );
 		}
 
+        internal static void ForceCreateAsset(Object obj, string path)
+        {
+            System.IO.Directory.CreateDirectory( System.IO.Path.GetDirectoryName(path) );
+            AssetDatabase.CreateAsset(obj, path);
+        }
+
 		internal static void DrawCenteredInspector(Editor editor, int width = 350)
 		{
 			// vertical space on top

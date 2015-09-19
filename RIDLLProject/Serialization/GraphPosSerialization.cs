@@ -8,8 +8,6 @@ namespace RelationsInspector
 {
     class GraphPosSerialization
     {
-        // storage file names are composed of a prefix and a hash id
-        const string FileNamePrefix = "VertexPosStore";
 
         // vertex hash id
         // use unity unique id where possible
@@ -49,9 +47,10 @@ namespace RelationsInspector
             return hash;
         }
 
-        private static string GetStorageFilePath(int hashId)
+        private static string GetStorageFilePath(int hashId, Type backendType)
         {
-            string fileName = FileNamePrefix + hashId.ToString() + ".asset";
+            string backendTypeName = backendType.Name.Split('`')[0];
+            string fileName = backendTypeName + hashId.ToString() + ".asset";
             return System.IO.Path.Combine(ProjectSettings.LayoutCachesPath, fileName);
         }
 
@@ -95,14 +94,14 @@ namespace RelationsInspector
             bool saveByDefault = typeof(UnityEngine.Object).IsAssignableFrom(typeof(T));
 
             var storage = GetVertexPositionStorage(graph);
-            string path = GetStorageFilePath( GetViewId(graph, backendType) );
-            AssetDatabase.CreateAsset(storage, path );          
+            string path = GetStorageFilePath( GetViewId(graph, backendType), backendType);
+            Util.ForceCreateAsset(storage, path );          
         }
 
         // load graph vertex positions from file
         internal static bool LoadGraphLayout<T, P>(Graph<T, P> graph, Type backendType) where T : class
         {
-            string path = GetStorageFilePath(GetViewId(graph, backendType));
+            string path = GetStorageFilePath(GetViewId(graph, backendType), backendType);
             var storage = Util.LoadAsset<VertexPositionStorage>(path);
 
             if (storage == null || storage.vertexPositions == null)
