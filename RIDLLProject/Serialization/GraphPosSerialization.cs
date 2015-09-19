@@ -8,6 +8,7 @@ namespace RelationsInspector
 {
     class GraphPosSerialization
     {
+        // storage file names are composed of a prefix and a hash id
         const string FileNamePrefix = "VertexPosStore";
 
         // vertex hash id
@@ -48,14 +49,14 @@ namespace RelationsInspector
             return hash;
         }
 
-        static string GetStorageFilePath(int hashId)
+        private static string GetStorageFilePath(int hashId)
         {
             string fileName = FileNamePrefix + hashId.ToString() + ".asset";
             return System.IO.Path.Combine(ProjectSettings.LayoutCachesPath, fileName);
         }
 
         // graph -> storage
-        static VertexPositionStorage GetVertexPositionStorage<T, P>(Graph<T, P> graph) where T : class
+        private static VertexPositionStorage GetVertexPositionStorage<T, P>(Graph<T, P> graph) where T : class
         {
             var storage = ScriptableObject.CreateInstance<VertexPositionStorage>();
             
@@ -64,11 +65,34 @@ namespace RelationsInspector
             return storage;
         }
 
+        // return true if a graph of the give backend type should be saved
+        private static bool ShouldGraphOfTypeBeSaved(Type backendType)
+        {
+            // get first generic type parameter
+            Type vertexType = BackendUtil.GetGenericArguments(backendType)[0];
+
+            // fallback behaviour: return true iff it's a unity object type
+            // all other types have no reliable object <-> id mapping
+            bool defaultChoice = typeof(UnityEngine.Object).IsAssignableFrom(vertexType);
+
+            // check for LayoutSaving attribute.
+            bool? userChoice = BackendUtil.DoesBackendForceLayoutSaving(backendType);
+
+            // respect the explicit attribute choice. fall back to default if there is none
+            return userChoice ?? defaultChoice;
+        }
+
         // save graph vertex positions to file
-        public static void SaveGraphLayout<T,P>(Graph<T,P> graph, Type backendType) where T : class
+        internal static void SaveGraphLayout<T,P>(Graph<T,P> graph, Type backendType) where T : class
         {
             if (graph == null || !graph.Vertices.Any())
                 return;
+
+            // some backend types should not be included
+            if (!ShouldGraphOfTypeBeSaved(backendType))
+                return;
+
+            bool saveByDefault = typeof(UnityEngine.Object).IsAssignableFrom(typeof(T));
 
             var storage = GetVertexPositionStorage(graph);
             string path = GetStorageFilePath( GetViewId(graph, backendType) );
@@ -76,10 +100,11 @@ namespace RelationsInspector
         }
 
         // load graph vertex positions from file
-        public static bool LoadGraphLayout<T, P>(Graph<T, P> graph, Type backendType) where T : class
+        internal static bool LoadGraphLayout<T, P>(Graph<T, P> graph, Type backendType) where T : class
         {
             string path = GetStorageFilePath(GetViewId(graph, backendType));
             var storage = Util.LoadAsset<VertexPositionStorage>(path);
+
             if (storage == null || storage.vertexPositions == null)
                 return false;
 
@@ -89,10 +114,9 @@ namespace RelationsInspector
             foreach(var vertex in graph.Vertices)
             {
                 int id = GetVertexId(vertex);
-                if( idToPosition.ContainsKey(id) )
-                {
+
+                if ( idToPosition.ContainsKey(id) )
                     graph.SetPos(vertex, idToPosition[id].vertexPosition);
-                }
             }
 
             return true;

@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Backend\BackendUtil.cs" />
     <Compile Include="DemoRestriction.cs" />
     <Compile Include="RelationDrawer\BasicRelation.cs" />
     <Compile Include="RelationDrawer\RelationDrawUtil.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="RelationsInspectorAttribute.cs" />
     <Compile Include="RelationsInspectorWindow.cs" />
     <Compile Include="Serialization\GraphPosSerialization.cs" />
+    <Compile Include="Serialization\SaveLayoutAttribute.cs" />
     <Compile Include="Serialization\VertexPosition.cs" />
     <Compile Include="Serialization\VertexPositionStorage.cs" />
     <Compile Include="Style\Skin.cs" />
@@ -116,7 +118,7 @@
     <Compile Include="View\IViewParent.cs" />
     <Compile Include="View\Minimap.cs" />
     <Compile Include="View\ViewUtil.cs" />
-    <Compile Include="WorkSpace\IGraphBackend.cs" />
+    <Compile Include="Backend\IGraphBackend.cs" />
     <Compile Include="WorkSpace\IWorkspace.cs" />
     <Compile Include="WorkSpace\Workspace.cs" />
     <Compile Include="WorkSpace\WorkspaceToolbar.cs" />

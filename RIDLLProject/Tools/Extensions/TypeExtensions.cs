@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 
@@ -32,5 +32,10 @@ namespace RelationsInspector.Extensions
 			}
 			return false;
 		}
-	}
+
+        public static T[] GetCustomAttributes<T>(this Type type, bool inherit) where T : Attribute
+        {
+            return (T[])type.GetCustomAttributes(typeof(T), inherit);
+        }
+    }
 }

@@ -80,31 +80,6 @@ namespace RelationsInspector
             AssetDatabase.SaveAssets();
         }
 
-		static Type[] GetGenericArguments(Type backend)
-		{
-			var backendInterface = ReflectionUtil.GetGenericInterface(backend, typeof(IGraphBackend<,>));
-			if (backendInterface == null)
-				throw new ArgumentException(backend + " does not implement backend");
-			return backendInterface.GetGenericArguments();
-		}
-
-		static bool IsBackendType(Type candidateType)
-		{
-			Type backendInterface = ReflectionUtil.GetGenericInterface(candidateType, typeof(IGraphBackend<,>));
-			if (backendInterface == null)
-				return false;
-
-			if (backendInterface.GetGenericArguments().Any(arg => arg.IsGenericParameter))
-				return false;
-			return true;
-		}
-
-		static List<Type> FindBackends()
-		{
-			var assemblies = new[] { ReflectionUtil.GetAssemblyByName("Assembly-CSharp-Editor"), typeof(RelationsInspectorWindow).Assembly };
-			return assemblies.SelectMany(asm => asm.GetTypes()).Where( IsBackendType ).ToList();
-		}
-
 		void InitWindow()
 		{
 			string dependencyError = ProjectSettings.CheckDependentFiles();
@@ -114,7 +89,7 @@ namespace RelationsInspector
 				return;
 			}
 
-			validBackends = allBackends = FindBackends();
+			validBackends = allBackends = BackendUtil.FindBackends();
 
 			var fallbackBackend = ReflectionUtil.GetAssemblyByName("Assembly-CSharp-Editor").GetType(ProjectSettings.DefaultBackendClassName, false, true);
 			if (fallbackBackend == null)
@@ -295,7 +270,7 @@ namespace RelationsInspector
 			if (backends == null || backends.Count() == 0)
 				return null;
 
-			var groups = backends.GroupBy(backend => GetGenericArguments(backend).First());
+			var groups = backends.GroupBy(backend => BackendUtil.GetGenericArguments(backend).First());
 			var entityTypes = groups.Select(group => group.Key).ToHashSet();
 
 			var bestEntityType = ReflectionUtil.GetMostSpecificType(entityTypes);
@@ -321,14 +296,14 @@ namespace RelationsInspector
 
 		bool EntityTypeIsAssignableFromAny(Type backendType, IEnumerable<System.Type> types)
 		{
-			var entityType = GetGenericArguments(backendType).First();
+			var entityType = BackendUtil.GetGenericArguments(backendType).First();
 			return entityType != null && types.Where(t => entityType.IsAssignableFrom(t)).Any();
 		}
 
 		// true if any of the given types can be passed as a RI attribute type
 		bool BackendAttributeFitsAny(Type backendType, IEnumerable<System.Type> types)
 		{
-			var attributes = (RelationsInspectorAttribute[]) backendType.GetCustomAttributes(typeof(RelationsInspectorAttribute), true);
+			var attributes = backendType.GetCustomAttributes<RelationsInspectorAttribute>(true);
 			return attributes.Any(attr => types.Any(t => attr.type.IsAssignableFrom(t)));
 		}
 
@@ -355,7 +330,7 @@ namespace RelationsInspector
 
 		IWorkspace CreateWorkspace()
 		{
-			var backendArguments = GetGenericArguments(selectedBackend);
+			var backendArguments = BackendUtil.GetGenericArguments(selectedBackend);
 			Type entityType = backendArguments[0];
 			Type relationTagType = backendArguments[1];
 
@@ -420,7 +395,7 @@ namespace RelationsInspector
 		// enforce backend selection
 		void RelationsInspectorAPI.SetBackend(Type backendType)
 		{
-			if (!IsBackendType(backendType))
+			if (!BackendUtil.IsBackendType(backendType))
 				throw new ArgumentException(backendType + " is not a valid backend type.");
 
 			ExecOnUpdate(() => OnSelectBackend(backendType) );
