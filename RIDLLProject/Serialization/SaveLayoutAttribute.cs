@@ -3,7 +3,7 @@ using System;
 namespace RelationsInspector
 {
     [AttributeUsage(AttributeTargets.Class)]
-    class SaveLayoutAttribute : Attribute
+    public class SaveLayoutAttribute : Attribute
     {
         public bool doSave;
 
