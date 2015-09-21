@@ -1,12 +1,17 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections;
 using System.Collections.Generic;
-using EditorCoroutines;
 using System.Linq;
 using RelationsInspector.Extensions;
 using System.Reflection;
 using System;
+
+// make internal classes accessible to unit tests
+#if DEBUG
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Assembly-CSharp-Editor")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Assembly-CSharp")]
+#endif
+
 
 namespace RelationsInspector
 {
