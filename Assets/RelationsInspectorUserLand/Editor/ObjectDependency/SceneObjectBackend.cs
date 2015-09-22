@@ -14,8 +14,6 @@ namespace RelationsInspector.Backend.ObjectDependency
 	{
 		public override IEnumerable<SerializedObject> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
 		{
-			this.api = api;
-
 			if (targets == null || !targets.Any())
 				yield break;
 

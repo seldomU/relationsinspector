@@ -16,7 +16,6 @@ namespace RelationsInspector.Backend.ObjectDependency
 		
 		public override IEnumerable<SerializedObject> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
 		{
-			this.api = api;
 			sceneGraphs = ReadScenes();
 
 			if (targets == null)

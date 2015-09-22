@@ -12,7 +12,6 @@ public class TestBackend : MinimalBackend<Object,string>
 {
 	public override IEnumerable<Object> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
 	{
-		this.api = api;
 		if (targets == null || !targets.Any())
 			yield break;
 

@@ -11,8 +11,8 @@ namespace RelationsInspector.Backend.SceneHierarchy
 	{
 		public IEnumerable<Object> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
 		{
-			return BackendUtil.Convert<Object>(targets);
-		}
+            return (targets == null) ? Enumerable.Empty<Object>() : targets.OfType<Object>();
+        }
 		
 		// this backend is only for display
 		// so don't perform any graph modification

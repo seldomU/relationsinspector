@@ -41,12 +41,13 @@ namespace RelationsInspector.Backend.TypeHierarchy
 		HashSet<Type> touchedSubTypes;
 		HashSet<Type> touchedSuperTypes;
 		object[] targets;
+        RelationsInspectorAPI riAPI;
 
 		public override IEnumerable<Type> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
 		{
-			this.api = api;
-			var targetTypes = BackendUtil.Convert<Type>(targets);
-			this.touchedSubTypes = new HashSet<Type>(targetTypes);
+            this.riAPI = api;
+            var targetTypes = (targets == null) ? Enumerable.Empty<Type>() : targets.OfType<Type>();
+            this.touchedSubTypes = new HashSet<Type>(targetTypes);
 			this.touchedSuperTypes = new HashSet<Type>(targetTypes);
 			this.targets = targets == null ? new Type[0] : targets.ToArray();
 			return targetTypes;
@@ -122,7 +123,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
 					includeInterfaces = GUILayout.Toggle(includeInterfaces, "Interfaces");
 				}
 				if (EditorGUI.EndChangeCheck())
-					api.ResetTargets(targets);
+					riAPI.ResetTargets(targets);
 
 				//GUILayout.FlexibleSpace();
 				//maxNodes = EditorGUILayout.IntField("max nodes", maxNodes);
@@ -140,9 +141,9 @@ namespace RelationsInspector.Backend.TypeHierarchy
 					}
 
 					if (string.IsNullOrEmpty(searchstring))
-						api.SelectEntityNodes( x => { return false; } );
+						riAPI.SelectEntityNodes( x => { return false; } );
 					else
-						api.SelectEntityNodes( x => (x as Type).FullName.Contains(searchstring) );
+						riAPI.SelectEntityNodes( x => (x as Type).FullName.Contains(searchstring) );
 				}
 
 			}
@@ -155,7 +156,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
 		public override void OnEntityContextClick(IEnumerable<Type> entities)
 		{
 			var menu = new GenericMenu();
-			menu.AddItem(new GUIContent("make new target"), false, () => api.ResetTargets(new[] { entities.First() }));
+			menu.AddItem(new GUIContent("make new target"), false, () => riAPI.ResetTargets(new[] { entities.First() }));
 			menu.ShowAsContext();
 		}
 
