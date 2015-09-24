@@ -16,6 +16,7 @@ namespace RelationsInspector
 		void CreateEntity(Vector2 position);
 		void CreateRelation(T source, T target, P tag);
 		void OnEntitySelectionChange(T[] selection);
+        void OnUnitySelectionChange();
 		Rect OnGUI();
 
 		string GetTooltip(T entity);

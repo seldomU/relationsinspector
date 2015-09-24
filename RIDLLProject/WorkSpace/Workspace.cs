@@ -239,8 +239,8 @@ namespace RelationsInspector
 
 		public void OnSelectionChange()
 		{
-			if (view != null)
-				view.OnWindowSelectionChange();
+            if (graphBackend != null)
+                graphBackend.OnUnitySelectionChange();
 		}
 
         public void OnDestroy()

@@ -53,9 +53,11 @@ namespace RelationsInspector.Backend.SceneHierarchy
 		{
 			// forward our selection to unity's selection
 			Selection.objects = selection.ToArray();
-		}		
+		}
 
-		public IEnumerable<Tuple<Object, string>> GetRelated(Object entity)
+        public virtual void OnUnitySelectionChange(){}
+
+        public IEnumerable<Tuple<Object, string>> GetRelated(Object entity)
 		{
 			var asGameObject = entity as GameObject;
 			if (asGameObject == null)

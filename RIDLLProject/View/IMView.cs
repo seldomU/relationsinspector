@@ -570,8 +570,6 @@ namespace RelationsInspector
 			return transform.Revert( source ); 
 		}
 
-		public void OnWindowSelectionChange() { }
-
 		public void SetCenter(Vector2 newCenter)
 		{
 			var currentCenter = GetViewRect(parent.GetViewRect()).center;
