@@ -281,8 +281,8 @@ namespace RelationsInspector
 			if( hoverItem != null )
 			{
 				var tooltip = hoverItem.IsEntity ?
-					parent.GetBackend().GetTooltip(hoverItem.entity) :
-					parent.GetBackend().GetTooltip(hoverItem.tag);
+					parent.GetBackend().GetEntityTooltip(hoverItem.entity) :
+					parent.GetBackend().GetTagTooltip(hoverItem.tag);
 				if ( !string.IsNullOrEmpty(tooltip) )
 				{
 					if(Event.current.type == EventType.Repaint)

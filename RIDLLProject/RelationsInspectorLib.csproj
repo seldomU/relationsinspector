@@ -58,7 +58,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Backend\BackendDecoration.cs" />
     <Compile Include="Backend\BackendUtil.cs" />
+    <Compile Include="Backend\IGraphBackendInternal.cs" />
     <Compile Include="DemoRestriction.cs" />
     <Compile Include="RelationDrawer\BasicRelation.cs" />
     <Compile Include="RelationDrawer\RelationDrawUtil.cs" />

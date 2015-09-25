@@ -39,12 +39,12 @@ namespace RelationsInspector.Backend.SceneHierarchy
 			return Color.white;
 		}
 
-		public string GetTooltip(Object entity)
+		public string GetEntityTooltip(Object entity)
 		{
 			return GetContent(entity).tooltip;
 		}
 
-		public string GetTooltip(string tag)
+		public string GetTagTooltip(string tag)
 		{
 			return tag;
 		}

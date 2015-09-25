@@ -6,7 +6,7 @@ using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
-    public static class BackendUtil
+    internal static class BackendUtil
     {
         // the assemblies in which we search for backends
         static readonly Assembly[] backendSearchAssemblies = new[] 
@@ -15,8 +15,16 @@ namespace RelationsInspector
             typeof(RelationsInspectorWindow).Assembly
         };
 
+        internal static readonly Dictionary<Type, Type> backendToDecorator = new Dictionary<Type, Type>
+        {
+            { typeof(IGraphBackend<,>), typeof(BackendDecoratorV1<,>) },
+            { typeof(IGraphBackend2<,>), typeof(BackendDecoratorV2<,>) }
+        };
+
+        internal static readonly HashSet<Type> backEndInterfaces = backendToDecorator.Keys.ToHashSet();
+
         // returns all types implementing IGraphBackend in the eligible assemblies
-        public static List<Type> FindBackends()
+        internal static List<Type> FindBackends()
         {
             return backendSearchAssemblies
                 .SelectMany(asm => asm.GetTypes())
@@ -24,34 +32,57 @@ namespace RelationsInspector
                 .ToList();
         }
 
-        // returns true if candidateType implements IGraphBackend without any generic type parameters
-        public static bool IsBackendType(Type candidateType)
+        internal static Type GetBackendInterface(Type potentialBackendType)
         {
-            Type backendInterface = ReflectionUtil.GetGenericInterface(candidateType, typeof(IGraphBackend<,>));
-            if (backendInterface == null)
-                return false;
+            return potentialBackendType
+                .GetInterfaces()
+                .Where(i => i.IsGenericType && backEndInterfaces.Contains(i.GetGenericTypeDefinition()))
+                .SingleOrDefault();
+        }
 
-            if (backendInterface.GetGenericArguments().Any(arg => arg.IsGenericParameter))
-                return false;
-            return true;
+        // returns true if candidateType implements IGraphBackend without any generic type parameters
+        internal static bool IsBackendType(Type candidateType)
+        {
+            return GetBackendInterface(candidateType) != null;
         }
 
         // returns the type parameters of IGraphBackend that backend uses
         // assumes that backend implements IGraphBackend
-        public static Type[] GetGenericArguments(Type backendType)
+        internal static Type[] GetGenericArguments(Type backendType)
         {
-            var backendInterface = ReflectionUtil.GetGenericInterface(backendType, typeof(IGraphBackend<,>));
+            var backendInterface = GetBackendInterface(backendType);
             if (backendInterface == null)
-                throw new ArgumentException(backendType + " does not implement IGraphBackend");
+                throw new ArgumentException(backendType + " does not implement a backend interface");
+
             return backendInterface.GetGenericArguments();
         }
 
-        public static bool? DoesBackendForceLayoutSaving(Type backendType)
+        internal static bool? DoesBackendForceLayoutSaving(Type backendType)
         {
             var attributes = backendType.GetCustomAttributes<SaveLayoutAttribute>(true);
             if (!attributes.Any())
                 return null;
             return attributes.First().doSave;
+        }
+
+        internal static Type GetDecoratorInterface(Type backendType)
+        {
+            Type bInterface = GetBackendInterface(backendType);
+            if (bInterface == null)
+                throw new ArgumentException("Expected a backend type:" + backendType);
+
+            Type decoratorInterface;
+            if (!backendToDecorator.TryGetValue(bInterface.GetGenericTypeDefinition(), out decoratorInterface))
+                throw new ArgumentException("No decorator found for backend interface " + bInterface);
+
+            return decoratorInterface;
+        }
+
+        internal static object CreateBackendDecorator(System.Type backendType)
+        {
+            Type decoratorType = GetDecoratorInterface(backendType).MakeGenericType( GetGenericArguments(backendType) );
+            var ctorArgs = new object[] { System.Activator.CreateInstance(backendType) };
+            return System.Activator.CreateInstance(decoratorType, ctorArgs );
         }
     }
 }

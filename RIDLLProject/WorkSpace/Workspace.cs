@@ -16,8 +16,8 @@ namespace RelationsInspector
 		GraphWithRoots<T,P> graph;
 		IGraphView<T,P> view;
 		LayoutParams layoutParams;
-		RelationsInspectorWindow editorWindow;	// parent window
-		IGraphBackend<T,P> graphBackend;
+		RelationsInspectorWindow editorWindow;  // parent window
+        IGraphBackendInternal<T,P> graphBackend;
 		DebugSettings debugSettings;
 		Rect minimapRect = new Rect(30, 30, 100, 100);
 		Rect drawRect;
@@ -49,10 +49,10 @@ namespace RelationsInspector
 		internal Workspace(Type backendType, RelationsInspectorWindow editorWindow, object[] targets)
 		{
 			this.editorWindow = editorWindow;
-			this.graphBackend = (IGraphBackend<T, P>)System.Activator.CreateInstance(backendType, true);
+            this.graphBackend = (IGraphBackendInternal<T, P>) BackendUtil.CreateBackendDecorator(backendType); 
 
-			// create new layout params, they are not comming from the cfg yet
-			this.layoutParams = ScriptableObject.CreateInstance<LayoutParams>();
+            // create new layout params, they are not comming from the cfg yet
+            this.layoutParams = ScriptableObject.CreateInstance<LayoutParams>();
 			this.debugSettings = ScriptableObject.CreateInstance<DebugSettings>();
 			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);
 			rootEntities = new HashSet<T>();
@@ -78,7 +78,7 @@ namespace RelationsInspector
 			graph = GraphBuilder<T, P>.Build(rootEntities, graphBackend.GetRelated, graphBackend.GetRelating, int.MaxValue);
             if (graph != null)
             {
-                bool didLoadLayout = GraphPosSerialization.LoadGraphLayout(graph, graphBackend.GetType());
+                bool didLoadLayout = GraphPosSerialization.LoadGraphLayout(graph, graphBackend.GetDecoratedType());
                 if (didLoadLayout)
                 {
                     // delay the view construction, so this.drawRect can be set before that runs.
@@ -213,12 +213,12 @@ namespace RelationsInspector
 
             if(GUILayout.Button("Save", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
             {
-                GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetType());
+                GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetDecoratedType());
             }
 
             if (GUILayout.Button("Load", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
             {
-                GraphPosSerialization.LoadGraphLayout(graph, graphBackend.GetType());
+                GraphPosSerialization.LoadGraphLayout(graph, graphBackend.GetDecoratedType());
             }
 
 #endif
@@ -246,7 +246,7 @@ namespace RelationsInspector
         public void OnDestroy()
         {
             if (graph != null)
-                GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetType());
+                GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetDecoratedType());
         }
 
 		void DoAutoLayout(bool firstTime = false )
@@ -393,7 +393,7 @@ namespace RelationsInspector
 			return rootEntities.Contains(entity);
 		}
 
-		public IGraphBackend<T, P> GetBackend()
+		public IGraphBackendInternal<T, P> GetBackend()
 		{
 			return graphBackend;
 		}

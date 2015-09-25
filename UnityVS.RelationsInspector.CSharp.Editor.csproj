@@ -180,7 +180,7 @@
     <Compile Include="Assets\UnitTests\Editor\GraphTest.cs" />
     <Compile Include="Assets\UnitTests\Editor\MyFirstTest.cs" />
     <Compile Include="Assets\UnitTests\Editor\ReflectUtilTests.cs" />
-    <Compile Include="Assets\UnitTests\Editor\RItests.cs" />
+    <Compile Include="Assets\UnitTests\Editor\BackendTypeTests.cs" />
     <Compile Include="Assets\UnityTestTools\Assertions\Editor\AssertionComponentEditor.cs" />
     <Compile Include="Assets\UnityTestTools\Assertions\Editor\AssertionExplorerWindow.cs" />
     <Compile Include="Assets\UnityTestTools\Assertions\Editor\AssertionListRenderer.cs" />

@@ -46,7 +46,7 @@ namespace RelationsInspector.Backend.ItemTree
 			return rect;
 		}
 
-		public override string GetTooltip(InventoryItemType entity)
+		public override string GetEntityTooltip(InventoryItemType entity)
 		{
 			return string.Empty;
 		}
