@@ -24,11 +24,11 @@ namespace RelationsInspector
         internal static readonly HashSet<Type> backEndInterfaces = backendToDecorator.Keys.ToHashSet();
 
         // returns all types implementing IGraphBackend in the eligible assemblies
-        internal static List<Type> FindBackendTypes()
+        internal static List<Type> GetNonGenericBackendTypes()
         {
             return backendSearchAssemblies
                 .SelectMany(asm => asm.GetTypes())
-                .Where(IsBackendType)
+                .Where( t => IsBackendType(t) && !GetGenericArguments(t).Any(arg => arg.IsGenericParameter ) )
                 .ToList();
         }
 
@@ -40,7 +40,8 @@ namespace RelationsInspector
                 .SingleOrDefault();
         }
 
-        // returns true if candidateType implements IGraphBackend without any generic type parameters
+        // returns true if candidateType implements one of the backend interfaces
+        // (the interface might have generic arguments)
         internal static bool IsBackendType(Type candidateType)
         {
             return GetBackendInterface(candidateType) != null;

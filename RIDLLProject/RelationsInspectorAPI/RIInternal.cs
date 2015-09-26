@@ -31,7 +31,7 @@ namespace RelationsInspector
             this.ShowNotification = ShowNotification;
             this.window = window;
 
-            validBackendTypes = allBackendTypes = BackendUtil.FindBackendTypes();
+            validBackendTypes = allBackendTypes = BackendUtil.GetNonGenericBackendTypes();
 
             var fallbackBackendType = ReflectionUtil
                 .GetAssemblyByName("Assembly-CSharp-Editor")
