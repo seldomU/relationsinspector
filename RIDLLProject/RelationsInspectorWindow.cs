@@ -19,9 +19,6 @@ namespace RelationsInspector
         APIv2Implementation api2impl;
 
 		[SerializeField]
-		internal RelationInspectorSkin skin;
-
-		[SerializeField]
 		bool initialized;
 
 		Rect workspaceRect;
@@ -53,8 +50,6 @@ namespace RelationsInspector
 				return;
 #endif// RIDEMO
 
-			skin = SkinManager.GetSkin();	// every frame, so it adapts when the user changes her unity skin
-
 			internalAPI.DrawToolbar();
 			
 			// allow the user to draw their own controls and return the remaining rect
@@ -68,7 +63,7 @@ namespace RelationsInspector
 			internalAPI.OnWorkspaceGUI(workspaceRect);
 			GUI.EndGroup();
 
-			HandleEvent(Event.current);
+			internalAPI.HandleEvent(Event.current, position);
 		}
 
 		void OnSelectionChange()
@@ -125,55 +120,6 @@ namespace RelationsInspector
 		void OnEnable()
 		{
 			InitWindow();
-		}
-
-		void HandleEvent(Event ev)
-		{
-			switch (ev.type)
-			{
-				case EventType.DragUpdated:
-					{
-						bool controlHeld = (ev.modifiers & EventModifiers.Control) != 0;
-						DragAndDrop.visualMode = controlHeld ? DragAndDropVisualMode.Generic : DragAndDropVisualMode.Move;
-						break;
-					}
-
-				case EventType.DragPerform:
-					{
-						bool controlHeld = (ev.modifiers & EventModifiers.Control) != 0;
-						// if control is held down, add to the existing targets
-						// else replace them
-						bool doAddObjects = controlHeld;
-
-						var dragObjs = GetDragObjects();
-
-						if (doAddObjects)
-							internalAPI.AddTargets(dragObjs);
-						else
-							internalAPI.ResetTargets(dragObjs);
-
-						DragAndDrop.AcceptDrag();
-						ev.Use();
-						break;
-					}
-
-				case EventType.Repaint:
-					if (DragAndDrop.visualMode == DragAndDropVisualMode.Generic || DragAndDrop.visualMode == DragAndDropVisualMode.Move)
-					{
-						var bgColor = skin.windowColor;
-						Util.FadeRect( position.ResetOrigin(), bgColor );
-					}
-					break;
-			}
-		}
-
-		static Object[] GetDragObjects()
-		{
-			Object[] objs = DragAndDrop.objectReferences;
-			if (objs != null)
-				return objs.ToArray();	// copy the array
-
-			return new Object[0];
 		}
 	}
 }

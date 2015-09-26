@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEditor;
+using RelationsInspector.Extensions;
+using Object = UnityEngine.Object;
 
 namespace RelationsInspector
 {
@@ -157,10 +159,17 @@ namespace RelationsInspector
             Type entityType = backendArguments[0];
             Type relationTagType = backendArguments[1];
 
-            var genericWorkspaceType = typeof(Workspace<,>).MakeGenericType(entityType, relationTagType);
+            var genericWorkspaceType = typeof(Workspace<,>).MakeGenericType(backendArguments);
             var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
             var targetArray = targetObjects == null ? null : targetObjects.ToArray();
-            var ctorArguments = new object[] { selectedBackendType, window, targetArray };
+            var ctorArguments = new object[] 
+            {
+                selectedBackendType,
+                targetArray,
+                (Func<RelationsInspectorAPI>)window.GetAPI,
+                (Action)window.Repaint,
+                (Action<Action>)window.ExecOnUpdate
+            };
             return (IWorkspace)System.Activator.CreateInstance(genericWorkspaceType, flags, null, ctorArguments, null);
         }
 
@@ -271,6 +280,55 @@ namespace RelationsInspector
         {
             if (workspace != null)
                 workspace.Update();
+        }
+
+        internal void HandleEvent(Event ev, Rect windowPosition)
+        {
+            switch (ev.type)
+            {
+                case EventType.DragUpdated:
+                    {
+                        bool controlHeld = (ev.modifiers & EventModifiers.Control) != 0;
+                        DragAndDrop.visualMode = controlHeld ? DragAndDropVisualMode.Generic : DragAndDropVisualMode.Move;
+                        break;
+                    }
+
+                case EventType.DragPerform:
+                    {
+                        bool controlHeld = (ev.modifiers & EventModifiers.Control) != 0;
+                        // if control is held down, add to the existing targets
+                        // else replace them
+                        bool doAddObjects = controlHeld;
+
+                        var dragObjs = GetDragObjects();
+
+                        if (doAddObjects)
+                            AddTargets(dragObjs);
+                        else
+                            ResetTargets(dragObjs);
+
+                        DragAndDrop.AcceptDrag();
+                        ev.Use();
+                        break;
+                    }
+
+                case EventType.Repaint:
+                    if (DragAndDrop.visualMode == DragAndDropVisualMode.Generic || DragAndDrop.visualMode == DragAndDropVisualMode.Move)
+                    {
+                        var bgColor = SkinManager.GetSkin().windowColor;
+                        Util.FadeRect(windowPosition.ResetOrigin(), bgColor);
+                    }
+                    break;
+            }
+        }
+
+        static Object[] GetDragObjects()
+        {
+            Object[] objs = DragAndDrop.objectReferences;
+            if (objs != null)
+                return objs.ToArray();  // copy the array
+
+            return new Object[0];
         }
     }
 }

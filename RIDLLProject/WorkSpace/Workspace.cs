@@ -5,7 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using RelationsInspector.Extensions;
 using RelationsInspector.Tween;
-using Type = System.Type;
+using System;
 using Stopwatch = System.Diagnostics.Stopwatch;
 using System.Collections;
 
@@ -16,7 +16,6 @@ namespace RelationsInspector
 		GraphWithRoots<T,P> graph;
 		IGraphView<T,P> view;
 		LayoutParams layoutParams;
-		RelationsInspectorWindow editorWindow;  // parent window
         IGraphBackendInternal<T,P> graphBackend;
 		DebugSettings debugSettings;
 		Rect minimapRect = new Rect(30, 30, 100, 100);
@@ -35,6 +34,9 @@ namespace RelationsInspector
 		const float vertexPosTweenDuration = 0.4f; // seconds
 		const float vertexPosTweenUpdateInterval = 0.25f; // seconds
 
+        Action Repaint;
+        Action<Action> Exec;
+
 		static Dictionary<LayoutType, GUIContent> layoutButtonContent = new Dictionary<LayoutType, GUIContent>()
 		{
 			{ LayoutType.Graph, new GUIContent("Graph", "Use graph layout") },
@@ -46,19 +48,24 @@ namespace RelationsInspector
 		bool permaRepaint;	// repaint permanently
 #endif
 
-		internal Workspace(Type backendType, RelationsInspectorWindow editorWindow, object[] targets)
+		internal Workspace(Type backendType, object[] targets, Func<RelationsInspectorAPI> GetAPI, Action Repaint, Action<Action> Exec)
 		{
-			this.editorWindow = editorWindow;
+            this.Repaint = Repaint;
+            this.Exec = Exec;
             this.graphBackend = (IGraphBackendInternal<T, P>) BackendUtil.CreateBackendDecorator(backendType); 
 
             // create new layout params, they are not comming from the cfg yet
             this.layoutParams = ScriptableObject.CreateInstance<LayoutParams>();
 			this.debugSettings = ScriptableObject.CreateInstance<DebugSettings>();
-			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);
-			rootEntities = new HashSet<T>();
+			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);			
 			graphPosTweens = new TweenCollection();
 
-			InitGraph(targets);
+            rootEntities = graphBackend.Init(targets, GetAPI() ).ToHashSet();
+
+            // when targets is null, show the toolbar only. don't create a graph (and view)
+            // when rootEntities is empty, create graph and view anyway, so the user can add entities
+            if (targets != null)
+                InitGraph(targets);
 		}
 
 		string GetPrefsKeyLayout()
@@ -68,30 +75,19 @@ namespace RelationsInspector
 
 		void InitGraph(object[] targets)
 		{
-			rootEntities = graphBackend.Init(targets, editorWindow.GetAPI()).ToHashSet();
-
-			// when targets is null, show the toolbar only. don't create a graph (and view)
-			// when rootEntities is empty, create graph and view anyway, so the user can add entities
-			if (targets == null)
-				return;
-
 			graph = GraphBuilder<T, P>.Build(rootEntities, graphBackend.GetRelated, graphBackend.GetRelating, int.MaxValue);
-            if (graph != null)
+            if (graph == null)
+                return;
+            
+            bool didLoadLayout = GraphPosSerialization.LoadGraphLayout(graph, graphBackend.GetDecoratedType());
+            if (didLoadLayout)
             {
-                bool didLoadLayout = GraphPosSerialization.LoadGraphLayout(graph, graphBackend.GetDecoratedType());
-                if (didLoadLayout)
-                {
-                    // delay the view construction, so this.drawRect can be set before that runs.
-                    ExecOnUpdate( () => view = new IMView<T, P>(graph, this) );
-                }
-                else
-                    ExecOnUpdate(() => DoAutoLayout(true));
-            }				
-		}
-
-		void ExecOnUpdate( System.Action action )
-		{
-			editorWindow.ExecOnUpdate( action );
+                // delay the view construction, so this.drawRect can be set before that runs.
+                Exec( () => view = new IMView<T, P>(graph, this) );
+            }
+            else
+                Exec(() => DoAutoLayout(true));
+            				
 		}
 
 		public void Update()
@@ -108,7 +104,7 @@ namespace RelationsInspector
 				doRepaint = true;
 #endif
 			if(doRepaint)
-				editorWindow.Repaint();
+				Repaint();
 		}
 
 		void UpdateLayout()
@@ -166,7 +162,7 @@ namespace RelationsInspector
 				if (graph != null)
 				{
 					var entityPositions = graph.VerticesData.Values.Select(data => data.pos);
-					var style = editorWindow.skin.minimap;
+					var style = SkinManager.GetSkin().minimap;
 					var newCenter = Minimap.Draw( entityPositions, minimapRect, view.GetViewRect(drawRect), debugSettings.showMinimapGraphBounds, style);
 					view.SetCenter(newCenter);
 				}
@@ -182,7 +178,7 @@ namespace RelationsInspector
 			if (EditorGUI.EndChangeCheck())
 			{
 				GUIUtil.SetPrefsInt(GetPrefsKeyLayout(), (int)layoutType);
-				ExecOnUpdate( () => DoAutoLayout() );
+				Exec( () => DoAutoLayout() );
 			}
 #if DEBUG
 			// option to repaint constantly
@@ -191,7 +187,7 @@ namespace RelationsInspector
 			// option to run the layout
 			if (GUILayout.Button("Run layout", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
 			{
-				ExecOnUpdate( () => DoAutoLayout() );
+				Exec( () => DoAutoLayout() );
 			}
 
 			/*
@@ -370,7 +366,7 @@ namespace RelationsInspector
 
 		public void RepaintView()
 		{
-			editorWindow.Repaint();
+			Repaint();
 		}
 
 		public Rect GetViewRect()
@@ -378,14 +374,9 @@ namespace RelationsInspector
 			return drawRect;
 		}
 
-		public RelationInspectorSkin GetSkin()
-		{
-			return editorWindow.skin;
-		}
-
 		public void MoveEntity(T entity, Vector2 delta)
 		{
-			ExecOnUpdate(() => MoveEntityCmd(entity, delta));
+			Exec( () => MoveEntityCmd(entity, delta) );
 		}
 
 		void MoveEntityCmd(T entity, Vector2 delta)

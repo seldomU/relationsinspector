@@ -8,7 +8,6 @@ namespace RelationsInspector
 	{
 		void RepaintView();
 		Rect GetViewRect();
-		RelationInspectorSkin GetSkin();
 
 		void MoveEntity(T entity, Vector2 delta);
 

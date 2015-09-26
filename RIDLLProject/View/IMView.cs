@@ -189,9 +189,10 @@ namespace RelationsInspector
 			// entities might have been destroyed externally
 			ClearMissingRefs();
 
-			// get draw styles
-			var relationDrawerStyle = parent.GetSkin().relationDrawer;
-			var entityWidgetStyle = parent.GetSkin().entityWidget;
+            // get draw styles
+            var skin = SkinManager.GetSkin();
+			var relationDrawerStyle = skin.relationDrawer;
+			var entityWidgetStyle = skin.entityWidget;
 			
 			// draw edges
 			edgeMarkerBounds.Clear();
@@ -291,7 +292,7 @@ namespace RelationsInspector
 						var size = GUI.skin.box.CalcSize(content);
 						var contentRect = FindTooltipRect(Event.current.mousePosition, size);
 						var contentPadding = new[] { 3f, 1f, 2f, 0f };					
-						var bgColor = parent.GetSkin().windowColor;
+						var bgColor = skin.windowColor;
 						DrawPaddedLabel(content, contentRect, contentPadding, bgColor);
 					}
 				}
