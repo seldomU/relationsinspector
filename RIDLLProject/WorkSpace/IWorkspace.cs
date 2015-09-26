@@ -10,6 +10,7 @@ namespace RelationsInspector
 		void Update();
 		void OnSelectionChange();
         void OnDestroy();
+        void OnEvent(Event e);
 
         void AddEntity(object vertex, Vector2 position);
 		void RemoveEntity(object vertex);

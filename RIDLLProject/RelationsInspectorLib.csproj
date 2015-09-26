@@ -72,7 +72,9 @@
     <Compile Include="Graph\GraphExtensions.cs" />
     <Compile Include="Graph\GraphWithRoots.cs" />
     <Compile Include="Graph\VertexData.cs" />
-    <Compile Include="IRelationsInspectorAPI.cs" />
+    <Compile Include="RelationsInspectorAPI\APIv1Implementation.cs" />
+    <Compile Include="RelationsInspectorAPI\APIv2Implementation.cs" />
+    <Compile Include="RelationsInspectorAPI\IRelationsInspectorAPI.cs" />
     <Compile Include="Layout\GraphLayoutAlgorithm.cs" />
     <Compile Include="Layout\GraphLayout.cs" />
     <Compile Include="Layout\LayoutParams.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="ProjectSettings.cs" />
     <Compile Include="RelationsInspectorAttribute.cs" />
     <Compile Include="RelationsInspectorWindow.cs" />
+    <Compile Include="RelationsInspectorAPI\RIInternal.cs" />
     <Compile Include="Serialization\GraphPosSerialization.cs" />
     <Compile Include="Serialization\SaveLayoutAttribute.cs" />
     <Compile Include="Serialization\VertexPosition.cs" />

@@ -15,7 +15,7 @@ namespace RelationsInspector
 		}*/
 		public static Rect rectZero = new Rect(0, 0, 0, 0);
 
-		public static System.Action Idle = () => { };
+		public static System.Action IdleAction = () => { };
 
 		public static float Transform(float source, float translation, float scale)
 		{

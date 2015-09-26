@@ -24,7 +24,7 @@ namespace RelationsInspector
         internal static readonly HashSet<Type> backEndInterfaces = backendToDecorator.Keys.ToHashSet();
 
         // returns all types implementing IGraphBackend in the eligible assemblies
-        internal static List<Type> FindBackends()
+        internal static List<Type> FindBackendTypes()
         {
             return backendSearchAssemblies
                 .SelectMany(asm => asm.GetTypes())
@@ -83,6 +83,33 @@ namespace RelationsInspector
             Type decoratorType = GetDecoratorInterface(backendType).MakeGenericType( GetGenericArguments(backendType) );
             var ctorArgs = new object[] { System.Activator.CreateInstance(backendType) };
             return System.Activator.CreateInstance(decoratorType, ctorArgs );
+        }
+
+
+        internal static Type GetMostSpecificBackend(IList<Type> backends)
+        {
+            if (backends == null || backends.Count() == 0)
+                return null;
+
+            var groups = backends.GroupBy(backend => GetGenericArguments(backend).First());
+            var entityTypes = groups.Select(group => group.Key).ToHashSet();
+
+            var bestEntityType = ReflectionUtil.GetMostSpecificType(entityTypes);
+            var bestEntityTypeGroup = groups.Single(group => group.Key == bestEntityType);
+            return bestEntityTypeGroup.First();
+        }
+
+        internal static bool IsEntityTypeAssignableFromAny(Type backendType, IEnumerable<Type> types)
+        {
+            var entityType = GetGenericArguments(backendType).First();
+            return entityType != null && types.Where(t => entityType.IsAssignableFrom(t)).Any();
+        }
+
+        // true if any of the given types can be passed as a RI attribute type
+        internal static bool BackendAttributeFitsAny(Type backendType, IEnumerable<Type> types)
+        {
+            var attributes = backendType.GetCustomAttributes<RelationsInspectorAttribute>(true);
+            return attributes.Any(attr => types.Any(t => attr.type.IsAssignableFrom(t)));
         }
     }
 }

@@ -68,7 +68,7 @@ namespace RelationsInspector
 
 		void InitGraph(object[] targets)
 		{
-			rootEntities = graphBackend.Init(targets, editorWindow).ToHashSet();
+			rootEntities = graphBackend.Init(targets, editorWindow.GetAPI()).ToHashSet();
 
 			// when targets is null, show the toolbar only. don't create a graph (and view)
 			// when rootEntities is empty, create graph and view anyway, so the user can add entities
@@ -242,6 +242,12 @@ namespace RelationsInspector
             if (graphBackend != null)
                 graphBackend.OnUnitySelectionChange();
 		}
+
+        public void OnEvent(Event e)
+        {
+            if (graphBackend != null)
+                graphBackend.OnEvent(e);
+        }
 
         public void OnDestroy()
         {
