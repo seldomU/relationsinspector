@@ -20,6 +20,7 @@ namespace RelationsInspector
         List<Type> validBackendTypes;
         Type selectedBackendType;
         RelationsInspectorWindow window;
+        RIStateHistory targetHistory;
 
         const string PrefsKeyDefaultBackend = "RIWindowDefaultBackend";
 
@@ -28,12 +29,13 @@ namespace RelationsInspector
 
         internal RIInternal(Action<Action> Exec, Action<GUIContent> ShowNotification, RelationsInspectorWindow window)
         {
-            Debug.Log("what");
             this.Exec = Exec;
             this.ShowNotification = ShowNotification;
             this.window = window;
-
+            
             validBackendTypes = allBackendTypes = BackendUtil.GetNonGenericBackendTypes();
+
+            targetHistory = new RIStateHistory();
 
             var fallbackBackendType = ReflectionUtil
                 .GetAssemblyByName("Assembly-CSharp-Editor")
@@ -70,6 +72,7 @@ namespace RelationsInspector
         // manipulate the graph through targets
         public void ResetTargets(object[] targets)
         {
+            targetHistory.RegisterState(targets, selectedBackendType);
             Exec(() => SetTargetObjects(targets));
         }
 
@@ -116,6 +119,7 @@ namespace RelationsInspector
             if (!BackendUtil.IsBackendType(backendType))
                 throw new ArgumentException(backendType + " is not a valid backend type.");
 
+            targetHistory.RegisterBackendChange(backendType);
             Exec(() => OnSelectBackend(backendType));
         }
 
@@ -240,9 +244,23 @@ namespace RelationsInspector
             return GUILayoutUtility.GetRect(0, 0, new[] { GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true) });
         }
 
+        void LoadHistoryState(object[] targets, Type backendType)
+        {
+            Exec(
+               () =>
+               {
+                   // don't use SetBackend or ResetTargets, they would add this change to the history
+                   selectedBackendType = backendType;
+                   SetTargetObjects(targets);
+               } );
+        }
+
         internal void DrawToolbar()
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+
+            // target history navigation
+            targetHistory.OnGUI( LoadHistoryState );
 
             // clear
             GUI.enabled = targetObjects != null;
@@ -265,7 +283,7 @@ namespace RelationsInspector
             {
                 var newSelection = validBackendTypes[selectedBackendId];
                 GUIUtil.SetPrefsType(PrefsKeyDefaultBackend, newSelection);
-                Exec(() => OnSelectBackend(newSelection));
+                SetBackend(newSelection);
             }
 
             GUILayout.FlexibleSpace();

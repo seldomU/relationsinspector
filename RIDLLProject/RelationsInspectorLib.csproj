@@ -88,8 +88,12 @@
     <Compile Include="Serialization\SaveLayoutAttribute.cs" />
     <Compile Include="Serialization\VertexPosition.cs" />
     <Compile Include="Serialization\VertexPositionStorage.cs" />
+    <Compile Include="Style\EntityWidgetStyle.cs" />
+    <Compile Include="Style\MinimapStyle.cs" />
+    <Compile Include="Style\RelationDrawerStyle.cs" />
     <Compile Include="Style\Skin.cs" />
     <Compile Include="Style\SkinManager.cs" />
+    <Compile Include="RIStateHistory.cs" />
     <Compile Include="Tools\DebugSettings.cs" />
     <Compile Include="Tools\EditorCoroutine\ContinueConditions.cs" />
     <Compile Include="Tools\EditorCoroutine\EditorCoroutine.cs" />
