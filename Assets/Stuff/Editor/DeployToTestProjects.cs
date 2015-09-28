@@ -12,13 +12,11 @@ namespace Stuff
         // test projects are located in the TestProjects folder, which lives next to Assets
 
         // name of the directory containing the test projects
-        const string TestProjDirName = "TestProjects";
         const string AssetsDirName = "Assets";
         const string RIDirname = "RelationsInspector";
         const string UserLandDirName = @"RelationsInspectorUserLand\Editor\";
 
-        static readonly string RIProjPath = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf(AssetsDirName));
-        static readonly string TestProjBasePath = Path.Combine(RIProjPath, TestProjDirName);
+        static readonly string TestProjBasePath = @"I:\code\RelationsInspectorTestProjects\";
 
         // all test project names
         public static readonly string[] testProjNames = new[]
@@ -26,7 +24,8 @@ namespace Stuff
             "SpaceShooter",
             "Stealth",
             "SurvivalShooter",
-            "UfoShooter"
+            "UfoShooter",
+            "Scavengers"
         };
 
         public static readonly string[] backendDirNames = new[]
