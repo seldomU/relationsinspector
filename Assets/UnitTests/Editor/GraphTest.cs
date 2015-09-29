@@ -25,7 +25,7 @@ public class GraphTests
     [Test]
     public void TestTreeDetector()
     {
-        var graph = new Graph<string, string>();
+        var graph = new GraphWithRoots<string, string>();
         graph.AddVertex("a");
         graph.AddVertex("b");
         graph.AddVertex("c");
@@ -37,6 +37,6 @@ public class GraphTests
         graph.AddEdge(new Edge<string, string>("c", "b", string.Empty));
         graph.AddEdge(new Edge<string, string>("c", "d", string.Empty));
         graph.AddEdge(new Edge<string, string>("d", "a", string.Empty));
-        Assert.That(!graph.IsTree(true));
+        Assert.That(!graph.IsTree());
     }
 }

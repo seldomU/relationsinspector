@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +8,8 @@ namespace RelationsInspector
 	public class GraphWithRoots<T, P> : Graph<T, P> where T : class
 	{
 		public HashSet<T> RootVertices { get; private set; }
+        private bool isTree;
+        private bool recalcIsTree;
 
 		public GraphWithRoots() : base()
 		{
@@ -19,11 +21,25 @@ namespace RelationsInspector
 			RootVertices = new HashSet<T>( source.RootVertices);
 		}
 
+        public bool IsTree()
+        {
+            if(recalcIsTree)
+            {
+                recalcIsTree = false;
+                isTree = this.IsSingleTree();
+            }
+
+            return isTree;
+        }
+
 		public override bool AddVertex(T vertex)
 		{
 			bool gotAdded = base.AddVertex(vertex);
-			if( gotAdded )
-				RootVertices.Add(vertex);
+            if (gotAdded)
+            {
+                recalcIsTree = true;
+                RootVertices.Add(vertex);
+            }
 			return gotAdded;
 		}
 
@@ -36,7 +52,8 @@ namespace RelationsInspector
 
 			if (gotRemoved)
 			{
-				RootVertices.Remove(vertex);
+                recalcIsTree = true;
+                RootVertices.Remove(vertex);
 				// add the targets that have no more in-edges
 				RootVertices.UnionWith(targets.Where(v => IsRoot(v) ) );
 			}
@@ -47,18 +64,23 @@ namespace RelationsInspector
 		public override bool AddEdge(Edge<T, P> edge)
 		{
 			bool gotAdded = base.AddEdge(edge);
-			if (gotAdded)
-				RootVertices.Remove(edge.Target);
-
+            if (gotAdded)
+            {
+                recalcIsTree = true;
+                RootVertices.Remove(edge.Target);
+            }
 			return gotAdded;
 		}
 
 		public override bool RemoveEdge(Edge<T, P> edge)
 		{
 			bool gotRemoved = base.RemoveEdge(edge);
-			if (gotRemoved)
-				if (IsRoot(edge.Target))
-					RootVertices.Add(edge.Target);
+            if (gotRemoved)
+            {
+                recalcIsTree = true;
+                if (IsRoot(edge.Target))
+                    RootVertices.Add(edge.Target);
+            }
 
 			return gotRemoved;
 		}

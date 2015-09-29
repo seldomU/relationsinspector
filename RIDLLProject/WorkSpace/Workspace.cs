@@ -174,12 +174,16 @@ namespace RelationsInspector
 		public void OnToolbarGUI()
 		{		
 			EditorGUI.BeginChangeCheck();
-			layoutType = (LayoutType) GUIUtil.EnumToolbar("", layoutType, (t) => layoutButtonContent[(LayoutType)t], EditorStyles.miniButton);
-			if (EditorGUI.EndChangeCheck())
-			{
-				GUIUtil.SetPrefsInt(GetPrefsKeyLayout(), (int)layoutType);
-				Exec( () => DoAutoLayout() );
-			}
+
+            if (graph != null && graph.IsTree())
+            {
+                layoutType = (LayoutType)GUIUtil.EnumToolbar("", layoutType, (t) => layoutButtonContent[(LayoutType)t], EditorStyles.miniButton);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    GUIUtil.SetPrefsInt(GetPrefsKeyLayout(), (int)layoutType);
+                    Exec(() => DoAutoLayout());
+                }
+            }
 #if DEBUG
 			// option to repaint constantly
 			permaRepaint = GUILayout.Toggle( permaRepaint, "perma-repaint", GUILayout.ExpandWidth(false));

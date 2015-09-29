@@ -50,34 +50,35 @@ namespace RelationsInspector
 			return graph.VerticesData[vertex].InEdges.Get();
 		}
 
-		public static bool IsTree<T,P>(this Graph<T, P> graph, bool demandSingleRooted) where T : class
+        public static bool IsSingleTree<T, P>(this Graph<T, P> graph) where T : class
+        {
+            var roots = graph.Vertices
+                .Where(v => graph.IsRoot(v))
+                ;//.SingleOrDefault();
+
+            if (roots.Count() != 1)
+                return false;
+
+            return graph.ContainsCycle( roots.Single() );
+        }
+
+        public static bool ContainsCycle<T,P>(this Graph<T, P> graph, T root) where T : class
 		{
-			var visited = new HashSet<T>();
-			var roots = graph.Vertices.Where(v => graph.IsRoot(v));
+            //var visited = new HashSet<T>();
 
-			// gotta have roots
-			if (!roots.Any())
-				return false;
-
-			if (demandSingleRooted && roots.Count() > 1)
-				return false;
-
-			// mark all root children as visited (recursively)
-			// if any are visited twice, there is a diamod or cycle
-			foreach (var root in roots)
+            // mark all root children as visited (recursively)
+            // if any are visited twice, there is a diamod or cycle
+            var visited = new HashSet<T>( new[] { root } );
+			var children = new HashSet<T>(graph.GetChildren(root));
+			while (children.Any())
 			{
-				visited.Add(root);
-				var children = new HashSet<T>(graph.GetChildren(root));
-				while (children.Any())
-				{
-					var child = children.First();
-                    children.Remove(child);
+				var child = children.First();
+                children.Remove(child);
 
-					if (visited.Contains(child))
-						return false;
-					visited.Add(child);
-                    children.UnionWith(graph.GetChildren(child) );
-				}
+				if (visited.Contains(child))
+					return false;
+				visited.Add(child);
+                children.UnionWith(graph.GetChildren(child) );
 			}
 
 			// any vertex not visited yet must be part of a cycle
@@ -86,6 +87,7 @@ namespace RelationsInspector
 			return !hasCycle;
 		}
 
+        /*
 		// see if removing all root-outedges recursively leaves any edges. if it does, there's a cycle
 		public static bool ContainsCycle<T,P>(this GraphWithRoots<T, P> graph) where T : class
 		{
@@ -109,7 +111,7 @@ namespace RelationsInspector
 			}
 
 			return graph.Edges.Except(removedEdges).Any();
-		}
+		}*/
 
 		public static Dictionary<T, Vector2> GetVertexPositions<T,P>(this Graph<T,P> graph) where T : class
 		{

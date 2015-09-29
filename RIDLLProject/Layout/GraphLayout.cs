@@ -6,7 +6,7 @@ namespace RelationsInspector
 {
 	internal class GraphLayout<T, P> where T : class
 	{
-		internal static IEnumerator Run(Graph<T, P> graph, bool firstTime, LayoutType layoutType, LayoutParams layoutParams)
+		internal static IEnumerator Run(GraphWithRoots<T, P> graph, bool firstTime, LayoutType layoutType, LayoutParams layoutParams)
 		{
 			switch(layoutType)
 			{
@@ -14,7 +14,7 @@ namespace RelationsInspector
                     return RunGraphLayout(graph, firstTime);
 				case LayoutType.Tree:
 				default:
-					if (graph.IsTree(true))
+					if ( graph.IsTree() )
 						return RunTreeLayout(graph);
 					else
                         return RunGraphLayout(graph, firstTime);
