@@ -88,6 +88,8 @@
     <Compile Include="Serialization\SaveLayoutAttribute.cs" />
     <Compile Include="Serialization\VertexPosition.cs" />
     <Compile Include="Serialization\VertexPositionStorage.cs" />
+    <Compile Include="Settings\AboutWindow.cs" />
+    <Compile Include="Settings\SettingsMenu.cs" />
     <Compile Include="Style\EntityWidgetStyle.cs" />
     <Compile Include="Style\MinimapStyle.cs" />
     <Compile Include="Style\RelationDrawerStyle.cs" />

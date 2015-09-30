@@ -9,5 +9,6 @@ namespace RelationsInspector
 		public EntityWidgetStyle entityWidget;
 		public RelationDrawerStyle relationDrawer;
 		public Color windowColor;
+        public Texture2D settingsIcon;
 	}
 }

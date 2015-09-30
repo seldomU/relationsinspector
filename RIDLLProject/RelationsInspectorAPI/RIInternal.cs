@@ -24,8 +24,8 @@ namespace RelationsInspector
 
         const string PrefsKeyDefaultBackend = "RIWindowDefaultBackend";
 
-        static GUIContent clearButtonContent = new GUIContent("Clear", "Removes all window content");
-        static GUIContent refreshButtonContent = new GUIContent("Refresh", "Rebuilds the graph from the target objects");
+        static readonly GUIContent clearButtonContent = new GUIContent("Clear", "Removes all window content");
+        static readonly GUIContent refreshButtonContent = new GUIContent("Refresh", "Rebuilds the graph from the target objects");
 
         internal RIInternal(Action<Action> Exec, Action<GUIContent> ShowNotification, RelationsInspectorWindow window)
         {
@@ -295,8 +295,15 @@ namespace RelationsInspector
 
             GUILayout.FlexibleSpace();
 
+            // workspace toolbar
             if (workspace != null)
                 workspace.OnToolbarGUI();
+
+            GUILayout.FlexibleSpace();
+
+            // setttings menu
+            if ( GUILayout.Button( new GUIContent(SkinManager.GetSkin().settingsIcon,"Settings"), EditorStyles.toolbarButton, GUILayout.Width( 25 ) ) )
+                SettingsMenu.Create();
 
             EditorGUILayout.EndHorizontal();
         }

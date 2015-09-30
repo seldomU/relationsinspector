@@ -89,3 +89,4 @@ MonoBehaviour:
     markerSize: {x: 15, y: 15}
     markerImage: {fileID: 2800000, guid: 3861beedaaa8b5443aab88a1b54316ff, type: 3}
   windowColor: {r: .75999999, g: .75999999, b: .75999999, a: 1}
+  settingsIcon: {fileID: -1323645999, guid: 0000000000000000d000000000000000, type: 0}

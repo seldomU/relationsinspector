@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -42,8 +42,9 @@ namespace RelationsInspector
 		public static void PopulateLightSkinAsset(RelationInspectorSkin skin)
 		{
 			skin.windowColor = new Color(0.76f, 0.76f, 0.76f);
+            skin.settingsIcon = EditorGUIUtility.Load( "icons/_Popup.png" ) as Texture2D; //SettingsIcon
 
-			skin.minimap = new MinimapStyle();
+            skin.minimap = new MinimapStyle();
 			skin.minimap.backgroundColor = new Color(0.76f, 0.76f, 0.76f);
 			skin.minimap.vertexMarkerColor = Color.black;
 			skin.minimap.viewRectColor = Color.blue;
@@ -70,8 +71,10 @@ namespace RelationsInspector
 		public static void PopulateDarkSkinAsset(RelationInspectorSkin skin)
 		{
 			skin.windowColor = new Color(0.2f, 0.2f, 0.2f);
+            skin.settingsIcon = EditorGUIUtility.Load( "icons/d__Popup.png" ) as Texture2D;
 
-			skin.minimap = new MinimapStyle();
+
+            skin.minimap = new MinimapStyle();
 			skin.minimap.backgroundColor = new Color(0.4f, 0.4f, 0.4f, 1f);
 			skin.minimap.vertexMarkerColor = Color.white;
 			skin.minimap.viewRectColor = new Color(1f, 0.92f, 0f, 1f);

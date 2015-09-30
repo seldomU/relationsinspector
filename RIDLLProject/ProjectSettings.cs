@@ -14,8 +14,9 @@ namespace RelationsInspector
 		public const string resourcesDirectoryName = "RelationsInspectorResources";
         public const string layoutCacheDirectoryName = "LayoutCaches";
 		public const string expectedRIBasePath = @"Assets\RelationsInspector\Editor";
+        public const string ProgramVersion = "1.0.0";
 
-		public static string[] obligatoryFileNames = new[]
+        public static string[] obligatoryFileNames = new[]
 		{
 			"ArrowHead.png",
 		};
