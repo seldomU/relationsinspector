@@ -11,7 +11,7 @@ namespace RelationsInspector
         // the assemblies in which we search for backends
         static readonly Assembly[] backendSearchAssemblies = new[] 
         {
-            ReflectionUtil.GetAssemblyByName("Assembly-CSharp-Editor"),
+            TypeUtil.GetAssemblyByName("Assembly-CSharp-Editor"),
             typeof(RelationsInspectorWindow).Assembly
         };
 
@@ -95,7 +95,7 @@ namespace RelationsInspector
             var groups = backends.GroupBy(backend => GetGenericArguments(backend).First());
             var entityTypes = groups.Select(group => group.Key).ToHashSet();
 
-            var bestEntityType = ReflectionUtil.GetMostSpecificType(entityTypes);
+            var bestEntityType = TypeUtil.GetMostSpecificType(entityTypes);
             var bestEntityTypeGroup = groups.Single(group => group.Key == bestEntityType);
             return bestEntityTypeGroup.First();
         }

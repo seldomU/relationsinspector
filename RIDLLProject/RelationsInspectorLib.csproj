@@ -109,7 +109,7 @@
     <Compile Include="Tools\GraphBuilder.cs" />
     <Compile Include="Tools\GUIUtil.cs" />
     <Compile Include="Tools\InspectorWindow.cs" />
-    <Compile Include="Tools\ReflectionUtil.cs" />
+    <Compile Include="Tools\TypeUtil.cs" />
     <Compile Include="Tools\RNG.cs" />
     <Compile Include="Tools\Tweening\Transform2DTween.cs" />
     <Compile Include="Tools\Tuple.cs" />

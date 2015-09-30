@@ -37,7 +37,7 @@ namespace RelationsInspector
 
             targetHistory = new RIStateHistory();
 
-            var fallbackBackendType = ReflectionUtil
+            var fallbackBackendType = TypeUtil
                 .GetAssemblyByName("Assembly-CSharp-Editor")
                 .GetType(ProjectSettings.DefaultBackendClassName, false, true);
 
@@ -167,7 +167,7 @@ namespace RelationsInspector
 
             var genericWorkspaceType = typeof(Workspace<,>).MakeGenericType(backendArguments);
             var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
-            var targetArray = ReflectionUtil.MakeObjectsAssignable( targetObjects, entityType );
+            var targetArray = TypeUtil.MakeObjectsAssignable( targetObjects, entityType );
             var ctorArguments = new object[]
             {
                 selectedBackendType,
@@ -211,8 +211,8 @@ namespace RelationsInspector
             else
             {
                 // find all possible backend entity types that can be derived from the set of target objects
-                var targetTypes = ReflectionUtil.GetTypesAssignableFrom(targetObjects.Select(obj => obj.GetType()));
-                var targetComponentTypes = ReflectionUtil.GetSharedComponentTypes( targetObjects );
+                var targetTypes = TypeUtil.GetTypesAssignableFrom(targetObjects.Select(obj => obj.GetType()));
+                var targetComponentTypes = TypeUtil.GetSharedComponentTypes( targetObjects );
                 var backendEntityTypes = targetTypes.Union( targetComponentTypes );
 
                 // find all backends that accept any of the possible entity types

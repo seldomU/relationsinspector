@@ -7,7 +7,7 @@ using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
-	internal static class ReflectionUtil		// based on https://gist.github.com/akimboyko/4442677
+	internal static class TypeUtil
 	{
 		
 		// return type for given typeName, search all assemblies
@@ -134,7 +134,7 @@ namespace RelationsInspector
 
 			var subTypes = new HashSet<System.Type>();
 			foreach (var type in nonInterfaces)
-				ReflectionUtil.ReplaceSuperTypes(subTypes, type);
+				TypeUtil.ReplaceSuperTypes(subTypes, type);
 
 			if (subTypes.Any())
 				return subTypes.First();
