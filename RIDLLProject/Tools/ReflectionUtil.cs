@@ -101,7 +101,8 @@ namespace RelationsInspector
 			}
 		}
 
-		// searching for common base class (either concrete or abstract)
+		// returns common base class (either concrete or abstract)
+        // returns null if non exists
 		internal static Type GetCommonBaseType(Type typeLeft, Type typeRight)
 		{
 			if (typeLeft == null || typeRight == null) return null;
@@ -111,7 +112,7 @@ namespace RelationsInspector
 			.FirstOrDefault(type => !type.IsInterface);
 		}
 
-		// basetype including the type itself. no interfaces
+		// returns type and all its base types. no interfaces
 		internal static IEnumerable<Type> GetTypeHierarchy(Type type)
 		{
 			if (type == null) yield break;
@@ -154,10 +155,68 @@ namespace RelationsInspector
 			return;
 		}
 
+        // returns the loaded assembly that matches the name. 
+        // returns null if there is not exactly one
 		public static System.Reflection.Assembly GetAssemblyByName(string name)
 		{
 			return System.AppDomain.CurrentDomain.GetAssemblies().
 				   SingleOrDefault(assembly => assembly.GetName().Name == name);
 		}
-	}
+
+        // returns the types and their basetypes of all components that are shared between the given GameObjects
+        // returns empty set if any of the objects is not a GameObject (or if they share no components)
+        internal static IEnumerable<Type> GetSharedComponentTypes( IEnumerable<object> objects )
+        {
+            if ( objects == null || !objects.Any() )
+                return Enumerable.Empty<Type>();
+
+            // all items have to be gameobjects
+            var asGameObjects = objects.Select( o => o as GameObject );
+            if ( asGameObjects.Any( go => go == null ) )
+                return Enumerable.Empty<Type>();
+
+            // return intersection of gameobject component types
+            return asGameObjects
+                .Select( GetComponentTypes )
+                .Aggregate( ( shared, goCompTypes ) => shared.Intersect( goCompTypes ) );
+        }
+
+        // map gameObject to all types that its components can be assigned to (distinct)
+        internal static IEnumerable<Type> GetComponentTypes( GameObject go )
+        {
+            return go
+                .GetComponents<Component>() // seq of components held by the GO
+                .SelectMany( c => GetTypeHierarchy( c.GetType() ) ) // seq of the types and supertypes of these components
+                .Distinct();    // same seq, with duplicates removed
+        }
+
+        // returns the first component of the given gameobject that can be treated as compType
+        // null if none found
+        internal static object GetGameObjectComponentOfType( object obj , Type compType)
+        {
+            var asGameObject = obj as GameObject;
+            if ( asGameObject == null )
+                return null;
+
+            return asGameObject
+                .GetComponents<Component>()
+                .FirstOrDefault( comp => compType.IsAssignableFrom( comp.GetType() ) );
+        }
+
+        // returns representations of the given objects that are assignable to targetType
+        // so that the resulting objects can be used as entities of a backend which uses taretType as entity type
+        internal static object[] MakeObjectsAssignable( IEnumerable<object> objects, Type targetType )
+        {
+            if ( objects == null )
+                return null;
+
+            return objects
+                .Select( obj => 
+                    targetType.IsAssignableFrom( obj.GetType() ) ? 
+                    obj : 
+                    GetGameObjectComponentOfType( obj, targetType ) 
+                )
+                .ToArray();
+        }
+    }
 }

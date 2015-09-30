@@ -157,6 +157,8 @@ namespace RelationsInspector
             return (workspace != null);
         }
 
+
+
         IWorkspace CreateWorkspace()
         {
             var backendArguments = BackendUtil.GetGenericArguments(selectedBackendType);
@@ -165,8 +167,8 @@ namespace RelationsInspector
 
             var genericWorkspaceType = typeof(Workspace<,>).MakeGenericType(backendArguments);
             var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
-            var targetArray = targetObjects == null ? null : targetObjects.ToArray();
-            var ctorArguments = new object[] 
+            var targetArray = ReflectionUtil.MakeObjectsAssignable( targetObjects, entityType );
+            var ctorArguments = new object[]
             {
                 selectedBackendType,
                 targetArray,
@@ -208,10 +210,15 @@ namespace RelationsInspector
                 validBackendTypes = allBackendTypes.ToList();
             else
             {
+                // find all possible backend entity types that can be derived from the set of target objects
                 var targetTypes = ReflectionUtil.GetTypesAssignableFrom(targetObjects.Select(obj => obj.GetType()));
-                var backendsWithMatchingEntityTypes = allBackendTypes.Where(backend => BackendUtil.IsEntityTypeAssignableFromAny(backend, targetTypes));
-                var backendsWithMatchingTargetAttribute = allBackendTypes.Where(backend => BackendUtil.BackendAttributeFitsAny(backend, targetTypes));
-                validBackendTypes = backendsWithMatchingEntityTypes.Union(backendsWithMatchingTargetAttribute).ToList();
+                var targetComponentTypes = ReflectionUtil.GetSharedComponentTypes( targetObjects );
+                var backendEntityTypes = targetTypes.Union( targetComponentTypes );
+
+                // find all backends that accept any of the possible entity types
+                validBackendTypes = allBackendTypes
+                    .Where( backendType => BackendUtil.IsEntityTypeAssignableFromAny( backendType, backendEntityTypes ) )
+                    .ToList();
             }
 
             if (!validBackendTypes.Contains(selectedBackendType))
