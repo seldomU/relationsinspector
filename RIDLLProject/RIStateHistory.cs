@@ -30,9 +30,6 @@ namespace RelationsInspector
         List<RIState> stateHistory = new List<RIState>();
         int pointer;
 
-        static readonly GUIContent prevButtonContent = new GUIContent("<", "Back to previous graph");
-        static readonly GUIContent nextButtonContent = new GUIContent(">", "Forward to next graph");
-
         public void RegisterState(IEnumerable<object> targets, Type backendType)
         {
             if (targets == null || !targets.Any())
@@ -92,14 +89,14 @@ namespace RelationsInspector
             bool contextEnabaled = GUI.enabled;
 
             GUI.enabled = backButtonEnabled;
-            if (GUILayout.Button(prevButtonContent, EditorStyles.toolbarButton))
+            if (GUILayout.Button( new GUIContent( SkinManager.GetSkin().prevIcon, "Back to previous graph" ), EditorStyles.toolbarButton))
             {
                 var state = GetPreviousState();
                 setTargets(state.targets, state.backendType);
             }
 
             GUI.enabled = nextButtonEnabled;
-            if (GUILayout.Button(nextButtonContent, EditorStyles.toolbarButton))
+            if (GUILayout.Button( new GUIContent( SkinManager.GetSkin().nextIcon, "Forward to next graph" ), EditorStyles.toolbarButton))
             {
                 var state = GetNextState();
                 setTargets(state.targets, state.backendType);

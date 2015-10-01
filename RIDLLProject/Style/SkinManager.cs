@@ -42,7 +42,9 @@ namespace RelationsInspector
 		public static void PopulateLightSkinAsset(RelationInspectorSkin skin)
 		{
 			skin.windowColor = new Color(0.76f, 0.76f, 0.76f);
-            skin.settingsIcon = EditorGUIUtility.Load( "icons/_Popup.png" ) as Texture2D; //SettingsIcon
+            skin.settingsIcon = EditorGUIUtility.Load( "icons/_Popup.png" ) as Texture2D;
+            skin.prevIcon = EditorGUIUtility.Load( "icons/Profiler.PrevFrame.png" ) as Texture2D;
+            skin.nextIcon = EditorGUIUtility.Load( "icons/Profiler.NextFrame.png" ) as Texture2D;
 
             skin.minimap = new MinimapStyle();
 			skin.minimap.backgroundColor = new Color(0.76f, 0.76f, 0.76f);
@@ -72,7 +74,8 @@ namespace RelationsInspector
 		{
 			skin.windowColor = new Color(0.2f, 0.2f, 0.2f);
             skin.settingsIcon = EditorGUIUtility.Load( "icons/d__Popup.png" ) as Texture2D;
-
+            skin.prevIcon = EditorGUIUtility.Load( "icons/d_Profiler.PrevFrame.png" ) as Texture2D;
+            skin.nextIcon = EditorGUIUtility.Load( "icons/d_Profiler.NextFrame.png" ) as Texture2D;
 
             skin.minimap = new MinimapStyle();
 			skin.minimap.backgroundColor = new Color(0.4f, 0.4f, 0.4f, 1f);

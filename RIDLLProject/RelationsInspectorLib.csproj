@@ -80,7 +80,7 @@
     <Compile Include="Layout\LayoutParams.cs" />
     <Compile Include="Layout\LayoutType.cs" />
     <Compile Include="Layout\TreeLayoutAlgorithm.cs" />
-    <Compile Include="ProjectSettings.cs" />
+    <Compile Include="Settings\ProjectSettings.cs" />
     <Compile Include="RelationsInspectorAttribute.cs" />
     <Compile Include="RelationsInspectorWindow.cs" />
     <Compile Include="RelationsInspectorAPI\RIInternal.cs" />
@@ -89,6 +89,8 @@
     <Compile Include="Serialization\VertexPosition.cs" />
     <Compile Include="Serialization\VertexPositionStorage.cs" />
     <Compile Include="Settings\AboutWindow.cs" />
+    <Compile Include="Settings\RelationsInspectorSettings.cs" />
+    <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsMenu.cs" />
     <Compile Include="Style\EntityWidgetStyle.cs" />
     <Compile Include="Style\MinimapStyle.cs" />

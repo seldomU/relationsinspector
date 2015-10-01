@@ -10,5 +10,7 @@ namespace RelationsInspector
 		public RelationDrawerStyle relationDrawer;
 		public Color windowColor;
         public Texture2D settingsIcon;
+        public Texture2D prevIcon;
+        public Texture2D nextIcon;
 	}
 }
