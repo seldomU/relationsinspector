@@ -71,9 +71,6 @@ namespace RelationsInspector
 		Vector2 selectionRectOrigin;
 		bool selectionRectActive;
 
-#if DEBUG
-		bool showScale;
-#endif
 
 		public IMView(Graph<T,P> graph, IViewParent<T, P> parent )
 		{
@@ -113,7 +110,12 @@ namespace RelationsInspector
 		public void FitViewRectToGraph()
 		{
 			var entityPositions = graph.VerticesData.Values.Select(v => v.pos);
-			transform = ViewUtil.FitPointsIntoRect(entityPositions, parent.GetViewRect(), 0.3f);
+
+            // use only the center area of the view rect for displaying the graph
+            Rect viewRect = parent.GetViewRect();
+            Rect graphRect = Util.CenterRect( viewRect.center, viewRect.GetExtents() * 0.7f );
+
+			transform = ViewUtil.FitPointsIntoRect(entityPositions, graphRect);
 		}
 
 		IEnumerable<Tuple<IEnumerable<Edge<T, P>>, IEnumerable<Edge<T, P>>>> GetEdgesPerEntityPair()
@@ -175,14 +177,7 @@ namespace RelationsInspector
 				InitEntityWidget();
 				parent.RepaintView();
 			}
-#if DEBUG
-			showScale = GUILayout.Toggle(showScale, "showScale");
-			if (showScale)
-			{
-				GUILayout.Label(transform.scale.ToString());
-			}
-#endif
-		}
+        }
 
 		public void Draw( )
 		{
@@ -495,8 +490,10 @@ namespace RelationsInspector
 					break;
 
 				case EventType.ScrollWheel:
-					bool zoomIn = ev.delta.y > 0;
-					Tweener.gen.MoveTransform2dTo(transform, t=>Zoom(t, zoomIn, ev.mousePosition), 0.1f, true);
+                    bool xZoom = ( ev.modifiers & EventModifiers.Control ) == 0;
+                    bool yZoom = ( ev.modifiers & EventModifiers.Shift ) == 0;
+                    bool zoomIn = ev.delta.y > 0;
+					Tweener.gen.MoveTransform2dTo(transform, t=>Zoom(t, zoomIn, xZoom, yZoom, ev.mousePosition), 0.1f, true);
 
                     ev.Use();
 					parent.RepaintView();
@@ -516,15 +513,18 @@ namespace RelationsInspector
 			return true;
 		}
 
-		static Transform2d Zoom(Transform2d transform, bool zoomIn, Vector2 fixPosition)
+		static Transform2d Zoom(Transform2d transform, bool zoomIn, bool affectX, bool affectY, Vector2 fixPosition)
 		{
 			// adjust the offset such that the window stays centered on the same graph position
 			var fixPositionBase = transform.Revert(fixPosition);
 
 			var targetTransform = new Transform2d(transform);
-			targetTransform.scale *= zoomIn ? 3f / 2 : 2f / 3;
+            if(affectX)
+			    targetTransform.scale.x *= zoomIn ? 3f / 2 : 2f / 3;
+            if ( affectY )
+                targetTransform.scale.y *= zoomIn ? 3f / 2 : 2f / 3;
 
-			var newfixPosition = targetTransform.Apply(fixPositionBase);
+            var newfixPosition = targetTransform.Apply(fixPositionBase);
 			targetTransform.translation += fixPosition - newfixPosition;
 			return targetTransform;
 		}

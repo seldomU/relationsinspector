@@ -5,7 +5,9 @@ using System.Collections.Generic;
 
 namespace RelationsInspector
 {
-	public class TreeLayoutAlgorithm<T,P> where T : class
+    internal enum TreeRootLocation { Top, Left, Bottom, Right };
+
+    public class TreeLayoutAlgorithm<T,P> where T : class
 	{
 		Graph<T, P> graph;
 		Dictionary<T, float> treeWidth;	// width of the tree under the entity, with each entity being one unit wide
@@ -29,6 +31,12 @@ namespace RelationsInspector
 			var positions = new Dictionary<T, Vector2>();
 			positions[root] = RootPos;
 			PositionChildren(root, positions);
+
+            // "rotate" positions according to the desired root node location 
+            var nodeTransform = GetNodePositionTransform( Settings.Storage.treeRootLocation );
+            foreach ( var node in graph.Vertices )
+                positions[ node ] = nodeTransform( positions[ node ] );
+
 			yield return positions;
 		}
 
@@ -60,5 +68,25 @@ namespace RelationsInspector
 			}
 			return treeWidth[root];
 		}
+
+        // this becomes superfluous when the view supports rotation
+        System.Func<Vector2,Vector2> GetNodePositionTransform( TreeRootLocation rootLocation )
+        {
+            switch ( rootLocation )
+            {
+                case TreeRootLocation.Top:
+                default:
+                    return pos => pos;  // identiy. keep position as it is
+
+                case TreeRootLocation.Left:
+                    return pos => new Vector2( pos.y, pos.x );  // flip x and y
+
+                case TreeRootLocation.Bottom:
+                    return pos => new Vector2( pos.x, -pos.y ); // mirror y 
+
+                case TreeRootLocation.Right:
+                    return pos => new Vector2( -pos.y, -pos.x ); // mirror both dimensions and flip
+            }
+        }
 	}
 }
