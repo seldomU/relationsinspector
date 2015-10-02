@@ -9,5 +9,8 @@ namespace RelationsInspector
         public Color backgroundColor;
         public Color vertexMarkerColor;
         public Color viewRectColor;
+        public MinimapLocation location;
+        public int size;
+        public int spacing;
     }
 }

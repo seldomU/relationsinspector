@@ -14,7 +14,7 @@ namespace RelationsInspector
             //menu.AddItem( new GUIContent( "Unity selection -> RI/On" ), false, () => { } );
             //menu.AddItem( new GUIContent( "Unity selection -> RI/Off" ), false, () => { } );
             //menu.AddItem( new GUIContent( "Unity selection -> RI/Backend decides" ), false, () => { } );
-            menu.AddItem( new GUIContent( "Settings" ), false, () => { Selection.activeObject = Settings.Storage; } );
+            menu.AddItem( new GUIContent( "Settings" ), false, () => { Selection.activeObject = Settings.Instance; } );
             menu.AddItem( new GUIContent( "Documentation" ), false, () => Application.OpenURL( DocURL ) );
             menu.AddItem( new GUIContent( "Discussion" ), false, () => Application.OpenURL( DiscussionURL ) );
             menu.AddItem( new GUIContent( "About" ), false, () => AboutWindow.Spawn() );

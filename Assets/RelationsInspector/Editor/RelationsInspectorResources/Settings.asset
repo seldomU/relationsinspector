@@ -11,3 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: -1643148027, guid: 944271f04a339b04fa43068183896d33, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
+  treeLayoutOrigin: 1

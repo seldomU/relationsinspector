@@ -7,8 +7,32 @@ using System.Collections.Generic;
 
 namespace RelationsInspector
 {
-	internal class Minimap
+    public enum MinimapLocation { TopLeft, TopRight, BottomLeft, BottomRight };
+
+    internal class Minimap
 	{
+        internal static Rect GetRect(MinimapStyle mmStyle, Rect contextRect)
+        {
+            int width, height;
+            width = height = mmStyle.size;
+            int spacing = mmStyle.spacing;
+            switch ( mmStyle.location )
+            {
+                case MinimapLocation.TopLeft:
+                default:
+                    return new Rect(contextRect.x+spacing, contextRect.y + spacing, width, height);
+
+                case MinimapLocation.TopRight:
+                    return new Rect(contextRect.xMax - spacing - width, contextRect.y+spacing, width, height);
+
+                case MinimapLocation.BottomLeft:
+                    return new Rect(contextRect.x + spacing, contextRect.yMax - spacing - height, width, height);
+
+                case MinimapLocation.BottomRight:
+                    return new Rect(contextRect.xMax - spacing - width, contextRect.yMax - spacing - height, width, height);
+            }
+        }
+
 		internal static Vector2 Draw(IEnumerable<Vector2> windowPositions, Rect drawRect, Rect graphViewRect, bool showGraphBounds, MinimapStyle style)
 		{
 			// draw black outline

@@ -33,7 +33,7 @@ namespace RelationsInspector
 			PositionChildren(root, positions);
 
             // "rotate" positions according to the desired root node location 
-            var nodeTransform = GetNodePositionTransform( Settings.Storage.treeRootLocation );
+            var nodeTransform = GetNodePositionTransform( Settings.Instance.treeRootLocation );
             foreach ( var node in graph.Vertices )
                 positions[ node ] = nodeTransform( positions[ node ] );
 

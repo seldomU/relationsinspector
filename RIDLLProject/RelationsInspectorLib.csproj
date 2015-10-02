@@ -91,6 +91,7 @@
     <Compile Include="Settings\AboutWindow.cs" />
     <Compile Include="Settings\RelationsInspectorSettings.cs" />
     <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Settings\SettingsInspector.cs" />
     <Compile Include="Settings\SettingsMenu.cs" />
     <Compile Include="Style\EntityWidgetStyle.cs" />
     <Compile Include="Style\MinimapStyle.cs" />

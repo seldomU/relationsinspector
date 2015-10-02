@@ -18,7 +18,6 @@ namespace RelationsInspector
 		LayoutParams layoutParams;
         IGraphBackendInternal<T,P> graphBackend;
 		DebugSettings debugSettings;
-		Rect minimapRect = new Rect(30, 30, 100, 100);
 		Rect drawRect;
 		IEnumerator layoutEnumerator;
 		LayoutType layoutType;
@@ -159,11 +158,12 @@ namespace RelationsInspector
 					graph.CleanNullRefs();
 				}
 
-				if (graph != null)
+				if (graph != null && Settings.Instance.showMinimap)
 				{
 					var entityPositions = graph.VerticesData.Values.Select(data => data.pos);
 					var style = SkinManager.GetSkin().minimap;
-					var newCenter = Minimap.Draw( entityPositions, minimapRect, view.GetViewRect(drawRect), debugSettings.showMinimapGraphBounds, style);
+                    Rect minimapRect = Minimap.GetRect( SkinManager.GetSkin().minimap, drawRect ); 
+                    var newCenter = Minimap.Draw( entityPositions, minimapRect, view.GetViewRect(drawRect), debugSettings.showMinimapGraphBounds, style);
 					view.SetCenter(newCenter);
 				}
 

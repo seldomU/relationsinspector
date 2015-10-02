@@ -13,7 +13,7 @@ namespace RelationsInspector
         const string SettingsFileName = "Settings.asset";
 
         private static RelationsInspectorSettings storage = LoadStorage();
-        public static RelationsInspectorSettings Storage
+        public static RelationsInspectorSettings Instance
         {
             get { return storage; }
         }
@@ -37,7 +37,7 @@ namespace RelationsInspector
 
             // initialize with default values
             storage.treeRootLocation = TreeRootLocation.Left;
-
+            storage.showMinimap = true;
             return storage;
         }
     }
