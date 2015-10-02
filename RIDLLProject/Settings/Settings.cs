@@ -34,6 +34,10 @@ namespace RelationsInspector
         static RelationsInspectorSettings CreateDefaultStorage()
         {
             var storage = ScriptableObject.CreateInstance<RelationsInspectorSettings>();
+
+            // initialize with default values
+            storage.treeRootLocation = TreeRootLocation.Left;
+
             return storage;
         }
     }
