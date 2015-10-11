@@ -60,7 +60,6 @@ namespace RelationsInspector
 
             // clip at the rect borders
             GUI.BeginGroup( workspaceRect, GUIStyle.none );
-            workspaceRect.y -= 16; // this is bad. the group adds vertical spacing that we don't want. find a way to compute it
 			internalAPI.OnWorkspaceGUI(workspaceRect);
 			GUI.EndGroup();
 
