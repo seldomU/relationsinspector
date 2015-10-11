@@ -574,7 +574,9 @@ namespace RelationsInspector
 		public void SetCenter(Vector2 newCenter)
 		{
 			var currentCenter = GetViewRect(parent.GetViewRect()).center;
-			var offset = (newCenter - currentCenter) * transform.scale.x;
+			var offset = (newCenter - currentCenter);
+            offset.x *= transform.scale.x;
+            offset.y *= transform.scale.y;
 			transform.translation -= offset;
 		}
 
