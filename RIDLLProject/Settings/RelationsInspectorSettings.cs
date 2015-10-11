@@ -6,5 +6,6 @@ namespace RelationsInspector
     {
         public TreeRootLocation treeRootLocation;
         public bool showMinimap;
+        public MinimapLocation minimapLocation;
     }
 }

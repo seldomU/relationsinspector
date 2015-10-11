@@ -19,5 +19,6 @@ namespace RelationsInspector
 		void RemoveEdge(object source, object target, object tag);
 
 		void SelectEntityNodes(System.Predicate<object> doSelect);
+        void Relayout();
 	}
 }

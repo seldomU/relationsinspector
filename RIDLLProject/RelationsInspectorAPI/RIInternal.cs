@@ -25,7 +25,7 @@ namespace RelationsInspector
         const string PrefsKeyDefaultBackend = "RIWindowDefaultBackend";
 
         static readonly GUIContent clearButtonContent = new GUIContent("Clear", "Removes all window content");
-        static readonly GUIContent refreshButtonContent = new GUIContent("Refresh", "Rebuilds the graph from the target objects");
+        static readonly GUIContent rebuildButtonContent = new GUIContent("Rebuild", "Rebuilds the graph from the target objects");
 
         internal RIInternal(Action<Action> Exec, Action<GUIContent> ShowNotification, RelationsInspectorWindow window)
         {
@@ -67,6 +67,19 @@ namespace RelationsInspector
         public void Repaint()
         {
             Exec(Util.IdleAction);  // Update repaints after any action, so idle is enough to cause a repaint
+        }
+        
+        // rebuild the graph from the current targets
+        public void Rebuild()
+        {
+            InitWorkspace();
+        }
+
+        // relayout the current graph
+        public void Relayout()
+        {
+            if ( workspace != null )
+                workspace.Relayout();
         }
 
         // manipulate the graph through targets
@@ -277,7 +290,7 @@ namespace RelationsInspector
 
             // re-create the workspace from targets
             GUI.enabled = targetObjects != null && targetObjects.Any();
-            if (GUILayout.Button(refreshButtonContent, EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(rebuildButtonContent, EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
                 InitWorkspace();
             GUI.enabled = true;
 

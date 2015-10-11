@@ -8,6 +8,12 @@ namespace RelationsInspector
 		// draw a fresh view of the graph
 		void Repaint();
 
+        // rebuild the graph from its current target objects
+        void Rebuild();
+
+        // redo the layout on the current graph
+        void Relayout();
+
 		// enforce backend selection
 		void SetBackend(System.Type backendType);
 
@@ -40,6 +46,12 @@ namespace RelationsInspector
     {
         // draw a fresh view of the graph
         void Repaint();
+
+        // rebuild the graph from its current target objects
+        void Rebuild();
+
+        // redo the layout on the current graph
+        void Relayout();
 
         // enforce backend selection
         void SetBackend(System.Type backendType);

@@ -52,7 +52,6 @@ namespace RelationsInspector
 			skin.minimap.viewRectColor = Color.blue;
             skin.minimap.size = 75;
             skin.minimap.spacing = 15;
-            skin.minimap.location = MinimapLocation.TopLeft;
 
 			skin.entityWidget = new EntityWidgetStyle();
 			skin.entityWidget.contentStyle = new GUIStyle(GUI.skin.label);
@@ -86,7 +85,6 @@ namespace RelationsInspector
 			skin.minimap.viewRectColor = new Color(1f, 0.92f, 0f, 1f);
             skin.minimap.size = 75;
             skin.minimap.spacing = 15;
-            skin.minimap.location = MinimapLocation.TopLeft;
 
             skin.entityWidget = new EntityWidgetStyle();
 			skin.entityWidget.contentStyle = new GUIStyle(GUI.skin.label);

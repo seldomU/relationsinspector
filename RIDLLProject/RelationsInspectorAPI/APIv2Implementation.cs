@@ -21,6 +21,18 @@ namespace RelationsInspector
             internalAPI.Repaint();
         }
 
+        // rebuild the graph from the current targets
+        public void Rebuild()
+        {
+            internalAPI.Rebuild();
+        }
+
+        // relayout the current graph
+        public void Relayout()
+        {
+            internalAPI.Relayout();
+        }
+
         // manipulate the graph through targets
         public void ResetTargets(object[] targets)
         {

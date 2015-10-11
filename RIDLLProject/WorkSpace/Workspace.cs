@@ -140,6 +140,11 @@ namespace RelationsInspector
 			}
 		}
 
+        public void Relayout()
+        {
+            Exec( () => DoAutoLayout( false ) );
+        }
+
 		public void OnGUI(Rect drawRect)
 		{					
 			this.drawRect = drawRect;
@@ -162,7 +167,7 @@ namespace RelationsInspector
 				{
 					var entityPositions = graph.VerticesData.Values.Select(data => data.pos);
 					var style = SkinManager.GetSkin().minimap;
-                    Rect minimapRect = Minimap.GetRect( SkinManager.GetSkin().minimap, drawRect ); 
+                    Rect minimapRect = Minimap.GetRect( SkinManager.GetSkin().minimap, Settings.Instance.minimapLocation, drawRect ); 
                     var newCenter = Minimap.Draw( entityPositions, minimapRect, view.GetViewRect(drawRect), debugSettings.showMinimapGraphBounds, style);
 					view.SetCenter(newCenter);
 				}

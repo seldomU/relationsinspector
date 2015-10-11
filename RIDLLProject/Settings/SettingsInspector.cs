@@ -11,29 +11,31 @@ namespace RelationsInspector
     [CustomEditor(typeof(RelationsInspectorSettings))]
     class SettingsInspector : Editor
     {
-        bool initialized;
         RelationsInspectorWindow riWindow;
+        RelationsInspectorSettings settings;
+
+        void OnEnable()
+        {
+            riWindow = Resources.FindObjectsOfTypeAll<RelationsInspectorWindow>().FirstOrDefault();
+            settings = target as RelationsInspectorSettings;
+        }
 
         public override void OnInspectorGUI()
         {
-            if ( !initialized )
-            {
-                initialized = true;
-                riWindow = Resources.FindObjectsOfTypeAll<RelationsInspectorWindow>().FirstOrDefault();
-            }
-
             GUILayout.Label( "Relations inspector settings", EditorStyles.boldLabel );
+            EditorGUILayout.Space();
 
             EditorGUI.BeginChangeCheck();
-            base.OnInspectorGUI();
-            if ( EditorGUI.EndChangeCheck() )
-                RepaintRI();
+            settings.treeRootLocation = (TreeRootLocation) EditorGUILayout.EnumPopup( "Tree root location", settings.treeRootLocation );
+            if ( EditorGUI.EndChangeCheck() && riWindow != null )
+                riWindow.GetAPI().Relayout();
+
+            EditorGUI.BeginChangeCheck();
+            settings.showMinimap = EditorGUILayout.Toggle( "Show minimap", settings.showMinimap );
+            settings.minimapLocation = (MinimapLocation) EditorGUILayout.EnumPopup( "Minimap location", settings.minimapLocation );
+            if ( EditorGUI.EndChangeCheck() && riWindow != null )
+                riWindow.GetAPI().Repaint();
         }
 
-        void RepaintRI()
-        {
-            if ( riWindow != null )
-                riWindow.Repaint();
-        }
     }
 }
