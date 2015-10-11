@@ -15,6 +15,9 @@ MonoBehaviour:
     backgroundColor: {r: .75999999, g: .75999999, b: .75999999, a: 1}
     vertexMarkerColor: {r: 0, g: 0, b: 0, a: 1}
     viewRectColor: {r: 0, g: 0, b: 1, a: 1}
+    location: 0
+    size: 75
+    spacing: 15
   entityWidget:
     backgroundColor: {r: .75999999, g: .75999999, b: .75999999, a: 1}
     highlightColor: {r: .349999994, g: .550000012, b: 1, a: 1}
