@@ -21,7 +21,7 @@ public class EditorInspector : EditorWindow
 
 		// draw the inspector
 		EditorGUILayout.Space();
-		EditorGUILayout.LabelField("Inspector", EditorStyles.boldLabel);
+		EditorGUILayout.LabelField("Inspector " + windows[ selectedWindowId ].GetType(), EditorStyles.boldLabel);
 		inspectorScrollPos = GUILayout.BeginScrollView(inspectorScrollPos);
 		inspectorEditor.OnInspectorGUI();
 		GUILayout.EndScrollView();
