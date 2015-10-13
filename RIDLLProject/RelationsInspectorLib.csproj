@@ -100,10 +100,6 @@
     <Compile Include="Style\SkinManager.cs" />
     <Compile Include="RIStateHistory.cs" />
     <Compile Include="Tools\DebugSettings.cs" />
-    <Compile Include="Tools\EditorCoroutine\ContinueConditions.cs" />
-    <Compile Include="Tools\EditorCoroutine\EditorCoroutine.cs" />
-    <Compile Include="Tools\EditorCoroutine\EditorCoroutineManager.cs" />
-    <Compile Include="Tools\EditorCoroutine\EditorWindowExtensions.cs" />
     <Compile Include="Tools\Extensions\LinqExtensions.cs" />
     <Compile Include="Tools\Extensions\RectExtensions.cs" />
     <Compile Include="Tools\Extensions\StringExtensions.cs" />
