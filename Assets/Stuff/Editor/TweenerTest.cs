@@ -3,8 +3,8 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using RelationsInspector;
-using RelationsInspector.Tween;
-
+using RelationsInspector.Tweening;
+/*
 public class TweenerTest : EditorWindow
 {
 	RectObj rectObj = new RectObj(new Rect(20, 30, 30, 30));
@@ -39,5 +39,5 @@ public class TweenerTest : EditorWindow
 	{
 		GetWindow<TweenCircleTest>();
 	}
-}
+}*/
 

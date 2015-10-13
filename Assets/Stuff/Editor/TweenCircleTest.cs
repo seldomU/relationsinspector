@@ -3,8 +3,8 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using RelationsInspector;
-using RelationsInspector.Tween;
-
+using RelationsInspector.Tweening;
+/*
 public class TweenCircleTest : EditorWindow
 {
 	// inspectable variables
@@ -89,3 +89,4 @@ public class TweenCircleTest : EditorWindow
 		GetWindow<TweenCircleTest>();
 	}
 }
+*/

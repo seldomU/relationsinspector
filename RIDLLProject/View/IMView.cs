@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using RelationsInspector.Extensions;
-using RelationsInspector.Tween;
+using RelationsInspector.Tweening;
 
 namespace RelationsInspector
 {
@@ -493,7 +493,8 @@ namespace RelationsInspector
                     bool xZoom = ( ev.modifiers & EventModifiers.Control ) == 0;
                     bool yZoom = ( ev.modifiers & EventModifiers.Shift ) == 0;
                     bool zoomIn = ev.delta.y > 0;
-					Tweener.gen.MoveTransform2dTo(transform, t=>Zoom(t, zoomIn, xZoom, yZoom, ev.mousePosition), 0.1f, true);
+                    var targetTransform = Zoom( transform, zoomIn, xZoom, yZoom, ev.mousePosition );
+                    Tweener.gen.Add( new Tween<Transform2d>( t => transform = t, 0.1f, TweenUtil.Transform2( transform, targetTransform, TwoValueEasing.Linear ) ) );  //.MoveTransform2dTo(transform, t=>Zoom(t, zoomIn, xZoom, yZoom, ev.mousePosition), 0.1f, true);
 
                     ev.Use();
 					parent.RepaintView();

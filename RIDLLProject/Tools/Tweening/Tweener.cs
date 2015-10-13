@@ -5,15 +5,8 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace RelationsInspector.Tween
+namespace RelationsInspector.Tweening
 {
-	public interface ITween
-	{
-		void Update(float time);
-		bool IsExpired(float time);
-		void Finish();
-	}
-	
 	public static class Tweener
 	{
 		public static TweenCollection gen = new TweenCollection();	// generic collection

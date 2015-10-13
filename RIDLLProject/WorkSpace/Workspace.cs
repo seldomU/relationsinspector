@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using RelationsInspector.Extensions;
-using RelationsInspector.Tween;
+using RelationsInspector.Tweening;
 using System;
 using Stopwatch = System.Diagnostics.Stopwatch;
 using System.Collections;
@@ -134,7 +134,7 @@ namespace RelationsInspector
 					{
 						VertexData<T, P> vData = null;
 						if( graph.VerticesData.TryGetValue(pair.Key, out vData) )
-							graphPosTweens.MoveVertexTo<T, P>(vData, pair.Value, vertexPosTweenDuration, false);
+							graphPosTweens.Add( new Tween<Vector2>( v=> vData.pos = v, vertexPosTweenDuration, TweenUtil.Vector2_2(vData.pos, pair.Value, TwoValueEasing.Linear)));
 					}
 				}
 			}
