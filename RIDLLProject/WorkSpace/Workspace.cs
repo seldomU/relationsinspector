@@ -163,15 +163,6 @@ namespace RelationsInspector
 					graph.CleanNullRefs();
 				}
 
-				if (graph != null && Settings.Instance.showMinimap)
-				{
-					var entityPositions = graph.VerticesData.Values.Select(data => data.pos);
-					var style = SkinManager.GetSkin().minimap;
-                    Rect minimapRect = Minimap.GetRect( SkinManager.GetSkin().minimap, Settings.Instance.minimapLocation, drawRect ); 
-                    var newCenter = Minimap.Draw( entityPositions, minimapRect, view.GetViewRect(drawRect), debugSettings.showMinimapGraphBounds, style);
-					view.SetCenter(newCenter);
-				}
-
 				view.HandleEvent(Event.current);
 			}
 		}

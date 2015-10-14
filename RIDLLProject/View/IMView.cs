@@ -292,7 +292,19 @@ namespace RelationsInspector
 					}
 				}
 			}
+
+            DrawMinimap();
 		}
+
+        void DrawMinimap()
+        {
+            var entityViewPositions = graph.VerticesData.Values.Select( data => transform.Apply( data.pos ) );
+            var style = SkinManager.GetSkin().minimap;
+            Rect drawRect = parent.GetViewRect();
+            Rect minimapRect = Minimap.GetRect( SkinManager.GetSkin().minimap, Settings.Instance.minimapLocation, drawRect );
+            var newCenter = Minimap.Draw( entityViewPositions, minimapRect,  drawRect, false, style );
+            //SetCenter( newCenter );
+        }
 
 		// draw label with padding around the content rect
 		static void DrawPaddedLabel(GUIContent label, Rect labelRect, float[] padding, Color bgColor, bool outLined = true)
