@@ -17,37 +17,6 @@ namespace RelationsInspector
 
 		public static System.Action IdleAction = () => { };
 
-		public static float Transform(float source, float translation, float scale)
-		{
-			return source * scale + translation;
-		}
-
-		public static Vector2 Transform(Vector2 source, Vector2 translation, float scale)
-		{
-			return source * scale + translation;
-		}
-
-		public static Rect Transform(Rect source, Vector2 translation, float scale)
-		{
-			var tCenter = Transform(source.center, translation, scale);
-			return CenterRect(tCenter, source.width * scale, source.height * scale);
-		}
-
-		public static Vector2 UnTransform(Vector2 source, Vector2 translation, float scale)
-		{
-			if( scale == 0 ) return Vector2.zero;
-
-			return (source - translation) / scale;
-		}
-
-		public static Rect UnTransform(Rect source, Vector2 translation, float scale)
-		{
-			if (scale == 0) return new Rect(0, 0, 0, 0);
-
-			var utCenter = UnTransform( source.center, translation, scale );
-			return CenterRect( utCenter, source.width / scale, source.height / scale );
-		}
-
 		public static Rect CenterRect(Vector2 center, float width, float height)
 		{
 			return new Rect(center.x - width / 2, center.y - height / 2, width, height);

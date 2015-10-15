@@ -38,6 +38,17 @@ namespace RelationsInspector
 			return new Vector2(source.x * scale.x + translation.x, source.y * scale.y + translation.y);
 		}
 
+        public Rect Apply( Rect source )
+        {
+            var newCenter = Apply( source.center );
+            return Util.CenterRect( newCenter, ApplyScale( source.GetExtents() ) );
+        }
+
+        public Vector2 ApplyScale( Vector2 source )
+        {
+            return new Vector2( source.x * scale.x, source.y * scale.y );
+        }
+
 		public Rect ApplyScale(Rect r)
 		{
 			Vector2 center = r.center;

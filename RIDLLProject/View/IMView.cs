@@ -303,7 +303,7 @@ namespace RelationsInspector
             Rect drawRect = parent.GetViewRect();
             Rect minimapRect = Minimap.GetRect( SkinManager.GetSkin().minimap, Settings.Instance.minimapLocation, drawRect );
             var newCenter = Minimap.Draw( entityViewPositions, minimapRect,  drawRect, false, style );
-            //SetCenter( newCenter );
+            SetCenter( newCenter );
         }
 
 		// draw label with padding around the content rect
@@ -586,10 +586,10 @@ namespace RelationsInspector
 
 		public void SetCenter(Vector2 newCenter)
 		{
-			var currentCenter = GetViewRect(parent.GetViewRect()).center;
+			var currentCenter = parent.GetViewRect().center;
 			var offset = (newCenter - currentCenter);
-            offset.x *= transform.scale.x;
-            offset.y *= transform.scale.y;
+            //offset.x *= transform.scale.x;
+            //offset.y *= transform.scale.y;
 			transform.translation -= offset;
 		}
 
