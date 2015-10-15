@@ -14,7 +14,6 @@ namespace RelationsInspector
 		Vector2 GetGraphPosition(Vector2 windowPos);
 		T GetEntityAtPosition(Vector2 position);
 
-		void SetCenter(Vector2 newCenter);
 		void CreateEdge(IEnumerable<T> sourceEntities, P tag);
 
 		void OnRemovedEntity(T entity);

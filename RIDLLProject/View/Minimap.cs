@@ -35,7 +35,7 @@ namespace RelationsInspector
             }
         }
 
-        internal static Vector2 Draw( IEnumerable<Vector2> vertexPositions, Rect drawRect, Rect viewRect, bool showGraphBounds, MinimapStyle style )
+        internal static Transform2d Draw( IEnumerable<Vector2> vertexPositions, Rect drawRect, Rect viewRect, bool showGraphBounds, MinimapStyle style )
         {
             // draw black outline
             EditorGUI.DrawRect( drawRect.AddBorder( 1f ), Color.black );
@@ -54,21 +54,7 @@ namespace RelationsInspector
             foreach(var pos in vertexPositions)
                 EditorGUI.DrawRect( Util.CenterRect( mmTransform.Apply( pos ), 2, 2 ), style.vertexMarkerColor );
 
-            // find new center: if there is a mousedown event in the rect, make that position the new view center
-            Vector2 newCenter = viewRect.center;
-            var ev = Event.current;
-            switch ( ev.type )
-            {
-                case EventType.mouseDown:
-                    if ( drawRect.Contains( ev.mousePosition ) )
-                    {
-                        newCenter = mmTransform.Revert( ev.mousePosition );
-                        ev.Use();
-                    }
-                    break;
-            }
-
-            return newCenter;
+            return mmTransform;
         }
 	}
 }

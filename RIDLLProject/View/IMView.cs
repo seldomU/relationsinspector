@@ -50,7 +50,10 @@ namespace RelationsInspector
 		Dictionary<T, Rect> entityDrawerBounds;
 		Dictionary<Edge<T, P>, Rect> edgeMarkerBounds;
 
-		IRelationDrawer<T,P> tagDrawer;
+        Rect minimapRect;
+        Transform2d minimapTransform;
+
+        IRelationDrawer<T,P> tagDrawer;
 		EdgePlacementProvider getEdgePlacement;
 		float edgeGapSize = 4;	// size of the gap between entity drawer bounds and edge
 
@@ -301,9 +304,8 @@ namespace RelationsInspector
             var entityViewPositions = graph.VerticesData.Values.Select( data => transform.Apply( data.pos ) );
             var style = SkinManager.GetSkin().minimap;
             Rect drawRect = parent.GetViewRect();
-            Rect minimapRect = Minimap.GetRect( SkinManager.GetSkin().minimap, Settings.Instance.minimapLocation, drawRect );
-            var newCenter = Minimap.Draw( entityViewPositions, minimapRect,  drawRect, false, style );
-            SetCenter( newCenter );
+            minimapRect = Minimap.GetRect( SkinManager.GetSkin().minimap, Settings.Instance.minimapLocation, drawRect );
+            minimapTransform = Minimap.Draw( entityViewPositions, minimapRect,  drawRect, false, style );
         }
 
 		// draw label with padding around the content rect
@@ -387,6 +389,13 @@ namespace RelationsInspector
 			switch (ev.type)
 			{
 				case EventType.mouseDown:
+
+                    if ( minimapRect.Contains( ev.mousePosition ))
+                    {
+                        SetCenter( minimapTransform.Revert( ev.mousePosition ) );
+                        break;
+                    }
+
 					var clickEntity = GetEntityAtPosition(ev.mousePosition);
 					if (clickEntity != null)
 					{
@@ -588,8 +597,6 @@ namespace RelationsInspector
 		{
 			var currentCenter = parent.GetViewRect().center;
 			var offset = (newCenter - currentCenter);
-            //offset.x *= transform.scale.x;
-            //offset.y *= transform.scale.y;
 			transform.translation -= offset;
 		}
 
