@@ -133,9 +133,13 @@ namespace RelationsInspector
 					foreach (var pair in positions)
 					{
 						VertexData<T, P> vData = null;
-						if( graph.VerticesData.TryGetValue(pair.Key, out vData) )
-							graphPosTweens.Add( new Tween<Vector2>( v=> vData.pos = v, vertexPosTweenDuration, TweenUtil.Vector2_2(vData.pos, pair.Value, TwoValueEasing.Linear)));
-					}
+                        if (graph.VerticesData.TryGetValue(pair.Key, out vData))
+                        {
+                            T tweenOwner = pair.Key;
+                            var evalFunc = TweenUtil.GetCombinedEasing(tweenOwner, graphPosTweens, vData.pos, pair.Value);
+                            graphPosTweens.Replace( tweenOwner, new Tween<Vector2>(v => vData.pos = v, vertexPosTweenDuration, evalFunc) );
+                        }
+                    }
 				}
 			}
 		}

@@ -8,6 +8,8 @@ namespace RelationsInspector.Tweening
 	public class TweenCollection
 	{
         HashSet<ITween> tweens = new HashSet<ITween>();
+        Dictionary<object, ITween> tweenOwners = new Dictionary<object, ITween>();
+
         public bool HasChanges { get; private set; }    // true if the last update changed any tweened values
 
 		public void Update()
@@ -47,6 +49,29 @@ namespace RelationsInspector.Tweening
         public void Add( ITween tween )
         {
             tweens.Add( tween );
+        }
+
+        public void Replace(object owner, ITween tween)
+        {
+            if (tweenOwners.ContainsKey(owner))
+                tweens.Remove(tweenOwners[owner]);
+
+            tweens.Add(tween);
+            tweenOwners[owner] = tween;
+        }
+
+        public bool HasTween(object owner)
+        {
+            return tweenOwners.ContainsKey(owner);
+        }
+
+        public T GetFinalValue<T>(object owner)
+        {
+            ITween tween;
+            if (!tweenOwners.TryGetValue(owner, out tween))
+                return default(T);
+
+            return (tween as Tween<T>).GetFinalValue();
         }
 	}
 }

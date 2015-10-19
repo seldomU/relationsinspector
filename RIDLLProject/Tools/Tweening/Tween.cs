@@ -25,7 +25,14 @@ namespace RelationsInspector.Tweening
             float startTime = (float) UnityEditor.EditorApplication.timeSinceStartup;
             this.endTime = startTime + duration;
 
-            evalAtTime = time => evalAtNormTime( ( time - startTime ) / duration );
+            evalAtTime = time => evalAtNormTime( Clamp01( ( time - startTime ) / duration ) );
+        }
+
+        static float Clamp01(float f)
+        {
+            if (f < 0) return 0;
+            if (f > 1) return 1;
+            return f;
         }
 
         public void Update( float time )
@@ -41,6 +48,11 @@ namespace RelationsInspector.Tweening
         public void Finish()
         {
             Update( endTime );
+        }
+
+        public T GetFinalValue()
+        {
+            return evalAtTime(float.MaxValue);
         }
     }
 }

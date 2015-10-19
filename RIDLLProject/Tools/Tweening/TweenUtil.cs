@@ -3,41 +3,23 @@ using UnityEngine;
 
 namespace RelationsInspector.Tweening
 {
-    public delegate float Easing2( float a, float b, float time );
+    public delegate float Easing2( float time );
     public delegate float Easing3( float a, float b, float c, float time );
-    public delegate T EvalAtNormTime<T>( float time );  // normalized time (0..1)
+    public delegate T EvalAtNormTime<T>( float time );  // expects normalized time (0..1)
     public delegate T EvalAtIntervalTime<T>( float time );
 
     public static class TweenUtil
 	{
-        public static EvalAtNormTime<float> GetTwoValueEasing( float a, float b, Easing2 easing)
-        {
-            return time => easing( a, b, time );
-        }
-
-        public static EvalAtNormTime<float> GetThreeValueEasing( float a, float b, float c, Easing3 easing )
-        {
-            return time => easing( a, b, c, time );
-        }
 
         public static EvalAtNormTime<float> Float2( float startValue, float endValue, TwoValueEasing mode )
         {
-            switch ( mode )
-            {
-                case TwoValueEasing.Linear:
-                default:
-                    return time => Easing.Linear( startValue, endValue, time );
-            }
+            float diff = endValue - startValue;
+            return time => startValue + diff * Easing.twoValueEasings[mode]( time );
         }
 
         public static EvalAtNormTime<float> Float3( float startValue, float controlValue, float endValue, ThreeValueEasing mode )
         {
-            switch ( mode )
-            {
-                case ThreeValueEasing.BezierQuadratic:
-                default:
-                    return time => Easing.BezierQuadratic( startValue, controlValue, endValue, time );
-            }
+            return time => Easing.threeValueEasings[mode](startValue, controlValue, endValue, time);
         }
 
         public static EvalAtNormTime<Vector2> Vector2_2( Vector2 startValue, Vector2 endValue, TwoValueEasing mode )
@@ -60,6 +42,15 @@ namespace RelationsInspector.Tweening
             var scaleEval = Vector2_2( startValue.scale, endValue.scale, mode );
             var rotateEval = Float2( startValue.rotation, endValue.rotation, mode );
             return time => new Transform2d( translateEval( time ), scaleEval( time ), rotateEval( time ) );
+        }
+
+        public static EvalAtNormTime<Vector2> GetCombinedEasing(object owner, TweenCollection collection, Vector2 startValue, Vector2 endValue)
+        {
+            if(!collection.HasTween(owner))
+                return Vector2_2(startValue, endValue, TwoValueEasing.Linear);
+
+            Vector2 midValue = collection.GetFinalValue<Vector2>(owner);
+            return Vector2_3(startValue, midValue, endValue, ThreeValueEasing.BezierQuadratic);
         }
     }
 }
