@@ -99,7 +99,6 @@
     <Compile Include="Style\Skin.cs" />
     <Compile Include="Style\SkinManager.cs" />
     <Compile Include="RIStateHistory.cs" />
-    <Compile Include="Tools\DebugSettings.cs" />
     <Compile Include="Tools\Extensions\LinqExtensions.cs" />
     <Compile Include="Tools\Extensions\RectExtensions.cs" />
     <Compile Include="Tools\Extensions\StringExtensions.cs" />
@@ -109,7 +108,6 @@
     <Compile Include="Tools\GLMaterials.cs" />
     <Compile Include="Tools\GraphBuilder.cs" />
     <Compile Include="Tools\GUIUtil.cs" />
-    <Compile Include="Tools\InspectorWindow.cs" />
     <Compile Include="Tools\Tweening\Tween.cs" />
     <Compile Include="Tools\TypeUtil.cs" />
     <Compile Include="Tools\RNG.cs" />
@@ -128,7 +126,6 @@
     <Compile Include="Backend\IGraphBackend.cs" />
     <Compile Include="WorkSpace\IWorkspace.cs" />
     <Compile Include="WorkSpace\Workspace.cs" />
-    <Compile Include="WorkSpace\WorkspaceToolbar.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />

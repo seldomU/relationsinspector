@@ -17,7 +17,6 @@ namespace RelationsInspector
 		IGraphView<T,P> view;
 		LayoutParams layoutParams;
         IGraphBackendInternal<T,P> graphBackend;
-		DebugSettings debugSettings;
 		Rect drawRect;
 		IEnumerator layoutEnumerator;
 		LayoutType layoutType;
@@ -55,7 +54,6 @@ namespace RelationsInspector
 
             // create new layout params, they are not comming from the cfg yet
             this.layoutParams = ScriptableObject.CreateInstance<LayoutParams>();
-			this.debugSettings = ScriptableObject.CreateInstance<DebugSettings>();
 			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);			
 			graphPosTweens = new TweenCollection();
 
@@ -203,13 +201,6 @@ namespace RelationsInspector
 			}
 			EditorGUI.EndDisabledGroup();
 			*/
-			
-			if (GUILayout.Button("Layout params", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
-			{
-				var window = EditorWindow.CreateInstance<InspectorWindow>();
-				window.objectToInspect = layoutParams;
-				window.Show();
-			}
 
             if(GUILayout.Button("Save", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
             {
