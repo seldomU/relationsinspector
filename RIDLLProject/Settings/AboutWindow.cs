@@ -7,7 +7,14 @@ namespace RelationsInspector
     {
         void OnGUI()
         {
-            GUILayout.Label("Relations inspector v" + ProjectSettings.ProgramVersion);
+#if RIDEMO
+            string title = "Relations inspector demo";
+#else
+            string title = "Relations inspector";
+
+#endif
+
+            GUILayout.Label( title + " " + ProjectSettings.ProgramVersion);
         }
 
         internal static void Spawn()
