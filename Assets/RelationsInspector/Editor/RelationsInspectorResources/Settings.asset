@@ -13,3 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treeRootLocation: 1
   showMinimap: 1
+  minimapLocation: 0
+  layoutParams:
+    maxFrameDuration: .00400000019
+    vertexPosTweenDuration: .400000006
+    vertexPosTweenUpdateInterval: .25

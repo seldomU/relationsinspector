@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
-
 
 namespace RelationsInspector
 {
@@ -13,6 +9,7 @@ namespace RelationsInspector
     {
         RelationsInspectorWindow riWindow;
         RelationsInspectorSettings settings;
+        bool foldGraphSettings;
 
         void OnEnable()
         {
@@ -35,7 +32,34 @@ namespace RelationsInspector
             settings.minimapLocation = (MinimapLocation) EditorGUILayout.EnumPopup( "Minimap location", settings.minimapLocation );
             if ( EditorGUI.EndChangeCheck() && riWindow != null )
                 riWindow.GetAPI().Repaint();
+
+#if DEBUG
+            ShowLayoutParams( settings.layoutParams );
+#endif           
+            if ( GUI.changed )
+                EditorUtility.SetDirty( settings );             
         }
 
+        void ShowLayoutParams(GraphLayoutParams lParams)
+        {
+            EditorGUILayout.Space();
+            foldGraphSettings = EditorGUILayout.Foldout( foldGraphSettings, "Graph layout settings" );
+            if ( !foldGraphSettings )
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Space( 10 );
+                GUILayout.BeginVertical();
+             
+                lParams.maxFrameDuration = EditorGUILayout.FloatField( "Frame duration", lParams.maxFrameDuration );
+
+                EditorGUILayout.Space();
+                GUILayout.Label( "Position tweens", EditorStyles.boldLabel );
+                lParams.vertexPosTweenDuration = EditorGUILayout.FloatField( "Duration", lParams.vertexPosTweenDuration );
+                lParams.vertexPosTweenUpdateInterval = EditorGUILayout.FloatField( "Update interval", lParams.vertexPosTweenUpdateInterval );
+
+                GUILayout.EndVertical();
+                GUILayout.EndHorizontal();
+            }
+        }
     }
 }

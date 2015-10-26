@@ -39,6 +39,7 @@ namespace RelationsInspector
             storage.treeRootLocation = TreeRootLocation.Left;
             storage.showMinimap = true;
             storage.minimapLocation = MinimapLocation.TopLeft;
+            storage.layoutParams = new GraphLayoutParams();
             return storage;
         }
     }

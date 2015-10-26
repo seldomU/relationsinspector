@@ -7,5 +7,7 @@ namespace RelationsInspector
         public TreeRootLocation treeRootLocation;
         public bool showMinimap;
         public MinimapLocation minimapLocation;
+        [HideInInspector]
+        public GraphLayoutParams layoutParams;
     }
 }

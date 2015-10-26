@@ -15,7 +15,6 @@ namespace RelationsInspector
 	{
 		GraphWithRoots<T,P> graph;
 		IGraphView<T,P> view;
-		LayoutParams layoutParams;
         IGraphBackendInternal<T,P> graphBackend;
 		Rect drawRect;
 		IEnumerator layoutEnumerator;
@@ -28,9 +27,6 @@ namespace RelationsInspector
 		//layout
 		Stopwatch layoutTimer = new Stopwatch();
 		float nextVertexPosTweenUpdate;
-		const float maxFrameDuration = 0.004f;	// seconds
-		const float vertexPosTweenDuration = 0.4f; // seconds
-		const float vertexPosTweenUpdateInterval = 0.25f; // seconds
 
         Action Repaint;
         Action<Action> Exec;
@@ -53,7 +49,6 @@ namespace RelationsInspector
             this.graphBackend = (IGraphBackendInternal<T, P>) BackendUtil.CreateBackendDecorator(backendType); 
 
             // create new layout params, they are not comming from the cfg yet
-            this.layoutParams = ScriptableObject.CreateInstance<LayoutParams>();
 			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);			
 			graphPosTweens = new TweenCollection();
 
@@ -112,10 +107,11 @@ namespace RelationsInspector
 			layoutTimer.Reset();
 			layoutTimer.Start();
 			bool generatorActive;
+            var parms = Settings.Instance.layoutParams;
 			do
 			{
 				generatorActive = layoutEnumerator.MoveNext();
-			} while (generatorActive && (layoutTimer.ElapsedTicks/(float)Stopwatch.Frequency) < maxFrameDuration);
+			} while (generatorActive && (layoutTimer.ElapsedTicks/(float)Stopwatch.Frequency) < parms.maxFrameDuration);
 
 			var positions = layoutEnumerator.Current as Dictionary<T, Vector2>;
 			bool gotFinalPositions = !generatorActive;
@@ -125,7 +121,7 @@ namespace RelationsInspector
 			var time = EditorApplication.timeSinceStartup;
 			if (gotFinalPositions || time > nextVertexPosTweenUpdate)
 			{
-				nextVertexPosTweenUpdate = (float)time + vertexPosTweenUpdateInterval;
+				nextVertexPosTweenUpdate = (float)time + parms.vertexPosTweenUpdateInterval;
 				if( positions != null)
 				{
 					foreach (var pair in positions)
@@ -135,7 +131,7 @@ namespace RelationsInspector
                         {
                             T tweenOwner = pair.Key;
                             var evalFunc = TweenUtil.GetCombinedEasing(tweenOwner, graphPosTweens, vData.pos, pair.Value);
-                            graphPosTweens.Replace( tweenOwner, new Tween<Vector2>(v => vData.pos = v, vertexPosTweenDuration, evalFunc) );
+                            graphPosTweens.Replace( tweenOwner, new Tween<Vector2>(v => vData.pos = v, parms.vertexPosTweenDuration, evalFunc) );
                         }
                     }
 				}
@@ -251,12 +247,7 @@ namespace RelationsInspector
 			if (graph == null)
 				return;
 
-			if (layoutParams == null)
-				Debug.LogError("canvas auto-layout: missing params");
-			else
-			{
-				layoutEnumerator = GraphLayout<T, P>.Run(graph,  firstTime, layoutType, layoutParams);
-			}
+			layoutEnumerator = GraphLayout<T, P>.Run(graph,  firstTime, layoutType, Settings.Instance.layoutParams);
 
 			view = new IMView<T, P>(graph, this);
 		}
