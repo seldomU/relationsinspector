@@ -37,11 +37,6 @@ namespace RelationsInspector
 			{ LayoutType.Tree, new GUIContent("Tree", "Use tree layout") }
 		};
 
-#if DEBUG
-		// debug settings
-		bool permaRepaint;	// repaint permanently
-#endif
-
 		internal Workspace(Type backendType, object[] targets, Func<RelationsInspectorAPI> GetAPI, Action Repaint, Action<Action> Exec)
 		{
             this.Repaint = Repaint;
@@ -91,10 +86,7 @@ namespace RelationsInspector
             hasGraphPosChanges = graphPosTweens.HasChanges;
             doRepaint |= hasGraphPosChanges;
             doRepaint |= Tweener.gen.HasChanges;
-#if DEBUG
-			if (permaRepaint)
-				doRepaint = true;
-#endif
+
 			if(doRepaint)
 				Repaint();
 		}
@@ -169,6 +161,7 @@ namespace RelationsInspector
 		{		
 			EditorGUI.BeginChangeCheck();
 
+            // let user pick a layout type (iff tree layout is an option)
             if (graph != null && graph.IsTree())
             {
                 layoutType = (LayoutType)GUIUtil.EnumToolbar("", layoutType, (t) => layoutButtonContent[(LayoutType)t], EditorStyles.miniButton);
@@ -178,37 +171,8 @@ namespace RelationsInspector
                     Exec(() => DoAutoLayout());
                 }
             }
-#if DEBUG
-			// option to repaint constantly
-			permaRepaint = GUILayout.Toggle( permaRepaint, "perma-repaint", GUILayout.ExpandWidth(false));
 
-			// option to run the layout
-			if (GUILayout.Button("Run layout", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
-			{
-				Exec( () => DoAutoLayout() );
-			}
-
-			/*
-			EditorGUI.BeginDisabledGroup(layoutEnumerator == null);
-			if (GUILayout.Button("step", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
-			{
-				if (!layoutEnumerator.MoveNext())
-					layoutEnumerator = null;
-			}
-			EditorGUI.EndDisabledGroup();
-			*/
-
-            if(GUILayout.Button("Save", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
-            {
-                GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetDecoratedType());
-            }
-
-            if (GUILayout.Button("Load", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
-            {
-                GraphPosSerialization.LoadGraphLayout(graph, graphBackend.GetDecoratedType());
-            }
-
-#endif
+            // draw view controls
             if (view != null)
 			{
 				GUILayout.FlexibleSpace();
