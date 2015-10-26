@@ -29,3 +29,4 @@ UnityVS.RelationsInspector.v12.suo
 .vs/
 *.unitypackage
 Docs/layoutSavingTodo.txt
+Assets/RelationsInspector/Editor/RelationsInspectorResources/Settings.asset
