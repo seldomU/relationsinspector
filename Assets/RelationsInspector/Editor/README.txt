@@ -1,7 +1,16 @@
 Relations inspector
 
-User manual, API reference, development guide etc:
-https://github.com/seldomU/RIBackendUtil#ribackendutil
+This is a Unity editor tool for displaying and modifying relations between any kind of project data. You can access it through the Window menu.
 
-ArrowHead texture by Nemo: 
+Manual
+https://github.com/seldomU/RIBackendUtil/wiki/Relations-inspector-manual
+
+Discussion thread:
+http://forum.unity3d.com/threads/demo-relations-inspector-asset.295319/
+
+Backend development:
+https://github.com/seldomU/RIBackendUtil/wiki/Backend-development
+
+
+The included ArrowHead texture was made by Nemo: 
 http://pixabay.com/en/arrow-left-point-pointer-sharp-40169/
