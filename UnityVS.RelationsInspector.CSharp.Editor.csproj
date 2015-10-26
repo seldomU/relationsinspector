@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>4.6.1f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -68,6 +66,9 @@
     <Reference Include="RelationsInspector">
       <HintPath>Assets\RelationsInspector\Editor\RelationsInspector.dll</HintPath>
     </Reference>
+    <Reference Include="YamlDotNet">
+      <HintPath>Assets\RelationsInspectorUserLand\Editor\ObjectDependency\YamlDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="NSubstitute">
       <HintPath>Assets\UnityTestTools\UnitTesting\Editor\NSubstitute\NSubstitute.dll</HintPath>
     </Reference>
@@ -95,9 +96,6 @@
     <Reference Include="UnityVS.VersionSpecific">
       <HintPath>Assets\UnityVS\Editor\UnityVS.VersionSpecific.dll</HintPath>
     </Reference>
-    <Reference Include="YamlDotNet">
-      <HintPath>Assets\RelationsInspectorUserLand\Editor\ObjectDependency\YamlDotNet.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-UnityScript">
       <HintPath>Library\ScriptAssemblies\Assembly-UnityScript.dll</HintPath>
     </Reference>
@@ -109,18 +107,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\RelationsInspectorUserLand\Editor\GameObjectTag\GameObjectLayerBackend.cs" />
-    <Compile Include="Assets\RelationsInspectorUserLand\Editor\GameObjectTag\GameObjectTagBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\BackendUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\DrawUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\MinimalBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ScriptableObjectBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ScriptableObjectBackendToolbar.cs" />
-    <Compile Include="Assets\RelationsInspector\Editor\HierarchyExample\SceneHierarchyBackend.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\Backends\HierarchyExample\SceneHierarchyBackend.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\Backends\SocialNetworkExample\Person.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\Backends\SocialNetworkExample\SocialNetworkBackend.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\Backends\SocialNetworkExample\StudyNetworkBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\RelationsInspectorMenuItem.cs" />
-    <Compile Include="Assets\RelationsInspector\Editor\SocialNetworkExample\Person.cs" />
-    <Compile Include="Assets\RelationsInspector\Editor\SocialNetworkExample\SocialNetworkBackend.cs" />
-    <Compile Include="Assets\RelationsInspector\Editor\SocialNetworkExample\StudyNetworkBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\BenchmarkTool\BenchmarkBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\BenchmarkTool\BenchmarkWindow.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\BenchmarkTool\Number.cs" />
@@ -132,6 +128,8 @@
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\Food\FoodBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\Food\FoodItem.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\GameObjectHierarchy\GameObjectHierarchyBackend.cs" />
+    <Compile Include="Assets\RelationsInspectorUserLand\Editor\GameObjectTag\GameObjectLayerBackend.cs" />
+    <Compile Include="Assets\RelationsInspectorUserLand\Editor\GameObjectTag\GameObjectTagBackend.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\ObjectDependency\Data\TestBehaviour.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\ObjectDependency\FileIdHelper.cs" />
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\ObjectDependency\ObjectDependencyBackend.cs" />
@@ -166,8 +164,8 @@
     <Compile Include="Assets\RelationsInspectorUserLand\Editor\TypeHierarchy\TypeUtility.cs" />
     <Compile Include="Assets\Stuff\Editor\CompileLibrary.cs" />
     <Compile Include="Assets\Stuff\Editor\DebugModeShortcuts.cs" />
-    <Compile Include="Assets\Stuff\Editor\DeploymentWindow.cs" />
     <Compile Include="Assets\Stuff\Editor\DeployToTestProjects.cs" />
+    <Compile Include="Assets\Stuff\Editor\DeploymentWindow.cs" />
     <Compile Include="Assets\Stuff\Editor\EditorInspector.cs" />
     <Compile Include="Assets\Stuff\Editor\ExportPackage.cs" />
     <Compile Include="Assets\Stuff\Editor\IOUtil.cs" />
@@ -175,12 +173,12 @@
     <Compile Include="Assets\Stuff\Editor\TweenCircleTest.cs" />
     <Compile Include="Assets\Stuff\Editor\TweenerTest.cs" />
     <Compile Include="Assets\Stuff\Editor\Util.cs" />
+    <Compile Include="Assets\UnitTests\Editor\BackendTypeTests.cs" />
     <Compile Include="Assets\UnitTests\Editor\ExtensionTests.cs" />
     <Compile Include="Assets\UnitTests\Editor\GenericInterfaceTests.cs" />
     <Compile Include="Assets\UnitTests\Editor\GraphTest.cs" />
     <Compile Include="Assets\UnitTests\Editor\MyFirstTest.cs" />
     <Compile Include="Assets\UnitTests\Editor\ReflectUtilTests.cs" />
-    <Compile Include="Assets\UnitTests\Editor\BackendTypeTests.cs" />
     <Compile Include="Assets\UnityTestTools\Assertions\Editor\AssertionComponentEditor.cs" />
     <Compile Include="Assets\UnityTestTools\Assertions\Editor\AssertionExplorerWindow.cs" />
     <Compile Include="Assets\UnityTestTools\Assertions\Editor\AssertionListRenderer.cs" />
