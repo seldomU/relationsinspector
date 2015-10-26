@@ -11,6 +11,7 @@ namespace RelationsInspector
     class Settings
     {
         const string SettingsFileName = "Settings.asset";
+        public static string SettingsPath = Path.Combine( ProjectSettings.ResourcesPath, SettingsFileName ).Replace( '\\', '/' );
 
         private static RelationsInspectorSettings storage = LoadStorage();
         public static RelationsInspectorSettings Instance
@@ -20,13 +21,12 @@ namespace RelationsInspector
 
         static RelationsInspectorSettings LoadStorage()
         {
-            string sFilePath = Path.Combine( ProjectSettings.ResourcesPath, SettingsFileName ).Replace( '\\', '/' );
-            if ( File.Exists( sFilePath ) )
-                return Util.LoadAsset<RelationsInspectorSettings>( sFilePath );
+            if ( File.Exists( SettingsPath ) )
+                return Util.LoadAsset<RelationsInspectorSettings>( SettingsPath );
 
             // doesn't exist, so create it
             var storage = CreateDefaultStorage();
-            AssetDatabase.CreateAsset( storage, sFilePath );
+            AssetDatabase.CreateAsset( storage, SettingsPath );
             AssetDatabase.SaveAssets();
             return storage;
         }

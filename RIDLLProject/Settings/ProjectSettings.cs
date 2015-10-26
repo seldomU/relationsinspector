@@ -14,6 +14,7 @@ namespace RelationsInspector
 		public const string resourcesDirectoryName = "RelationsInspectorResources";
         public const string layoutCacheDirectoryName = "LayoutCaches";
 		public const string expectedRIBasePath = @"Assets\RelationsInspector\Editor";
+        public const string dllName = "RelationsInspector.dll";
         public const string ProgramVersion = "1.0.0";
 
         public static string[] obligatoryFileNames = new[]
@@ -21,44 +22,38 @@ namespace RelationsInspector
 			"ArrowHead.png",
 		};
 
-		static string resourcesPath;
-		public static string ResourcesPath
-		{
-			get
-			{
-				if (resourcesPath == null)
-					resourcesPath = FindRIDirectoryPath(resourcesDirectoryName);
-				return resourcesPath;
-			}
-		}
+        public static string RIBasePath { get; private set; }
+        public static string ResourcesPath { get; private set; }
+        public static string LayoutCachesPath { get; private set; }
 
-        static string layoutCachesPath;
-        public static string LayoutCachesPath
+        static ProjectSettings()
         {
-            get
-            {
-                if (layoutCachesPath == null)
-                    layoutCachesPath = FindRIDirectoryPath(layoutCacheDirectoryName);
-                return layoutCachesPath;
-            }
+            RIBasePath = FindRIBasePath();
+            ResourcesPath = GetAbsoluteRIDirectoryPath( resourcesDirectoryName );
+            LayoutCachesPath = GetAbsoluteRIDirectoryPath( layoutCacheDirectoryName );
         }
 
-        // change this: demand that RelationsInspector\Editor exists, it just doesn't have to be in "Assets"
-        public static string FindRIDirectoryPath(string directoryName)
+        static string FindRIBasePath()
         {
-            // try the expected path first
-            string expectedPath = Path.Combine(expectedRIBasePath, directoryName);
-            if (Directory.Exists(expectedPath))
-                return expectedPath;
+            if ( Directory.Exists( expectedRIBasePath ) )
+                return expectedRIBasePath;
 
-            // search all subdirectories of Assets
-            var searchPattern = @"*" + directoryName;
-            string path = Directory.GetDirectories("Assets", searchPattern, SearchOption.AllDirectories).FirstOrDefault();
-            if (path != null)
-                return path;
+            string path = Directory.GetFiles( "Assets", dllName, SearchOption.AllDirectories ).SingleOrDefault();
+            if ( !string.IsNullOrEmpty( path ) )
+                return Path.GetDirectoryName( path );   // path has to be absolute
 
-            Directory.CreateDirectory(expectedPath);
-            return expectedPath;
+            // no dll, no party. The editor should throw a warning and die
+            return null;
+        }
+
+        static string GetAbsoluteRIDirectoryPath( string relativeDirPath )
+        {
+            string absoluteDirPath = Path.Combine( RIBasePath, relativeDirPath);
+
+            if( !Directory.Exists(absoluteDirPath) )
+                Directory.CreateDirectory( absoluteDirPath );
+
+            return absoluteDirPath;
         }
 
 		internal static string CheckDependentFiles()

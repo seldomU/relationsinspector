@@ -10,8 +10,9 @@ namespace RelationsInspector
 		public const string darkSkinName = "RIWindowDarkSkin";
 		public const string lightSkinName = "RIWindowLightSkin";
 
-		static string LightSkinPath = Path.Combine(ProjectSettings.ResourcesPath, lightSkinName + ".asset");
-		static string DarkSkinPath = Path.Combine(ProjectSettings.ResourcesPath, darkSkinName + ".asset");
+        // public so build tool code can use these
+		public static string LightSkinPath = Path.Combine(ProjectSettings.ResourcesPath, lightSkinName + ".asset");
+		public static string DarkSkinPath = Path.Combine(ProjectSettings.ResourcesPath, darkSkinName + ".asset");
 
 		static RelationInspectorSkin LightSkin = LoadSkin(lightSkin: true);
 		static RelationInspectorSkin DarkSkin = LoadSkin(lightSkin: false);
