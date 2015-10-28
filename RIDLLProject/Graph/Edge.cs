@@ -1,5 +1,3 @@
-using UnityEngine;
-using System.Collections;
 
 namespace RelationsInspector
 {
@@ -20,5 +18,12 @@ namespace RelationsInspector
 		{
 			return Source == source && Target == target && (Tag == null && tag == null || Tag != null && Tag.Equals(tag));
 		}
-	}
+
+        public T Opposite( T entity )
+        {
+            if ( entity == Source ) return Target;
+            if ( entity == Target ) return Source;
+            throw new System.ArgumentException( "entity is not part of the relation" );
+        }
+    }
 }

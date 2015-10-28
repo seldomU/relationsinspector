@@ -7,9 +7,9 @@ namespace RelationsInspector
 {
 	public static class GraphBuilder<T,P> where T : class
 	{
-		public delegate IEnumerable<Tuple<T,P>> GetRelations(T item);
+		public delegate IEnumerable<Edge<T,P>> GetRelations(T item);
 
-		public static GraphWithRoots<T,P> Build(IEnumerable<T> roots, GetRelations GetRelated, GetRelations GetRelating, int recursionSteps)
+		public static GraphWithRoots<T,P> Build(IEnumerable<T> roots, GetRelations getRelations, int maxNodeCount)
 		{
 			var graph = new GraphWithRoots<T, P>();
 			
@@ -20,64 +20,55 @@ namespace RelationsInspector
 			foreach(var root in roots)
 				graph.AddVertex(root);
 
-			// process elements that are in the graph already
-			// add their successors (that are not in the graph yet) 
-			// and add an edge between the element and its successor
-			var successorQueue = new System.Collections.Generic.Queue<T>( roots );
-            int sucRecSteps = recursionSteps;
-			while (successorQueue.Any())
-			{
-				T vertex = successorQueue.Dequeue();
-                sucRecSteps--;
-
-				foreach (var relation in GetRelated(vertex))
-				{
-					var successor = relation._1;
-					var tag = relation._2;
-
-					if ( Util.IsBadRef(successor) )
-						continue;
-
-					if (!graph.ContainsVertex(successor))
-					{
-						graph.AddVertex(successor);
-                        if (sucRecSteps > 0)
-							successorQueue.Enqueue(successor);
-					}
-
-					graph.AddEdge( new Edge<T,P>(vertex, successor, tag) );
-				}
-			}
-
-            // add root predecessors (that are not in the graph yet) 
-            // and add edges from predecessors to vertices
-            var predecessorQueue = new System.Collections.Generic.Queue<T>( roots );
-            int predRecSteps = recursionSteps;
-            while (predecessorQueue.Any())
-			{
-                T vertex = predecessorQueue.Dequeue();
-                predRecSteps--;
-
-                foreach (var relation in GetRelating(vertex))
-				{
-					var predecessor = relation._1;
-					var tag = relation._2;
-
-					if ( Util.IsBadRef(predecessor) )
-						continue;
-
-					if (!graph.ContainsVertex(predecessor))
-					{
-						graph.AddVertex(predecessor);
-                        if (predRecSteps > 0)
-                            predecessorQueue.Enqueue(predecessor);
-					}
-
-                    graph.AddEdge(new Edge<T, P>(predecessor, vertex, tag));
-				}
-			}
-
+            //GetRelations x = ent => GetRelations1( ent ).Concat( GetRelations2( ent ) );
+            AddRelations( graph, roots, getRelations, maxNodeCount );
 			return graph;
 		}
+
+        static void AddRelations( Graph<T, P> graph, IEnumerable<T> entities, GetRelations getRelations, int maxNodeCount )
+        {
+            var unexploredEntities = new List<T>();
+            foreach ( var ent in entities )
+            {
+                foreach ( var rel in getRelations( ent ) )
+                {
+                    if ( !IsValidFor( rel, ent ) )
+                        break;
+                    
+                    var otherEnt = rel.Opposite( ent );
+
+                    if ( graph.ContainsVertex( otherEnt ) )
+                    {
+                        graph.AddEdge( rel );
+                    }
+                    else
+                    {
+                        if ( graph.VertexCount < maxNodeCount )
+                        {
+                            if ( graph.AddVertex( otherEnt ) )
+                            {
+                                unexploredEntities.Add( otherEnt );
+                                graph.AddEdge( rel );
+                            }
+                        }
+                    }
+                }
+            }
+
+            if( unexploredEntities.Any() )
+                AddRelations( graph, unexploredEntities, getRelations, maxNodeCount );
+        }
+
+        // returns tree if the given relation contains entity and can be added to the graph
+        static bool IsValidFor( Edge<T, P> relation, T entity )
+        {
+            if ( relation == null )
+                return false;
+            if ( relation.Source != entity && relation.Target != entity )
+                return false;
+            if ( Util.IsBadRef( relation.Source ) || Util.IsBadRef( relation.Target ) )
+                return false;
+            return true;
+        }
 	}
 }

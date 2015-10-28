@@ -22,6 +22,8 @@ namespace RelationsInspector
             GUILayout.Label( "Relations inspector settings", EditorStyles.boldLabel );
             EditorGUILayout.Space();
 
+            settings.maxGraphNodes = EditorGUILayout.IntField( "Max graph nodes", settings.maxGraphNodes );
+
             EditorGUI.BeginChangeCheck();
             settings.treeRootLocation = (TreeRootLocation) EditorGUILayout.EnumPopup( "Tree root location", settings.treeRootLocation );
             if ( EditorGUI.EndChangeCheck() && riWindow != null )

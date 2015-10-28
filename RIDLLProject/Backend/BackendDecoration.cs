@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-
+using System.Linq;
 
 namespace RelationsInspector
 {
@@ -25,15 +25,15 @@ namespace RelationsInspector
         {
             return backend.Init(targets, api);
         }
-
-        public IEnumerable<Tuple<T, P>> GetRelated(T entity)
+        
+        public IEnumerable<Edge<T, P>> GetRelated(T entity)
         {
-            return backend.GetRelated(entity);
+            return backend.GetRelated( entity ).Select( tuple => new Edge<T, P>( entity, tuple._1, tuple._2 ) );
         }
 
-        public IEnumerable<Tuple<T, P>> GetRelating(T entity)
+        public IEnumerable<Edge<T, P>> GetRelating(T entity)
         {
-            return backend.GetRelating(entity);
+            return backend.GetRelating(entity).Select( tuple => new Edge<T, P>( tuple._1, entity, tuple._2 ) );
         }
 
         public void CreateEntity(Vector2 position)
@@ -95,7 +95,7 @@ namespace RelationsInspector
         public void OnEvent(Event e){ }
     }
 
-    // decorator class for IGraphBackend version 1
+    // decorator class for IGraphBackend version 2
     internal class BackendDecoratorV2<T, P> : IGraphBackendInternal<T, P> where T : class
     {
         IGraphBackend2<T, P> backend;
@@ -115,12 +115,12 @@ namespace RelationsInspector
             return backend.Init(targets, api);
         }
 
-        public IEnumerable<Tuple<T, P>> GetRelated(T entity)
+        public IEnumerable<Edge<T, P>> GetRelated(T entity)
         {
             return backend.GetRelated(entity);
         }
 
-        public IEnumerable<Tuple<T, P>> GetRelating(T entity)
+        public IEnumerable<Edge<T, P>> GetRelating(T entity)
         {
             return backend.GetRelating(entity);
         }

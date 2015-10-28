@@ -8,8 +8,8 @@ namespace RelationsInspector
         System.Type GetDecoratedType();
         // initialize the backend object
         IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api);
-        IEnumerable<Tuple<T, P>> GetRelated(T entity);
-        IEnumerable<Tuple<T, P>> GetRelating(T entity);
+        IEnumerable<Edge<T, P>> GetRelated(T entity);
+        IEnumerable<Edge<T, P>> GetRelating(T entity);
         void CreateEntity(Vector2 position);
         void CreateRelation(T source, T target, P tag);
         void OnEntitySelectionChange(T[] selection);

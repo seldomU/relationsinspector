@@ -62,7 +62,10 @@ namespace RelationsInspector
 
 		void InitGraph(object[] targets)
 		{
-			graph = GraphBuilder<T, P>.Build(rootEntities, graphBackend.GetRelated, graphBackend.GetRelating, int.MaxValue);
+            // merge the relations providers
+            GraphBuilder<T, P>.GetRelations getRelations = ent => graphBackend.GetRelated( ent ).Concat( graphBackend.GetRelating( ent ) );
+
+            graph = GraphBuilder<T, P>.Build(rootEntities, getRelations, Settings.Instance.maxGraphNodes);
             if (graph == null)
                 return;
             
