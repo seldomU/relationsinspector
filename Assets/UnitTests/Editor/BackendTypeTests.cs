@@ -17,8 +17,8 @@ namespace Assets.UnitTests.Editor
         {
             // initialize the backend object
             public IEnumerable<string> Init(IEnumerable<object> targets, RelationsInspectorAPI api) { yield break; }
-            public IEnumerable<Edge<string, string>> GetRelated(string entity) { yield break; }
-            public IEnumerable<Edge<string, string>> GetRelating(string entity) { yield break; }
+            public IEnumerable<Relation<string, string>> GetRelated(string entity) { yield break; }
+            public IEnumerable<Relation<string, string>> GetRelating(string entity) { yield break; }
             public void CreateEntity(Vector2 position) { }
             public void CreateRelation(string source, string target, string tag) { }
             public void OnEntitySelectionChange(string[] selection) { }

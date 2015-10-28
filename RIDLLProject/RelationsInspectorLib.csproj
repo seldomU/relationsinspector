@@ -67,7 +67,7 @@
     <Compile Include="EdgePlacement\EdgePlacement.cs" />
     <Compile Include="EdgePlacement\StraightCirclePlacementProvider.cs" />
     <Compile Include="EdgePlacement\StraightRectPlacementProvider.cs" />
-    <Compile Include="Graph\Edge.cs" />
+    <Compile Include="Graph\Relation.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\GraphExtensions.cs" />
     <Compile Include="Graph\GraphWithRoots.cs" />

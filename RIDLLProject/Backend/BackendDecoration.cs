@@ -26,14 +26,14 @@ namespace RelationsInspector
             return backend.Init(targets, api);
         }
         
-        public IEnumerable<Edge<T, P>> GetRelated(T entity)
+        public IEnumerable<Relation<T, P>> GetRelated(T entity)
         {
-            return backend.GetRelated( entity ).Select( tuple => new Edge<T, P>( entity, tuple._1, tuple._2 ) );
+            return backend.GetRelated( entity ).Select( tuple => new Relation<T, P>( entity, tuple._1, tuple._2 ) );
         }
 
-        public IEnumerable<Edge<T, P>> GetRelating(T entity)
+        public IEnumerable<Relation<T, P>> GetRelating(T entity)
         {
-            return backend.GetRelating(entity).Select( tuple => new Edge<T, P>( tuple._1, entity, tuple._2 ) );
+            return backend.GetRelating(entity).Select( tuple => new Relation<T, P>( tuple._1, entity, tuple._2 ) );
         }
 
         public void CreateEntity(Vector2 position)
@@ -115,12 +115,12 @@ namespace RelationsInspector
             return backend.Init(targets, api);
         }
 
-        public IEnumerable<Edge<T, P>> GetRelated(T entity)
+        public IEnumerable<Relation<T, P>> GetRelated(T entity)
         {
             return backend.GetRelated(entity);
         }
 
-        public IEnumerable<Edge<T, P>> GetRelating(T entity)
+        public IEnumerable<Relation<T, P>> GetRelating(T entity)
         {
             return backend.GetRelating(entity);
         }

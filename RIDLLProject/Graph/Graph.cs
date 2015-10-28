@@ -10,19 +10,19 @@ namespace RelationsInspector
 	{
 		public Dictionary<T, VertexData<T, P>> VerticesData { get; private set; }
 		public IEnumerable<T> Vertices { get { return VerticesData.Keys; } }
-		public HashSet<Edge<T, P>> Edges { get; private set; }
+		public HashSet<Relation<T, P>> Edges { get; private set; }
 		public int VertexCount { get { return VerticesData.Count; } }
 
 		public Graph()
 		{
 			VerticesData = new Dictionary<T, VertexData<T, P>>();
-			Edges = new HashSet<Edge<T, P>>();
+			Edges = new HashSet<Relation<T, P>>();
 		}
 
 		public Graph(Graph<T, P> source)
 		{
 			this.VerticesData = new Dictionary<T, VertexData<T, P>>(source.VerticesData);
-			this.Edges = new HashSet<Edge<T, P>>(source.Edges);
+			this.Edges = new HashSet<Relation<T, P>>(source.Edges);
 		}
 
 		public void CleanNullRefs()
@@ -66,32 +66,32 @@ namespace RelationsInspector
 			return ret;
 		}
 
-		public virtual bool AddEdge(Edge<T, P> edge)
+		public virtual bool AddEdge(Relation<T, P> relation)
 		{
-			if (edge == null || edge.Source == null || edge.Target == null)
+			if (relation == null || relation.Source == null || relation.Target == null)
 				return false;
 
-			if (!VerticesData.ContainsKey(edge.Source) || !VerticesData.ContainsKey(edge.Target))
+			if (!VerticesData.ContainsKey(relation.Source) || !VerticesData.ContainsKey(relation.Target))
 				return false;
 
-			if (!Edges.Add(edge))
+			if (!Edges.Add(relation))
 				return false;
 
-			VerticesData[edge.Source].OutEdges.Add(edge);
-			VerticesData[edge.Target].InEdges.Add(edge);
+			VerticesData[relation.Source].OutEdges.Add(relation);
+			VerticesData[relation.Target].InEdges.Add(relation);
 			return true;
 		}
 
-		public virtual bool RemoveEdge(Edge<T, P> edge)
+		public virtual bool RemoveEdge(Relation<T, P> relation)
 		{
-			if (edge == null)
+			if (relation == null)
 				return false;
 
-			if (!Edges.Remove(edge))
+			if (!Edges.Remove(relation))
 				return false;
 
-			VerticesData[edge.Source].OutEdges.Remove(edge);
-			VerticesData[edge.Target].InEdges.Remove(edge);
+			VerticesData[relation.Source].OutEdges.Remove(relation);
+			VerticesData[relation.Target].InEdges.Remove(relation);
 			return true;
 		}
 

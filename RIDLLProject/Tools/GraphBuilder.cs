@@ -7,7 +7,7 @@ namespace RelationsInspector
 {
 	public static class GraphBuilder<T,P> where T : class
 	{
-		public delegate IEnumerable<Edge<T,P>> GetRelations(T item);
+		public delegate IEnumerable<Relation<T,P>> GetRelations(T item);
 
 		public static GraphWithRoots<T,P> Build(IEnumerable<T> roots, GetRelations getRelations, int maxNodeCount)
 		{
@@ -60,7 +60,7 @@ namespace RelationsInspector
         }
 
         // returns tree if the given relation contains entity and can be added to the graph
-        static bool IsValidFor( Edge<T, P> relation, T entity )
+        static bool IsValidFor( Relation<T, P> relation, T entity )
         {
             if ( relation == null )
                 return false;

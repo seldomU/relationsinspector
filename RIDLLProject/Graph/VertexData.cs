@@ -24,17 +24,6 @@ namespace RelationsInspector
 		{
 			return InEdges.GetCorrespondents().Union( OutEdges.GetCorrespondents() );
 		}
-
-		/*
-		public IEnumerable<Edge<T,P>> InEdges( T correspondent = null)
-		{
-			return inEdges.Get(correspondent);
-		}
-
-		public IEnumerable<Edge<T,P>> OutEdges( T correspondent = null)
-		{
-			return outEdges.Get(correspondent);
-		}*/
 	}
 
     // incomming or outgoing edges of one vertex
@@ -48,7 +37,7 @@ namespace RelationsInspector
 
 		// per corresponent vertex, the set of edges between subject and the vertex. 
         // depending on isSource they are either outgoing or incomming, from subject's PoV
-		private Dictionary<T, HashSet<Edge<T,P>>> byCorespondent = new Dictionary<T, HashSet<Edge<T,P>>>();
+		private Dictionary<T, HashSet<Relation<T,P>>> byCorespondent = new Dictionary<T, HashSet<Relation<T,P>>>();
 
         // ctor
 		public EdgeSet(T subject, bool isSource)
@@ -59,19 +48,19 @@ namespace RelationsInspector
 
         // returns all edges between subject and corresponent
         // returns ALL edges if correspondent is null
-		public IEnumerable<Edge<T,P>> Get( T correspondent = null)
+		public IEnumerable<Relation<T,P>> Get( T correspondent = null)
 		{
 			if( correspondent == null)
 				return byCorespondent.Values.SelectMany(x => x);
 			
 			if( !byCorespondent.ContainsKey(correspondent) )
-				return Enumerable.Empty<Edge<T,P>>();
+				return Enumerable.Empty<Relation<T,P>>();
 
 			return byCorespondent[correspondent];
 		}
 
         // returns all edge sets
-		public IEnumerable<HashSet<Edge<T, P>>> GetSets()
+		public IEnumerable<HashSet<Relation<T, P>>> GetSets()
 		{
 			return byCorespondent.Values;
 		}
@@ -83,28 +72,28 @@ namespace RelationsInspector
 		}
 
         // add edge to the set
-		public void Add(Edge<T, P> edge)
+		public void Add(Relation<T, P> relation)
 		{
-			if (edge == null)
+			if (relation == null)
 				throw new System.ArgumentNullException();
 
 			// make sure the subject is part of the edge
 			// and in the expected role
-			if (isSource && edge.Source != subject || !isSource && edge.Target != subject)
+			if (isSource && relation.Source != subject || !isSource && relation.Target != subject)
 				throw new System.ArgumentException("Subject does not fill the expect role in edge.");
 			
-			var correspondent = isSource ? edge.Target : edge.Source;
+			var correspondent = isSource ? relation.Target : relation.Source;
 
 			// ensure that the set exists
 			if (!byCorespondent.ContainsKey(correspondent))
-				byCorespondent[correspondent] = new HashSet<Edge<T, P>>();
+				byCorespondent[correspondent] = new HashSet<Relation<T, P>>();
 
 			// add the edge
-			byCorespondent[correspondent].Add( edge );
+			byCorespondent[correspondent].Add( relation );
 		}
 
         // remove edge from the set
-		public void Remove(Edge<T, P> edge)
+		public void Remove(Relation<T, P> edge)
 		{
 			if(edge == null)
 				throw new System.ArgumentNullException();

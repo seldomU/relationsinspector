@@ -111,19 +111,19 @@ namespace RelationsInspector
         public void InitRelation(object[] sourceEntities, object tag)
         {
             if (workspace != null)
-                Exec(() => workspace.CreateEdge(sourceEntities, tag));
+                Exec(() => workspace.CreateRelation(sourceEntities, tag));
         }
 
         public void AddRelation(object sourceEntity, object targetEntity, object tag)
         {
             if (workspace != null)
-                Exec(() => workspace.AddEdge(sourceEntity, targetEntity, tag));
+                Exec(() => workspace.AddRelation( sourceEntity, targetEntity, tag));
         }
 
         public void RemoveRelation(object sourceEntity, object targetEntity, object tag)
         {
             if (workspace != null)
-                Exec(() => workspace.RemoveEdge(sourceEntity, targetEntity, tag));
+                Exec(() => workspace.RemoveRelation( sourceEntity, targetEntity, tag));
         }
 
         // enforce backend selection

@@ -48,7 +48,7 @@ namespace RelationsInspector
 		Transform2d transform;
 		Graph<T, P> graph;
 		Dictionary<T, Rect> entityDrawerBounds;
-		Dictionary<Edge<T, P>, Rect> edgeMarkerBounds;
+		Dictionary<Relation<T, P>, Rect> edgeMarkerBounds;
 
         Rect minimapRect;
         Transform2d minimapTransform;
@@ -81,7 +81,7 @@ namespace RelationsInspector
 			this.parent = parent;
 
 			entityDrawerBounds = new Dictionary<T, Rect>();
-			edgeMarkerBounds = new Dictionary<Edge<T, P>, Rect>();
+			edgeMarkerBounds = new Dictionary<Relation<T, P>, Rect>();
 
 			entitySelection = new HashSet<T>();
 			dragEdgeSource = new HashSet<T>();
@@ -121,7 +121,7 @@ namespace RelationsInspector
 			transform = ViewUtil.FitPointsIntoRect(entityPositions, graphRect);
 		}
 
-		IEnumerable<Tuple<IEnumerable<Edge<T, P>>, IEnumerable<Edge<T, P>>>> GetEdgesPerEntityPair()
+		IEnumerable<Tuple<IEnumerable<Relation<T, P>>, IEnumerable<Relation<T, P>>>> GetEdgesPerEntityPair()
 		{
 			var visitedPairs = new Dictionary<T, HashSet<T>>();
 
@@ -140,7 +140,7 @@ namespace RelationsInspector
 						visitedPairs[entity] = new HashSet<T>();
 					visitedPairs[entity].Add(correspondent);
 
-					yield return new Tuple<IEnumerable<Edge<T, P>>, IEnumerable<Edge<T, P>>>(graph.VerticesData[entity].InEdges.Get(correspondent), graph.VerticesData[entity].OutEdges.Get(correspondent));
+					yield return new Tuple<IEnumerable<Relation<T, P>>, IEnumerable<Relation<T, P>>>(graph.VerticesData[entity].InEdges.Get(correspondent), graph.VerticesData[entity].OutEdges.Get(correspondent));
 				}
 			}
 		}
@@ -329,7 +329,7 @@ namespace RelationsInspector
 			return Util.CenterRect(rectCenter, extents);
 		}
 
-		EdgePlacement GetEdgePlacement(Edge<T, P> edge)
+		EdgePlacement GetEdgePlacement(Relation<T, P> edge)
 		{
 			if (edge == null)
 				throw new System.ArgumentNullException("edge");
@@ -365,7 +365,7 @@ namespace RelationsInspector
 			return null;
 		}
 
-		Edge<T, P> GetEdgeAtPosition(Vector2 position)
+		Relation<T, P> GetEdgeAtPosition(Vector2 position)
 		{
 			foreach (var pair in edgeMarkerBounds)
 				if (pair.Value.Contains(position))

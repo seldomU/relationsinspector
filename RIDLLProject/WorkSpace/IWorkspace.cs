@@ -14,9 +14,9 @@ namespace RelationsInspector
 
         void AddEntity(object vertex, Vector2 position);
 		void RemoveEntity(object vertex);
-		void CreateEdge(object[] sourceEntities, object tag);
-		void AddEdge(object source, object target, object tag);
-		void RemoveEdge(object source, object target, object tag);
+		void CreateRelation(object[] sourceEntities, object tag);
+		void AddRelation(object source, object target, object tag);
+		void RemoveRelation(object source, object target, object tag);
 
 		void SelectEntityNodes(System.Predicate<object> doSelect);
         void Relayout();

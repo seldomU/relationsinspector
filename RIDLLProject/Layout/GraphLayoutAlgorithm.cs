@@ -122,7 +122,7 @@ namespace RelationsInspector
 		}
 
 		// get force attracting the edge source vertex to the edge target vertex
-		Vector2 GetAttraction(Edge<T, P> edge)
+		Vector2 GetAttraction(Relation<T, P> edge)
 		{
 			Vector2 displacement = positions[edge.Target] - positions[edge.Source];
 			float distance = Mathf.Max(displacement.magnitude, Mathf.Epsilon);	// avoid division by 0

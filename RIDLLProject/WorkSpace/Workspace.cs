@@ -242,7 +242,7 @@ namespace RelationsInspector
 				view.OnRemovedEntity(entity);
 		}
 
-		void IWorkspace.CreateEdge(object[] sourceEntities, object tagObj)
+		void IWorkspace.CreateRelation(object[] sourceEntities, object tagObj)
 		{
 			if (sourceEntities == null)
 				throw new System.ArgumentException("sourceEntities");
@@ -253,7 +253,7 @@ namespace RelationsInspector
 				view.CreateEdge(sourceEntities.Select(obj => obj as T), tag);
 		}
 
-		void IWorkspace.AddEdge(object sourceObj, object targetObj, object tagObj)
+		void IWorkspace.AddRelation(object sourceObj, object targetObj, object tagObj)
 		{
 			if (graph == null)
 				return;
@@ -271,11 +271,11 @@ namespace RelationsInspector
 			if (source == null || target == null)
 				return;
 
-			var edge = new Edge<T, P>(source, target, tag);
-			graph.AddEdge(edge);
+			var relation = new Relation<T, P>(source, target, tag);
+			graph.AddEdge(relation);
 		}
 
-		void IWorkspace.RemoveEdge(object sourceObj, object targetObj, object tagObj)
+		void IWorkspace.RemoveRelation(object sourceObj, object targetObj, object tagObj)
 		{
 			if (graph == null) return;
 

@@ -61,25 +61,25 @@ namespace RelationsInspector
 			return gotRemoved;
 		}
 
-		public override bool AddEdge(Edge<T, P> edge)
+		public override bool AddEdge(Relation<T, P> relation)
 		{
-			bool gotAdded = base.AddEdge(edge);
+			bool gotAdded = base.AddEdge(relation);
             if (gotAdded)
             {
                 recalcIsTree = true;
-                RootVertices.Remove(edge.Target);
+                RootVertices.Remove(relation.Target);
             }
 			return gotAdded;
 		}
 
-		public override bool RemoveEdge(Edge<T, P> edge)
+		public override bool RemoveEdge(Relation<T, P> relation)
 		{
-			bool gotRemoved = base.RemoveEdge(edge);
+			bool gotRemoved = base.RemoveEdge(relation);
             if (gotRemoved)
             {
                 recalcIsTree = true;
-                if (IsRoot(edge.Target))
-                    RootVertices.Add(edge.Target);
+                if (IsRoot(relation.Target))
+                    RootVertices.Add(relation.Target);
             }
 
 			return gotRemoved;

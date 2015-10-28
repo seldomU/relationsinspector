@@ -1,13 +1,13 @@
 
 namespace RelationsInspector
 {
-	public class Edge<T, P> where T : class
+	public class Relation<T, P> where T : class
 	{
 		public T Source {get; private set;}
 		public T Target { get; private set; }
 		public P Tag { get; private set; }
 
-		public Edge(T source, T target, P tag)
+		public Relation(T source, T target, P tag)
 		{
 			this.Source = source;
 			this.Target = target;

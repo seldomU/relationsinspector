@@ -12,7 +12,7 @@ namespace RelationsInspector
 	{
 		const float MinCircleRadius = 12f;
 
-		public virtual Dictionary<Edge<T, P>, Rect> DrawRelation(IEnumerable<Edge<T, P>> toEdges, IEnumerable<Edge<T, P>> fromEdges, EdgePlacement placement, bool isSelfEdge, bool highlight, bool includeMarker, RelationDrawerStyle style, System.Func<P, Color> GetMarkerColor)
+		public virtual Dictionary<Relation<T, P>, Rect> DrawRelation(IEnumerable<Relation<T, P>> toEdges, IEnumerable<Relation<T, P>> fromEdges, EdgePlacement placement, bool isSelfEdge, bool highlight, bool includeMarker, RelationDrawerStyle style, System.Func<P, Color> GetMarkerColor)
 		{
 			if (isSelfEdge)
 				return DrawSelfRelation(toEdges, fromEdges, placement, highlight, includeMarker, style, GetMarkerColor);
@@ -39,7 +39,7 @@ namespace RelationsInspector
 			}
 		}
 
-		protected virtual Dictionary<Edge<T, P>, Rect> DrawRegularRelation(IEnumerable<Edge<T, P>> toEdges, IEnumerable<Edge<T, P>> fromEdges, EdgePlacement placement, bool highlight, bool includeMarker, RelationDrawerStyle style, System.Func<P, Color> GetMarkerColor)
+		protected virtual Dictionary<Relation<T, P>, Rect> DrawRegularRelation(IEnumerable<Relation<T, P>> toEdges, IEnumerable<Relation<T, P>> fromEdges, EdgePlacement placement, bool highlight, bool includeMarker, RelationDrawerStyle style, System.Func<P, Color> GetMarkerColor)
 		{
 			Handles.color = highlight ? style.highlightEdgeColor : style.regularEdgeColor;
 			int lineWidth = highlight ? style.highlightEdgeWidth : style.regularEdgeWidth;
@@ -49,10 +49,10 @@ namespace RelationsInspector
 			if (includeMarker)
 				return DrawMarkers(toEdges, fromEdges, placement.startPos, placement.endPos, style.markerSize, style.markerImage, GetMarkerColor);
 
-			return new Dictionary<Edge<T, P>, Rect>();
+			return new Dictionary<Relation<T, P>, Rect>();
 		}
 
-		static Dictionary<Edge<T, P>, Rect> DrawMarkers(IEnumerable<Edge<T, P>> toEdges, IEnumerable<Edge<T, P>> fromEdges, Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D image, System.Func<P, Color> GetMarkerColor)
+		static Dictionary<Relation<T, P>, Rect> DrawMarkers(IEnumerable<Relation<T, P>> toEdges, IEnumerable<Relation<T, P>> fromEdges, Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D image, System.Func<P, Color> GetMarkerColor)
 		{
 			var edgeCenter = (startPos + endPos) * 0.5f;
 
@@ -63,12 +63,12 @@ namespace RelationsInspector
 			return toMarkers;
 		}
 
-		static Dictionary<Edge<T, P>, Rect> DrawMarkers(IEnumerable<Edge<T, P>> edges, Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D image, System.Func<P, Color> GetMarkerColor)
+		static Dictionary<Relation<T, P>, Rect> DrawMarkers(IEnumerable<Relation<T, P>> edges, Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D image, System.Func<P, Color> GetMarkerColor)
 		{
 			if( !edges.Any() )
-				return new Dictionary<Edge<T, P>, Rect>();
+				return new Dictionary<Relation<T, P>, Rect>();
 
-			var markerRects = new Dictionary<Edge<T, P>, Rect>();
+			var markerRects = new Dictionary<Relation<T, P>, Rect>();
 
 			var edgeArray = edges.ToArray();
 			int numMarkers = edgeArray.Length;
@@ -96,7 +96,7 @@ namespace RelationsInspector
 		}
 
 
-		protected virtual Dictionary<Edge<T, P>, Rect> DrawSelfRelation(IEnumerable<Edge<T, P>> toEdges, IEnumerable<Edge<T, P>> fromEdges, EdgePlacement placement, bool highlight, bool includeMarker, RelationDrawerStyle style, System.Func<P, Color> GetMarkerColor)
+		protected virtual Dictionary<Relation<T, P>, Rect> DrawSelfRelation(IEnumerable<Relation<T, P>> toEdges, IEnumerable<Relation<T, P>> fromEdges, EdgePlacement placement, bool highlight, bool includeMarker, RelationDrawerStyle style, System.Func<P, Color> GetMarkerColor)
 		{
 			var edges = toEdges;	// self edges are stored in both: toEdges and fromEdges. so we pass only one set.
 			float markerArcLength = Mathf.PI * 1.5f;
@@ -113,7 +113,7 @@ namespace RelationsInspector
 				float startAngle = -Mathf.PI * 1.5f;				
 				return DrawSelfMarkers(toEdges, circleCenter, circleRadius, startAngle, markerArcLength, style.markerSize, style.markerImage, GetMarkerColor); 
 			}
-			return new Dictionary<Edge<T, P>, Rect>();
+			return new Dictionary<Relation<T, P>, Rect>();
 		}
 
 		static float GetRadiusForFittingCircle(int numMarkers, float unitCircleArcLength, float markersize, float spacing)
@@ -139,9 +139,9 @@ namespace RelationsInspector
 			return midPoint + centerLineDirection * distFromMidPoint;
 		}
 
-		static Dictionary<Edge<T, P>, Rect> DrawSelfMarkers(IEnumerable<Edge<T, P>> edges, Vector2 circleCenter, float radius, float startAngle, float arcLength, Vector2 markerSize, Texture2D image, System.Func<P, Color> GetMarkerColor)
+		static Dictionary<Relation<T, P>, Rect> DrawSelfMarkers(IEnumerable<Relation<T, P>> edges, Vector2 circleCenter, float radius, float startAngle, float arcLength, Vector2 markerSize, Texture2D image, System.Func<P, Color> GetMarkerColor)
 		{
-			var markerDict = new Dictionary<Edge<T, P>, Rect>();
+			var markerDict = new Dictionary<Relation<T, P>, Rect>();
 			if (!edges.Any())
 				return markerDict;
 
