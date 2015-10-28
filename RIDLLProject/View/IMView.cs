@@ -14,6 +14,7 @@ namespace RelationsInspector
 		public Vector2 position;
 		public bool isTarget;
 		public bool isSelected;
+        public bool isUnexlored;
 		public EntityWidgetType widgetType;
 		public EntityWidgetStyle style;
 	}
@@ -216,9 +217,9 @@ namespace RelationsInspector
 					placement = placement.Swap();
 
 				bool isSelfEdge = (repEdge.Source == repEdge.Target);
-				bool highLight = entitySelection.Contains(repEdge.Source) || entitySelection.Contains(repEdge.Target);
+				bool highlight = entitySelection.Contains(repEdge.Source) || entitySelection.Contains(repEdge.Target);
 
-				var markerRects = tagDrawer.DrawRelation(toEdges, fromEdges, placement, isSelfEdge, highLight, true, relationDrawerStyle, parent.GetBackend().GetRelationColor );
+				var markerRects = tagDrawer.DrawRelation(toEdges, fromEdges, placement, isSelfEdge, highlight, true, relationDrawerStyle, parent.GetBackend().GetRelationColor );
 				edgeMarkerBounds.UnionWith(markerRects);
 			}
 
@@ -234,6 +235,7 @@ namespace RelationsInspector
 				drawContext.position = transform.Apply(pair.Value.pos);
 				drawContext.isTarget = parent.IsRoot(entity);
 				drawContext.isSelected = false;
+                drawContext.isUnexlored = pair.Value.unexplored;
 				drawContext.widgetType = entityWidgetType;
 				drawContext.style = entityWidgetStyle;
 

@@ -8,6 +8,7 @@ namespace RelationsInspector
     {
         public Color backgroundColor;
         public Color highlightColor;
+        public Color unexploredColor;
         public float highlightStrength;
         public float contentPadding;
         public GUIStyle contentStyle;

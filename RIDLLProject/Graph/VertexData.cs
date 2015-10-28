@@ -8,6 +8,7 @@ namespace RelationsInspector
 	{
 		T subject;
 		public Vector2 pos;
+        public bool unexplored;
 		public EdgeSet<T, P> InEdges { get; private set; }
 		public EdgeSet<T, P> OutEdges { get; private set; }
 

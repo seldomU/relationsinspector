@@ -7,6 +7,7 @@ namespace RelationsInspector
 	{
 		public delegate IEnumerable<Relation<T,P>> GetRelations(T item);
 
+
 		public static GraphWithRoots<T,P> Build(IEnumerable<T> roots, GetRelations getRelations, int maxNodeCount)
 		{
 			var graph = new GraphWithRoots<T, P>();
@@ -18,37 +19,38 @@ namespace RelationsInspector
 			foreach(var root in roots)
 				graph.AddVertex(root);
 
-            //GetRelations x = ent => GetRelations1( ent ).Concat( GetRelations2( ent ) );
-            AddRelations( graph, roots, getRelations, maxNodeCount );
+            AddRelations( graph, roots, getRelations, maxNodeCount);
 			return graph;
 		}
 
-        static void AddRelations( Graph<T, P> graph, IEnumerable<T> entities, GetRelations getRelations, int maxNodeCount )
+        static void AddRelations( Graph<T, P> graph, IEnumerable<T> entities, GetRelations getRelations, int maxNodeCount)
         {
             var unexploredEntities = new List<T>();
-            foreach ( var ent in entities )
+            foreach ( var entity in entities )
             {
-                foreach ( var rel in getRelations( ent ) )
+                foreach ( var relation in getRelations( entity ) )
                 {
-                    if ( !IsValidFor( rel, ent ) )
+                    if ( !IsValidFor( relation, entity ) )
                         break;
                     
-                    var otherEnt = rel.Opposite( ent );
+                    var otherEntity = relation.Opposite( entity );
 
-                    if ( graph.ContainsVertex( otherEnt ) )
+                    if ( graph.ContainsVertex( otherEntity ) )
                     {
-                        graph.AddEdge( rel );
+                        graph.AddEdge( relation );
                     }
                     else
                     {
                         if ( graph.VertexCount < maxNodeCount )
                         {
-                            if ( graph.AddVertex( otherEnt ) )
+                            if ( graph.AddVertex( otherEntity ) )
                             {
-                                unexploredEntities.Add( otherEnt );
-                                graph.AddEdge( rel );
+                                unexploredEntities.Add( otherEntity );
+                                graph.AddEdge( relation );
                             }
                         }
+                        else
+                            graph.VerticesData[ entity ].unexplored = true;
                     }
                 }
             }
