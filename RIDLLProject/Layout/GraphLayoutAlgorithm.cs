@@ -80,7 +80,7 @@ namespace RelationsInspector
 				forces[vertex] = force;
 			}
 
-			// collect attacive forces between neighbor vertices
+			// collect attractive forces between neighbor vertices
 			foreach (var edge in graph.Edges)
 			{
 				Vector2 attraction = GetAttraction(edge);
