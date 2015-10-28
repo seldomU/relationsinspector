@@ -1,11 +1,9 @@
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace RelationsInspector
 {
-	public class GraphWithRoots<T, P> : Graph<T, P> where T : class
+    public class GraphWithRoots<T, P> : Graph<T, P> where T : class
 	{
 		public HashSet<T> RootVertices { get; private set; }
         private bool isTree;

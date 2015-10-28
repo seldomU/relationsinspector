@@ -1,11 +1,9 @@
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace RelationsInspector.Extensions
 {
-	public static class LinqExtensions
+    public static class LinqExtensions
 	{
 		public static HashSet<T> ToHashSet<T>(this IEnumerable<T> sequence)
 		{

@@ -1,7 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using RelationsInspector;
-using RelationsInspector.Backend;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,11 +1,9 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 
 namespace RelationsInspector
 {
-	public interface IGraphBackend<T, P> where T : class
+    public interface IGraphBackend<T, P> where T : class
 	{
 		// initialize the backend object
 		IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api);

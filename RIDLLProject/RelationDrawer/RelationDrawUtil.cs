@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections;
 using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
-	public class RelationDrawUtil
+    public class RelationDrawUtil
 	{
 		internal static void DrawRotatedTexture(Texture2D texture, Vector2 center, Vector2 scale, float rotation, Color color)
 		{

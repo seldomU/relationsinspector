@@ -1,10 +1,9 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace RelationsInspector
 {
-	internal interface IGraphView<T, P> where T : class
+    internal interface IGraphView<T, P> where T : class
 	{
 		void Draw();
 		void OnToolbarGUI();

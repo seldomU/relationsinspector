@@ -1,12 +1,10 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
-	public static class GraphExtensions
+    public static class GraphExtensions
 	{
 		public static IEnumerable<T> GetNeighbors<T, P>(this Graph<T, P> graph, T vertex) where T : class
 		{

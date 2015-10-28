@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using UnityEditor;
 using System.Linq;
 using RelationsInspector.Extensions;

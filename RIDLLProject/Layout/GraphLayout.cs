@@ -1,10 +1,8 @@
-using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace RelationsInspector
 {
-	internal class GraphLayout<T, P> where T : class
+    internal class GraphLayout<T, P> where T : class
 	{
 		internal static IEnumerator Run(GraphWithRoots<T, P> graph, bool firstTime, LayoutType layoutType, GraphLayoutParams layoutParams)
 		{

@@ -1,9 +1,8 @@
 using UnityEngine;
-using System.Collections;
 
 namespace RelationsInspector
 {
-	public class StraightCirclePlacementProvider
+    public class StraightCirclePlacementProvider
 	{
 		public static EdgePlacement GetEdgePlacement(Rect sourceRect, Rect targetRect, float gapSize)
 		{

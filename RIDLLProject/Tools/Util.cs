@@ -1,13 +1,12 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
-	public class Util
+    public class Util
 	{
 		/*public static GUIStyle WindowStyle
 		{

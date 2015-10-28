@@ -1,10 +1,8 @@
-using UnityEngine;
-using System.Collections;
 using System;
 
 namespace RelationsInspector.Extensions
 {
-	public static class TypeExtensions
+    public static class TypeExtensions
 	{
 		public static bool Implements(this Type candidateType, Type interfaceType)
 		{

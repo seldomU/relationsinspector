@@ -1,12 +1,9 @@
-using UnityEngine;
-using UnityEditor;
-using System.Collections;
 using System.IO;
 using System.Linq;
 
 namespace RelationsInspector
 {
-	public static class ProjectSettings
+    public static class ProjectSettings
 	{
 		public const string DefaultBackendClassName = "SceneHierarchyBackend";
 		public const string EditorPrefsProjectPrefix = "Relations inspector";

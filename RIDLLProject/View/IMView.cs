@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -8,7 +7,7 @@ using RelationsInspector.Tweening;
 
 namespace RelationsInspector
 {
-	public enum EntityWidgetType { Rect, Circle };
+    public enum EntityWidgetType { Rect, Circle };
 
 	public class EntityDrawContext
 	{

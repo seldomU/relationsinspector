@@ -1,9 +1,8 @@
 using UnityEngine;
-using System.Collections;
 
 namespace RelationsInspector
 {
-	public interface RelationsInspectorAPI
+    public interface RelationsInspectorAPI
 	{
 		// draw a fresh view of the graph
 		void Repaint();

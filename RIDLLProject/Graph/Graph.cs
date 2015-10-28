@@ -1,12 +1,11 @@
-﻿using UnityEngine;
-using System.Collections;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
-	public class Graph<T, P> where T : class
+    public class Graph<T, P> where T : class
 	{
 		public Dictionary<T, VertexData<T, P>> VerticesData { get; private set; }
 		public IEnumerable<T> Vertices { get { return VerticesData.Keys; } }

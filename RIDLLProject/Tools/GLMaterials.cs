@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
+using UnityEngine;
 
 namespace RelationsInspector
 {
-	public class GLMaterials
+    public class GLMaterials
 	{
 		public static Material defaultMat;
 		

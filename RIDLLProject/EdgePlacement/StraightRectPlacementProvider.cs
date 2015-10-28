@@ -1,9 +1,8 @@
 using UnityEngine;
-using System.Collections;
 
 namespace RelationsInspector
 {
-	public class StraightRectPlacementProvider
+    public class StraightRectPlacementProvider
 	{
 		static float selfEdgeOffset = 10;	// edge anchor distances from rect corner
 

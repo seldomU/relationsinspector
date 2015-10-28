@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
+using UnityEngine;
 
 namespace RelationsInspector
 {
-	public delegate EdgePlacement EdgePlacementProvider(Rect sourceRect, Rect targetRect, float gapSize);
+    public delegate EdgePlacement EdgePlacementProvider(Rect sourceRect, Rect targetRect, float gapSize);
 	
 	public struct EdgePlacement
 	{

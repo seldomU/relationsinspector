@@ -1,11 +1,10 @@
-using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace RelationsInspector.Tweening
 {
-	public class TweenCollection
+    public class TweenCollection
 	{
         HashSet<ITween> tweens = new HashSet<ITween>();
         Dictionary<object, ITween> tweenOwners = new Dictionary<object, ITween>();

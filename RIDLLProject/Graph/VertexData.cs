@@ -1,11 +1,10 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace RelationsInspector
 {
-	public class VertexData<T, P> where T : class
+    public class VertexData<T, P> where T : class
 	{
 		T subject;
 		public Vector2 pos;

@@ -1,11 +1,10 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
-	public static class ViewUtil
+    public static class ViewUtil
 	{
 		// get a transform that makes the graph fit into the view rect
 		public static Transform2d FitPointsIntoRect(IEnumerable<Vector2> logicalPositions,  Rect displayRect )

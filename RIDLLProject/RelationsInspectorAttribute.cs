@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 
 namespace RelationsInspector
 {
-	[AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class)]
 	public class RelationsInspectorAttribute : System.Attribute
 	{
 		public Type type;

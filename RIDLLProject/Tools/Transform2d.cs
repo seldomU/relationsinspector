@@ -1,10 +1,9 @@
 using UnityEngine;
-using System.Collections;
 using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
-	public class Transform2d
+    public class Transform2d
 	{
 		public Vector2 translation;
 		public Vector2 scale;

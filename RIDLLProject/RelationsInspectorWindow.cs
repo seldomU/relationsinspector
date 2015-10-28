@@ -1,18 +1,16 @@
 using UnityEngine;
 using UnityEditor;
-using System.Linq;
-using RelationsInspector.Extensions;
 
 // make internal classes accessible to unit tests
 #if DEBUG
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Assembly-CSharp-Editor")]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Assembly-CSharp")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo( "Assembly-CSharp-Editor" )]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo( "Assembly-CSharp" )]
 #endif
 
 
 namespace RelationsInspector
 {
-	public class RelationsInspectorWindow : EditorWindow
+    public class RelationsInspectorWindow : EditorWindow
     {
         RIInternal internalAPI;
         APIv1Implementation api1impl;

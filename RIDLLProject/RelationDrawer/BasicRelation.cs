@@ -1,14 +1,12 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections;
-using RelationsInspector;
 using RelationsInspector.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace RelationsInspector
 {
-	public class BasicRelationDrawer<T,P> : IRelationDrawer<T,P> where T : class
+    public class BasicRelationDrawer<T,P> : IRelationDrawer<T,P> where T : class
 	{
 		const float MinCircleRadius = 12f;
 

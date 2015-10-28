@@ -1,4 +1,3 @@
-using RelationsInspector;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
@@ -11,7 +10,7 @@ using System.Collections;
 
 namespace RelationsInspector
 {
-	internal class Workspace<T,P> : IWorkspace, IViewParent<T,P> where T : class
+    internal class Workspace<T,P> : IWorkspace, IViewParent<T,P> where T : class
 	{
 		GraphWithRoots<T,P> graph;
 		IGraphView<T,P> view;

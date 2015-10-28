@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
-	internal static class TypeUtil
+    internal static class TypeUtil
 	{
 		
 		// return type for given typeName, search all assemblies

@@ -1,9 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
-
 namespace RelationsInspector
 {
-	public class RNG
+    public class RNG
 	{
 		System.Random rng;
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
-using System.Text;
 using RelationsInspector.Extensions;
 
 namespace RelationsInspector
