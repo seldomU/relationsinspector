@@ -1,7 +1,9 @@
 
+using System;
+
 namespace RelationsInspector
 {
-	public class Relation<T, P> where T : class
+	public class Relation<T, P> : IEquatable<Relation<T, P>> where T : class
 	{
 		public T Source {get; private set;}
 		public T Target { get; private set; }
@@ -24,6 +26,26 @@ namespace RelationsInspector
             if ( entity == Source ) return Target;
             if ( entity == Target ) return Source;
             throw new System.ArgumentException( "entity is not part of the relation" );
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 13;
+            hash = ( hash * 7 ) + Source.GetHashCode();
+            hash = ( hash * 7 ) + Target.GetHashCode();
+            hash = ( hash * 7 ) + Tag.GetHashCode();
+            return hash;
+        }
+
+        public bool Equals( Relation<T, P> other )
+        {
+            return ( other == null ) ? false : GetHashCode() == other.GetHashCode();
+        }
+
+        public override bool Equals( object otherObj )
+        {
+            var otherRelation = otherObj as Relation<T, P>;
+            return ( otherRelation == null ) ? false : Equals( otherRelation );
         }
     }
 }

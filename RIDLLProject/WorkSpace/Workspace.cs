@@ -19,7 +19,7 @@ namespace RelationsInspector
 		IEnumerator layoutEnumerator;
 		LayoutType layoutType;
 		LayoutType defaultLayoutType = LayoutType.Graph;
-		HashSet<T> rootEntities;
+		HashSet<T> seedEntities; 
 		TweenCollection graphPosTweens;
         bool hasGraphPosChanges;
 
@@ -46,7 +46,7 @@ namespace RelationsInspector
 			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);			
 			graphPosTweens = new TweenCollection();
 
-            rootEntities = graphBackend.Init(targets, GetAPI() ).ToHashSet();
+            seedEntities = graphBackend.Init(targets, GetAPI() ).ToHashSet();
 
             // when targets is null, show the toolbar only. don't create a graph (and view)
             // when rootEntities is empty, create graph and view anyway, so the user can add entities
@@ -64,7 +64,7 @@ namespace RelationsInspector
             // merge the relations providers
             GraphBuilder<T, P>.GetRelations getRelations = ent => graphBackend.GetRelated( ent ).Concat( graphBackend.GetRelating( ent ) );
 
-            graph = GraphBuilder<T, P>.Build(rootEntities, getRelations, Settings.Instance.maxGraphNodes);
+            graph = GraphBuilder<T, P>.Build(seedEntities, getRelations, Settings.Instance.maxGraphNodes);
             if (graph == null)
                 return;
             
@@ -241,6 +241,25 @@ namespace RelationsInspector
 				view.OnRemovedEntity(entity);
 		}
 
+        void IWorkspace.ExpandEntity( object entityObj )
+        {
+            var entity = entityObj as T;
+            if ( entity == null )
+                return;
+            GraphBuilder<T, P>.GetRelations getRelations = ent => graphBackend.GetRelated( ent ).Concat( graphBackend.GetRelating( ent ) );
+            GraphBuilder<T, P>.Expand( graph, entity, getRelations, graph.VertexCount + Settings.Instance.maxGraphNodes );
+            Exec( () => DoAutoLayout( false ) );
+        }
+
+        void IWorkspace.FoldEntity( object entityObj )
+        {
+            var entity = entityObj as T;
+            if ( entity == null )
+                return;
+
+            FoldUtil.Fold( graph, entity, IsSeed );
+        }
+
 		void IWorkspace.CreateRelation(object[] sourceEntities, object tagObj)
 		{
 			if (sourceEntities == null)
@@ -337,9 +356,9 @@ namespace RelationsInspector
 			graph.SetPos(entity, newPos);
 		}
 
-		public bool IsRoot(T entity)
+		public bool IsSeed(T entity)
 		{
-			return rootEntities.Contains(entity);
+			return seedEntities.Contains(entity);
 		}
 
 		public IGraphBackendInternal<T, P> GetBackend()

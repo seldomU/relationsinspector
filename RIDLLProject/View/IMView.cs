@@ -233,7 +233,7 @@ namespace RelationsInspector
 					continue;
 
 				drawContext.position = transform.Apply(pair.Value.pos);
-				drawContext.isTarget = parent.IsRoot(entity);
+				drawContext.isTarget = parent.IsSeed(entity);
 				drawContext.isSelected = false;
                 drawContext.isUnexlored = pair.Value.unexplored;
 				drawContext.widgetType = entityWidgetType;
@@ -249,7 +249,7 @@ namespace RelationsInspector
 					continue;	// throw exception?
 
 				drawContext.position = transform.Apply(graph.GetPos(entity));
-				drawContext.isTarget = parent.IsRoot(entity);
+				drawContext.isTarget = parent.IsSeed(entity);
 				drawContext.isSelected = true;
 				drawContext.widgetType = entityWidgetType;
 				drawContext.style = entityWidgetStyle;
@@ -425,9 +425,13 @@ namespace RelationsInspector
 						}
 						else if (ev.button == 1)	// right click
 						{
-							parent.GetBackend().OnEntityContextClick( new[]{clickEntity} ); 
-						}
-					}
+                            if( entitySelection.Contains( clickEntity ) )
+                                parent.GetBackend().OnEntityContextClick( entitySelection );
+                            else
+                                parent.GetBackend().OnEntityContextClick( new[] { clickEntity } );
+
+                        }
+                    }
 					else // clickEntity == null
 					{
 						var clickEdge = GetEdgeAtPosition(ev.mousePosition);

@@ -9,7 +9,7 @@ namespace RelationsInspector
 
 		void MoveEntity(T entity, Vector2 delta);
 
-		bool IsRoot(T entity);  // is entity derived from a inspector target object?
+		bool IsSeed(T entity);  // is entity derived from a inspector target object?
         IGraphBackendInternal<T, P> GetBackend();
 	}
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using RelationsInspector.Extensions;
+using System;
 
 namespace RelationsInspector
 {
@@ -11,6 +12,8 @@ namespace RelationsInspector
 		public IEnumerable<T> Vertices { get { return VerticesData.Keys; } }
 		public HashSet<Relation<T, P>> Edges { get; private set; }
 		public int VertexCount { get { return VerticesData.Count; } }
+        public bool genDownwards;
+        public bool genUpwards;
 
 		public Graph()
 		{
@@ -42,7 +45,16 @@ namespace RelationsInspector
 			return true;
 		}
 
-		public virtual bool RemoveVertex(T vertex)
+        public bool CanRegenerate( T source, T target)
+        {
+            if ( this.GetChildren( source ).Contains( target ) )
+                return genDownwards;
+            if ( this.GetParents( source ).Contains( target ) )
+                return genUpwards;
+            throw new Exception( "source and target are not related" );
+        }
+
+        public virtual bool RemoveVertex(T vertex)
 		{
 			if (vertex == null)
 				return false;
@@ -103,6 +115,14 @@ namespace RelationsInspector
 		{
 			return VerticesData.ContainsKey(vertex);
 		}
+
+        public bool ContainsEdge( Relation<T, P> relation )
+        {
+            return ContainsVertex(relation.Source) &&
+                VerticesData[ relation.Source ]
+                .OutEdges.Get()
+                .Any( rel => rel.Equals( relation ) );
+        }
 
 		public Vector2 GetPos(T vertex)
 		{

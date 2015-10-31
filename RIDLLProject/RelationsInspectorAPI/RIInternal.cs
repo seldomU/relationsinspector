@@ -107,6 +107,18 @@ namespace RelationsInspector
                 Exec(() => workspace.RemoveEntity(entity));
         }
 
+        internal void ExpandEntity( object entity )
+        {
+            if ( workspace != null )
+                Exec( () => workspace.ExpandEntity( entity ) );
+        }
+
+        internal void FoldEntity( object entity )
+        {
+            if ( workspace != null )
+                Exec( () => workspace.FoldEntity( entity ) );
+        }
+
         public void InitRelation(object[] sourceEntities, object tag)
         {
             if (workspace != null)

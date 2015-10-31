@@ -53,6 +53,16 @@ namespace RelationsInspector
             internalAPI.RemoveEntity(entity);
         }
 
+        public void ExpandEntity( object entity )
+        {
+            internalAPI.ExpandEntity( entity );
+        }
+
+        public void FoldEntity( object entity )
+        {
+            internalAPI.FoldEntity( entity );
+        }
+
         public void InitRelation(object[] sourceEntities, object tag)
         {
             internalAPI.InitRelation(sourceEntities, tag);

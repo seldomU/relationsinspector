@@ -1,11 +1,14 @@
 using System.Linq;
 using System.Collections.Generic;
+//using System;
+using UnityEngine;
 
 namespace RelationsInspector
 {
 	public static class GraphBuilder<T,P> where T : class
 	{
 		public delegate IEnumerable<Relation<T,P>> GetRelations(T item);
+        delegate void OnVertexAdded( T vertex, T related );
 
 
 		public static GraphWithRoots<T,P> Build(IEnumerable<T> roots, GetRelations getRelations, int maxNodeCount)
@@ -19,11 +22,11 @@ namespace RelationsInspector
 			foreach(var root in roots)
 				graph.AddVertex(root);
 
-            AddRelations( graph, roots, getRelations, maxNodeCount);
+            AddRelations( graph, roots, getRelations, (a,b)=> { }, maxNodeCount);
 			return graph;
 		}
 
-        static void AddRelations( Graph<T, P> graph, IEnumerable<T> entities, GetRelations getRelations, int maxNodeCount)
+        static void AddRelations( Graph<T, P> graph, IEnumerable<T> entities, GetRelations getRelations, OnVertexAdded onVertexAdded, int maxNodeCount)
         {
             var unexploredEntities = new List<T>();
             foreach ( var entity in entities )
@@ -31,7 +34,15 @@ namespace RelationsInspector
                 foreach ( var relation in getRelations( entity ) )
                 {
                     if ( !IsValidFor( relation, entity ) )
-                        break;
+                        continue;
+
+                    if ( graph.ContainsEdge( relation ) )
+                        continue;
+
+                    if ( entity == relation.Source )
+                        graph.genDownwards = true;
+                    else
+                        graph.genUpwards = true;
                     
                     var otherEntity = relation.Opposite( entity );
 
@@ -47,6 +58,7 @@ namespace RelationsInspector
                             {
                                 unexploredEntities.Add( otherEntity );
                                 graph.AddEdge( relation );
+                                onVertexAdded( otherEntity, entity );
                             }
                         }
                         else
@@ -56,7 +68,7 @@ namespace RelationsInspector
             }
 
             if( unexploredEntities.Any() )
-                AddRelations( graph, unexploredEntities, getRelations, maxNodeCount );
+                AddRelations( graph, unexploredEntities, getRelations, onVertexAdded, maxNodeCount );
         }
 
         // returns tree if the given relation contains entity and can be added to the graph
@@ -70,5 +82,17 @@ namespace RelationsInspector
                 return false;
             return true;
         }
-	}
+
+        internal static void Expand( Graph<T, P> graph, T entity, GetRelations getRelations, int maxNodes )
+        {
+            OnVertexAdded setPos = ( v, rel ) =>
+            {
+                var pos = graph.GetPos( rel ) + new Vector2( Random.Range( 0.3f, 1f ), Random.Range( 0.3f, 1f ) );
+                graph.SetPos( v, pos );
+            };
+
+            graph.VerticesData[ entity ].unexplored = false;
+            AddRelations( graph, new[] { entity }, getRelations, setPos, maxNodes );
+        }
+    }
 }

@@ -14,11 +14,15 @@ namespace RelationsInspector
 
         void AddEntity(object vertex, Vector2 position);
 		void RemoveEntity(object vertex);
-		void CreateRelation(object[] sourceEntities, object tag);
+        void ExpandEntity( object entity );
+        void FoldEntity( object entity );
+
+        void CreateRelation(object[] sourceEntities, object tag);
 		void AddRelation(object source, object target, object tag);
 		void RemoveRelation(object source, object target, object tag);
 
 		void SelectEntityNodes(System.Predicate<object> doSelect);
         void Relayout();
-	}
+        
+    }
 }

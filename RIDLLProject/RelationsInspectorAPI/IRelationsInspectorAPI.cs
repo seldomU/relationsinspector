@@ -25,9 +25,11 @@ namespace RelationsInspector
 		// manipulate the graph directly
 		void AddEntity(object entity, Vector2 position);
 		void RemoveEntity(object entity);
+        void ExpandEntity( object entity );
+        void FoldEntity( object entity );
 
-		// add relation that has yet to be connected to its target
-		void InitRelation(object[] sourceEntity, object tag);
+        // add relation that has yet to be connected to its target
+        void InitRelation(object[] sourceEntity, object tag);
 
 		// add relation
 		void AddRelation(object sourceEntity, object targetEntity, object tag);
@@ -64,6 +66,8 @@ namespace RelationsInspector
         // manipulate the graph directly
         void AddEntity(object entity, Vector2 position);
         void RemoveEntity(object entity);
+        void ExpandEntity( object entity );
+        void FoldEntity( object entity );
 
         // add relation that has yet to be connected to its target
         void InitRelation(object[] sourceEntity, object tag);

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
@@ -13,8 +14,8 @@ namespace RelationsInspector
 		
 		public static IEnumerable<T> GetChildren<T,P>(this Graph<T, P> graph, T vertex) where T : class
 		{
-			if (!graph.Vertices.Contains(vertex))
-				return Enumerable.Empty<T>();
+            if ( !graph.Vertices.Contains( vertex ) )
+                return Enumerable.Empty<T>();
 
 			return graph.VerticesData[vertex].OutEdges.Get().Select(e => e.Target);
 		}
@@ -24,7 +25,7 @@ namespace RelationsInspector
 			if (!graph.Vertices.Contains(vertex))
 				return Enumerable.Empty<T>();
 
-			return graph.VerticesData[vertex].InEdges.Get().Select(e => e.Target);
+			return graph.VerticesData[vertex].InEdges.Get().Select(e => e.Source);
 		}
 
 		public static IEnumerable<Relation<T, P>> GetEdges<T, P>(this Graph<T, P> graph, T vertex) where T : class
@@ -50,20 +51,20 @@ namespace RelationsInspector
 
         public static bool IsSingleTree<T, P>(this Graph<T, P> graph) where T : class
         {
-            var roots = graph.Vertices
-                .Where(v => graph.IsRoot(v))
-                ;//.SingleOrDefault();
+            var roots = graph
+                .Vertices
+                .Where( v => graph.IsRoot( v ) );
 
             if (roots.Count() != 1)
                 return false;
 
-            return graph.ContainsCycle( roots.Single() );
+            T root = roots.Single();
+            return graph.IsTree( root, root, new HashSet<T>() );
         }
 
-        public static bool ContainsCycle<T,P>(this Graph<T, P> graph, T root) where T : class
+        /*// returns tree if the graph forms a tree with root as root node and no disconnected nodes
+        public static bool IsConnectedTree<T,P>(this Graph<T, P> graph, T root) where T : class
 		{
-            //var visited = new HashSet<T>();
-
             // mark all root children as visited (recursively)
             // if any are visited twice, there is a diamod or cycle
             var visited = new HashSet<T>( new[] { root } );
@@ -83,7 +84,22 @@ namespace RelationsInspector
 			var unvisited = graph.Vertices.Except(visited);
 			bool hasCycle = unvisited.Any();
 			return !hasCycle;
-		}
+		}*/
+
+        // assumes that root is already part of ignore
+        public static bool IsTree<T,P>( this Graph<T,P> graph, T root, T ignore, HashSet<T> visited) where T : class
+        {
+            var neighbors = graph
+                .GetNeighbors( root )
+                .ToHashSet()
+                .Except( new[] { ignore } );
+
+            if ( visited.Intersect( neighbors ).Any() )
+                return false;
+
+            visited = visited.Union( neighbors ).ToHashSet();
+            return neighbors.Any( neighbor => graph.IsTree( neighbor, root, visited ) );
+        }
 
 		public static Dictionary<T, Vector2> GetVertexPositions<T,P>(this Graph<T,P> graph) where T : class
 		{

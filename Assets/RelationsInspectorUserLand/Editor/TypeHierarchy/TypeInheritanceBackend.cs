@@ -11,7 +11,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
 	// we have two kinds of relations in the inheritance graph:
 	public enum TypeRelation { SubType, SuperType};
 
-	public class TypeInheritanceBackend : MinimalBackend<Type, TypeRelation>
+	public class TypeInheritanceBackend : MinimalBackend2<Type, TypeRelation>
 	{	
 		static bool includeSuperTypes = true;
 		static bool includeSubTypes = true;
@@ -53,59 +53,33 @@ namespace RelationsInspector.Backend.TypeHierarchy
 			return targetTypes;
 		}
 
-		public override IEnumerable<Tuple<Type, TypeRelation>> GetRelated(Type entity)
+		public override IEnumerable<Relation<Type, TypeRelation>> GetRelated(Type entity)
 		{
-			//
-			foreach (var tuple in GetRelatedTuples(entity))
-			{
-				if (nodeCount >= maxNodes)
-					yield break;
-
-				yield return tuple;
-				nodeCount++;
-			}
-		}
-
-        public override IEnumerable<Tuple<Type, TypeRelation>> GetRelating(Type entity)
-        {
-            //
-            foreach (var tuple in GetRelatingTuples(entity))
+            if ( includeSubTypes && touchedSubTypes.Contains( entity ) )
             {
-                if (nodeCount >= maxNodes)
-                    yield break;
-
-                yield return tuple;
-                nodeCount++;
+                var subTypes = TypeUtility.GetSubtypes( entity, allAssemblies );
+                touchedSubTypes.UnionWith( subTypes );
+                foreach ( var t in subTypes )
+                    yield return new Relation<Type, TypeRelation>(entity, t, TypeRelation.SubType );
             }
         }
 
-		IEnumerable<Tuple<Type, TypeRelation>> GetRelatedTuples(Type entity)
-		{
-			if (includeSubTypes && touchedSubTypes.Contains(entity))
-			{
-				var subTypes = TypeUtility.GetSubtypes(entity, allAssemblies);
-				touchedSubTypes.UnionWith(subTypes);
-				foreach (var t in subTypes)
-					yield return new Tuple<Type, TypeRelation>(t, TypeRelation.SubType);
-			}
-        }
-
-        IEnumerable<Tuple<Type, TypeRelation>> GetRelatingTuples(Type entity)
+        public override IEnumerable<Relation<Type, TypeRelation>> GetRelating(Type entity)
         {
-			if (includeSuperTypes && touchedSuperTypes.Contains(entity))
-			{
-				var superTypes = new List<Type>();
-				if (entity.BaseType != null)
-					superTypes.Add(entity.BaseType);
+            if ( !includeSuperTypes || !touchedSuperTypes.Contains( entity ) )
+                yield break;
 
-				if (includeInterfaces)
-					superTypes.AddRange(entity.GetInterfaces());
+            var superTypes = new List<Type>();
+            if ( entity.BaseType != null )
+                superTypes.Add( entity.BaseType );
 
-				touchedSuperTypes.UnionWith(superTypes);
-				foreach (var t in superTypes)
-					yield return new Tuple<Type, TypeRelation>(t, TypeRelation.SuperType);
-			}
-		}
+            if ( includeInterfaces )
+                superTypes.AddRange( entity.GetInterfaces() );
+
+            touchedSuperTypes.UnionWith( superTypes );
+            foreach ( var t in superTypes )
+                yield return new Relation<Type, TypeRelation>( t, entity, TypeRelation.SuperType );
+        }
 
 		public override Rect OnGUI()
 		{
@@ -153,11 +127,9 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
 
 
-		public override void OnEntityContextClick(IEnumerable<Type> entities)
+		public override void OnEntityContextClick(IEnumerable<Type> entities, GenericMenu menu)
 		{
-			var menu = new GenericMenu();
-			menu.AddItem(new GUIContent("make new target"), false, () => riAPI.ResetTargets(new[] { entities.First() }));
-			menu.ShowAsContext();
+			menu.AddItem(new GUIContent("make new target"), false, () => riAPI.ResetTargets(entities.ToArray() ));
 		}
 
 		// map relation tag value to color

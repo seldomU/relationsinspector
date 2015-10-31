@@ -6,6 +6,7 @@ using NUnit.Framework;
 using UnityEngine;
 using RelationsInspector;
 using RelationsInspector.Backend;
+using UnityEditor;
 
 namespace Assets.UnitTests.Editor
 {
@@ -29,8 +30,8 @@ namespace Assets.UnitTests.Editor
             public string GetTagTooltip(string tag) { return string.Empty;  }
             public Rect DrawContent(string entity, EntityDrawContext drawContext) { return new Rect(); }
 
-            public void OnEntityContextClick(IEnumerable<string> entities) { }
-            public void OnRelationContextClick(string source, string target, string tag) { }
+            public void OnEntityContextClick(IEnumerable<string> entities, GenericMenu menu) { }
+            public void OnRelationContextClick(string source, string target, string tag, GenericMenu menu ) { }
             public Color GetRelationColor(string relationTagValue) { return Color.white; }
             public void OnEvent(Event e) { }
         }

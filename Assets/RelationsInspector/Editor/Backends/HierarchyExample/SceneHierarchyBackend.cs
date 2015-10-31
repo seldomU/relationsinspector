@@ -7,7 +7,7 @@ using RelationsInspector.Backend;
 
 namespace RelationsInspector.Backend.SceneHierarchy
 {
-	public class SceneHierarchyBackend : IGraphBackend<Object, string>
+	public class SceneHierarchyBackend : IGraphBackend2<Object, string>
 	{
 		public IEnumerable<Object> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
 		{
@@ -18,8 +18,8 @@ namespace RelationsInspector.Backend.SceneHierarchy
 		// so don't perform any graph modification
 		public void CreateEntity(Vector2 position) { }
 		public void CreateRelation(Object source, Object target, string tag) { }
-		public void OnEntityContextClick(IEnumerable<Object> entities) { }
-		public void OnRelationContextClick(Object source, Object target, string tag) { }
+		public void OnEntityContextClick(IEnumerable<Object> entities, GenericMenu contextMenu ) { }
+		public void OnRelationContextClick(Object source, Object target, string tag, GenericMenu contextMenu ) { }
 
 		// no need for toolbar or controls
 		public Rect OnGUI()
@@ -57,7 +57,7 @@ namespace RelationsInspector.Backend.SceneHierarchy
 
         public virtual void OnUnitySelectionChange(){}
 
-        public IEnumerable<Tuple<Object, string>> GetRelated(Object entity)
+        public IEnumerable<Relation<Object, string>> GetRelated(Object entity)
 		{
 			var asGameObject = entity as GameObject;
 			if (asGameObject == null)
@@ -65,14 +65,14 @@ namespace RelationsInspector.Backend.SceneHierarchy
 
 			// include sub-gameObjects
 			foreach (Transform t in asGameObject.transform)
-				yield return new Tuple<Object, string>(t.gameObject, string.Empty);
+				yield return new Relation<Object, string>(entity, t.gameObject, string.Empty);
 
 			// include components
 			foreach (var c in asGameObject.GetComponents<Component>())
-				yield return new Tuple<Object, string>(c, string.Empty);
+				yield return new Relation<Object, string>(entity, c, string.Empty);
 		}
 
-        public IEnumerable<Tuple<Object, string>> GetRelating(Object entity)
+        public IEnumerable<Relation<Object, string>> GetRelating(Object entity)
         {
             yield break;
         }
@@ -89,5 +89,10 @@ namespace RelationsInspector.Backend.SceneHierarchy
 			content.tooltip = content.text;
 			return content;
 		}
-	}
+        
+        public void OnEvent( Event e )
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }

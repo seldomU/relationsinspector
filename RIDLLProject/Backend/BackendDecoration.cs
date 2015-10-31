@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using System.Linq;
+using UnityEditor;
 
 namespace RelationsInspector
 {
@@ -99,6 +100,7 @@ namespace RelationsInspector
     internal class BackendDecoratorV2<T, P> : IGraphBackendInternal<T, P> where T : class
     {
         IGraphBackend2<T, P> backend;
+        RelationsInspectorAPI api;
 
         public BackendDecoratorV2(IGraphBackend2<T, P> backend)
         {
@@ -112,6 +114,7 @@ namespace RelationsInspector
 
         public IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
         {
+            this.api = api;
             return backend.Init(targets, api);
         }
 
@@ -167,12 +170,33 @@ namespace RelationsInspector
 
         public void OnEntityContextClick(IEnumerable<T> entities)
         {
-            backend.OnEntityContextClick(entities);
+            var menu = new GenericMenu();
+            menu.AddItem( new GUIContent( "Fold" ), false, () => 
+                {
+                    foreach ( var ent in entities )
+                    {
+                        api.FoldEntity( ent );
+                    }
+                } );
+
+            menu.AddItem( new GUIContent( "Expand" ), false, () =>
+              {
+                  foreach ( var ent in entities )
+                  {
+                      api.ExpandEntity( ent );
+                  }
+              } );
+
+            backend.OnEntityContextClick( entities, menu );
+            menu.ShowAsContext();
         }
 
         public void OnRelationContextClick(T source, T target, P tag)
         {
-            backend.OnRelationContextClick(source, target, tag);
+            var menu = new GenericMenu();
+            backend.OnRelationContextClick(source, target, tag, menu);
+            if ( menu.GetItemCount() > 0 )
+                menu.ShowAsContext();
         }
 
         public Color GetRelationColor(P relationTagValue)

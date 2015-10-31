@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 using System.Collections.Generic;
 
 namespace RelationsInspector
@@ -44,8 +45,8 @@ namespace RelationsInspector
         string GetTagTooltip(P tag);
         Rect DrawContent(T entity, EntityDrawContext drawContext);
 
-        void OnEntityContextClick(IEnumerable<T> entities);
-        void OnRelationContextClick(T source, T target, P tag);
+        void OnEntityContextClick(IEnumerable<T> entities, GenericMenu contextMenu );
+        void OnRelationContextClick(T source, T target, P tag, GenericMenu contextMenu);
         Color GetRelationColor(P relationTagValue);
         void OnEvent(Event e);
     }
