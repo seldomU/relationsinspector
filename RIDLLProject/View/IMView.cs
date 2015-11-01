@@ -455,29 +455,27 @@ namespace RelationsInspector
 						{
 							draggedEntity = clickEntity;
 
-							// update selection
-							bool controlHeld = (ev.modifiers & EventModifiers.Control) != 0;
-							if (controlHeld)
-							{
-								if (entitySelection.Contains(clickEntity))
-									entitySelection.Remove(clickEntity);
-								else
-									entitySelection.Add(clickEntity);
-							}
-							else
-								entitySelection = new HashSet<T>(new[] { clickEntity });
+                            // update selection
+                            bool controlHeld = ( ev.modifiers & EventModifiers.Control ) != 0;
+                            if ( controlHeld )
+                            {
+                                if ( entitySelection.Contains( clickEntity ) )
+                                    entitySelection.Remove( clickEntity );
+                                else
+                                    entitySelection.Add( clickEntity );
+                            }
+                            else
+                                entitySelection = new HashSet<T>( new[] { clickEntity } );
 
-							if (OnEntitySelectionChange())
-								parent.RepaintView();
+                            OnEntitySelectionChange();
+						    parent.RepaintView();
 						}
 						else if (ev.button == 1)	// right click
 						{
-                            if ( entitySelection.Contains( clickEntity ) )
-                                HandleEntityContextClick( entitySelection );
-                            else
-                                HandleEntityContextClick( new[] { clickEntity } );
+                            if ( !entitySelection.Contains( clickEntity ) )
+                                entitySelection = new HashSet<T>() { clickEntity };
 
-
+                            HandleEntityContextClick( entitySelection );
                         }
                     }
 					else // clickEntity == null
@@ -623,10 +621,9 @@ namespace RelationsInspector
 			dragEdgeTag = tag;
 		}
 
-		bool OnEntitySelectionChange()
+		void OnEntitySelectionChange()
 		{
 			parent.GetBackend().OnEntitySelectionChange( entitySelection.ToArray() );
-			return true;
 		}
 
 		static Transform2d Zoom(Transform2d transform, bool zoomIn, bool affectX, bool affectY, Vector2 fixPosition)
