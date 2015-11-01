@@ -59,10 +59,10 @@ namespace RelationsInspector
                 return false;
 
             T root = roots.Single();
-            return graph.IsTree( root, root, new HashSet<T>() );
+            return graph.IsConnectedTree( root );
         }
 
-        /*// returns tree if the graph forms a tree with root as root node and no disconnected nodes
+        // returns tree if the graph forms a tree with root as root node and no disconnected nodes
         public static bool IsConnectedTree<T,P>(this Graph<T, P> graph, T root) where T : class
 		{
             // mark all root children as visited (recursively)
@@ -84,22 +84,7 @@ namespace RelationsInspector
 			var unvisited = graph.Vertices.Except(visited);
 			bool hasCycle = unvisited.Any();
 			return !hasCycle;
-		}*/
-
-        // assumes that root is already part of ignore
-        public static bool IsTree<T,P>( this Graph<T,P> graph, T root, T ignore, HashSet<T> visited) where T : class
-        {
-            var neighbors = graph
-                .GetNeighbors( root )
-                .ToHashSet()
-                .Except( new[] { ignore } );
-
-            if ( visited.Intersect( neighbors ).Any() )
-                return false;
-
-            visited = visited.Union( neighbors ).ToHashSet();
-            return neighbors.Any( neighbor => graph.IsTree( neighbor, root, visited ) );
-        }
+		}
 
 		public static Dictionary<T, Vector2> GetVertexPositions<T,P>(this Graph<T,P> graph) where T : class
 		{
