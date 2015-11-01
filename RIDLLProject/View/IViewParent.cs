@@ -11,5 +11,6 @@ namespace RelationsInspector
 
 		bool IsSeed(T entity);  // is entity derived from a inspector target object?
         IGraphBackendInternal<T, P> GetBackend();
+        RelationsInspectorAPI GetAPI();
 	}
 }

@@ -46,7 +46,7 @@ namespace RelationsInspector
         Rect DrawContent(T entity, EntityDrawContext drawContext);
 
         void OnEntityContextClick(IEnumerable<T> entities, GenericMenu contextMenu );
-        void OnRelationContextClick(T source, T target, P tag, GenericMenu contextMenu);
+        void OnRelationContextClick(Relation<T,P> relation, GenericMenu contextMenu);
         Color GetRelationColor(P relationTagValue);
         void OnEvent(Event e);
     }

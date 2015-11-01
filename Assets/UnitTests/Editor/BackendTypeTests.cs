@@ -31,7 +31,7 @@ namespace Assets.UnitTests.Editor
             public Rect DrawContent(string entity, EntityDrawContext drawContext) { return new Rect(); }
 
             public void OnEntityContextClick(IEnumerable<string> entities, GenericMenu menu) { }
-            public void OnRelationContextClick(string source, string target, string tag, GenericMenu menu ) { }
+            public void OnRelationContextClick(Relation<string,string> relation, GenericMenu menu ) { }
             public Color GetRelationColor(string relationTagValue) { return Color.white; }
             public void OnEvent(Event e) { }
         }

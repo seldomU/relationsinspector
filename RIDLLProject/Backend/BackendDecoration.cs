@@ -77,14 +77,14 @@ namespace RelationsInspector
             return backend.DrawContent(entity, drawContext);
         }
 
-        public void OnEntityContextClick(IEnumerable<T> entities)
+        public void OnEntityContextClick(IEnumerable<T> entities, GenericMenu menu)
         {
             backend.OnEntityContextClick(entities);
         }
 
-        public void OnRelationContextClick(T source, T target, P tag)
+        public void OnRelationContextClick(Relation<T,P> relation, GenericMenu menu )
         {
-            backend.OnRelationContextClick(source, target, tag);
+            backend.OnRelationContextClick(relation.Source, relation.Target, relation.Tag);
         }
 
         public Color GetRelationColor(P relationTagValue)
@@ -100,7 +100,6 @@ namespace RelationsInspector
     internal class BackendDecoratorV2<T, P> : IGraphBackendInternal<T, P> where T : class
     {
         IGraphBackend2<T, P> backend;
-        RelationsInspectorAPI api;
 
         public BackendDecoratorV2(IGraphBackend2<T, P> backend)
         {
@@ -114,7 +113,6 @@ namespace RelationsInspector
 
         public IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
         {
-            this.api = api;
             return backend.Init(targets, api);
         }
 
@@ -168,35 +166,14 @@ namespace RelationsInspector
             return backend.DrawContent(entity, drawContext);
         }
 
-        public void OnEntityContextClick(IEnumerable<T> entities)
+        public void OnEntityContextClick(IEnumerable<T> entities, GenericMenu menu)
         {
-            var menu = new GenericMenu();
-            menu.AddItem( new GUIContent( "Fold" ), false, () => 
-                {
-                    foreach ( var ent in entities )
-                    {
-                        api.FoldEntity( ent );
-                    }
-                } );
-
-            menu.AddItem( new GUIContent( "Expand" ), false, () =>
-              {
-                  foreach ( var ent in entities )
-                  {
-                      api.ExpandEntity( ent );
-                  }
-              } );
-
             backend.OnEntityContextClick( entities, menu );
-            menu.ShowAsContext();
         }
 
-        public void OnRelationContextClick(T source, T target, P tag)
+        public void OnRelationContextClick(Relation<T,P> relation, GenericMenu menu)
         {
-            var menu = new GenericMenu();
-            backend.OnRelationContextClick(source, target, tag, menu);
-            if ( menu.GetItemCount() > 0 )
-                menu.ShowAsContext();
+            backend.OnRelationContextClick(relation, menu);
         }
 
         public Color GetRelationColor(P relationTagValue)

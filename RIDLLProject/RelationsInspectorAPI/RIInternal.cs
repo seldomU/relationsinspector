@@ -196,7 +196,7 @@ namespace RelationsInspector
             {
                 selectedBackendType,
                 targetArray,
-                (Func<RelationsInspectorAPI>)window.GetAPI,
+                window.GetAPI(),
                 (Action)window.Repaint,
                 (Action<Action>)window.ExecOnUpdate
             };

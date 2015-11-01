@@ -60,23 +60,27 @@ namespace RelationsInspector
             return subGraph;
         }
 
-        public static void Fold<T, P>( Graph<T, P> graph, T foldEntity, Func<T,bool> isGraphSeed ) where T : class
+        public static IEnumerable<T> GetFoldVertices<T, P>( Graph<T, P> graph, T foldEntity, Func<T, bool> isGraphSeed ) where T : class
         {
             var subGraphs = Split( graph, foldEntity, isGraphSeed );
-            if ( subGraphs.Any( sub => sub.numSeeds > 0 ) )
-            {
-                var removeEntities = subGraphs
-                    .Where( sub => sub.numSeeds == 0 )
-                    .Where( sub => sub.entryPoints.Any( entry => graph.CanRegenerate(foldEntity, entry)) )
-                    .SelectMany( sub => sub.elements )
-                    .ToArray();
+            if ( !subGraphs.Any( sub => sub.numSeeds > 0 ) )
+                return Enumerable.Empty<T>();
 
-                if ( removeEntities.Any() )
-                    graph.VerticesData[ foldEntity ].unexplored = true;
+            return subGraphs
+                .Where( sub => sub.numSeeds == 0 )
+                .Where( sub => sub.entryPoints.Any( entry => graph.CanRegenerate( foldEntity, entry ) ) )
+                .SelectMany( sub => sub.elements );
+        }
 
-                foreach ( var ent in removeEntities )
-                    graph.RemoveVertex( ent );
-            }
+        public static void Fold<T, P>( Graph<T, P> graph, T foldEntity, Func<T,bool> isGraphSeed ) where T : class
+        {
+            var removeEntities = GetFoldVertices( graph, foldEntity, isGraphSeed );
+
+            if ( removeEntities.Any() )
+                graph.VerticesData[ foldEntity ].unexplored = true;
+
+            foreach ( var ent in removeEntities )
+                graph.RemoveVertex( ent );
         }
     }
 }

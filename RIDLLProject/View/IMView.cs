@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEditor;
 using RelationsInspector.Extensions;
 using RelationsInspector.Tweening;
+using System;
 
 namespace RelationsInspector
 {
@@ -425,10 +426,11 @@ namespace RelationsInspector
 						}
 						else if (ev.button == 1)	// right click
 						{
-                            if( entitySelection.Contains( clickEntity ) )
-                                parent.GetBackend().OnEntityContextClick( entitySelection );
+                            if ( entitySelection.Contains( clickEntity ) )
+                                HandleEntityContextClick( entitySelection );
                             else
-                                parent.GetBackend().OnEntityContextClick( new[] { clickEntity } );
+                                HandleEntityContextClick( new[] { clickEntity } );
+
 
                         }
                     }
@@ -439,7 +441,7 @@ namespace RelationsInspector
 						{
 							if (ev.button == 1)	// right click
 							{
-								parent.GetBackend().OnRelationContextClick( clickEdge.Source, clickEdge.Target, clickEdge.Tag );
+                                HandleRelationContextClick( clickEdge );
 								ev.Use();	// eat event, or else a new entity is created here
 							}
 						}
@@ -528,7 +530,48 @@ namespace RelationsInspector
 			}
 		}
 
-		void DragEdge(IEnumerable<T> vertices, P tag)
+        void HandleEntityContextClick( IEnumerable<T> entities )
+        {
+            var menu = new GenericMenu();
+
+            // a vertex can be folded when it produces fold-vertices
+            if ( entities.All( e => FoldUtil.GetFoldVertices(graph, e, parent.IsSeed).Any() ) )
+            {
+                menu.AddItem( new GUIContent( "Fold" ), false, () =>
+                {
+                    foreach ( var ent in entities )
+                    {
+                        parent.GetAPI().FoldEntity( ent );
+                    }
+                } );
+            };
+
+            // a vertex can be expanded when it is marked as unexplored 
+            if ( entities.All( e => graph.VerticesData[e].unexplored ) )
+            {
+                menu.AddItem( new GUIContent( "Expand" ), false, () =>
+                {
+                    foreach ( var ent in entities )
+                    {
+                        parent.GetAPI().ExpandEntity( ent );
+                    }
+                } );
+            }
+
+            parent.GetBackend().OnEntityContextClick( entities, menu);
+            if ( menu.GetItemCount() > 0 )
+                menu.ShowAsContext();          
+        }
+
+        void HandleRelationContextClick(Relation<T,P> clickEdge)
+        {
+            var menu = new GenericMenu();
+            parent.GetBackend().OnRelationContextClick( clickEdge, menu );
+            if ( menu.GetItemCount() > 0 )
+                menu.ShowAsContext();
+        }
+
+        void DragEdge(IEnumerable<T> vertices, P tag)
 		{
 			dragEdgeSource = new HashSet<T>(vertices);
 			dragEdgeTag = tag;

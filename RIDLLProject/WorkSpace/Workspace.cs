@@ -29,6 +29,7 @@ namespace RelationsInspector
 
         Action Repaint;
         Action<Action> Exec;
+        RelationsInspectorAPI API;
 
 		static Dictionary<LayoutType, GUIContent> layoutButtonContent = new Dictionary<LayoutType, GUIContent>()
 		{
@@ -36,17 +37,18 @@ namespace RelationsInspector
 			{ LayoutType.Tree, new GUIContent("Tree", "Use tree layout") }
 		};
 
-		internal Workspace(Type backendType, object[] targets, Func<RelationsInspectorAPI> GetAPI, Action Repaint, Action<Action> Exec)
+		internal Workspace(Type backendType, object[] targets, RelationsInspectorAPI API, Action Repaint, Action<Action> Exec)
 		{
             this.Repaint = Repaint;
             this.Exec = Exec;
+            this.API = API;
             this.graphBackend = (IGraphBackendInternal<T, P>) BackendUtil.CreateBackendDecorator(backendType); 
 
             // create new layout params, they are not comming from the cfg yet
 			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);			
 			graphPosTweens = new TweenCollection();
 
-            seedEntities = graphBackend.Init(targets, GetAPI() ).ToHashSet();
+            seedEntities = graphBackend.Init(targets, API ).ToHashSet();
 
             // when targets is null, show the toolbar only. don't create a graph (and view)
             // when rootEntities is empty, create graph and view anyway, so the user can add entities
@@ -366,6 +368,11 @@ namespace RelationsInspector
 			return graphBackend;
 		}
 
-		#endregion
-	}
+        public RelationsInspectorAPI GetAPI()
+        {
+            return API;
+        }
+
+        #endregion
+    }
 }

@@ -19,7 +19,7 @@ namespace RelationsInspector.Backend.SceneHierarchy
 		public void CreateEntity(Vector2 position) { }
 		public void CreateRelation(Object source, Object target, string tag) { }
 		public void OnEntityContextClick(IEnumerable<Object> entities, GenericMenu contextMenu ) { }
-		public void OnRelationContextClick(Object source, Object target, string tag, GenericMenu contextMenu ) { }
+		public void OnRelationContextClick(Relation<Object,string> relation, GenericMenu contextMenu ) { }
 
 		// no need for toolbar or controls
 		public Rect OnGUI()
