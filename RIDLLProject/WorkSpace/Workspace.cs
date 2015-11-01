@@ -64,10 +64,7 @@ namespace RelationsInspector
 
 		void InitGraph(object[] targets)
 		{
-            // merge the relations providers
-            GraphBuilder<T, P>.GetRelations getRelations = ent => graphBackend.GetRelated( ent ).Concat( graphBackend.GetRelating( ent ) );
-
-            graph = GraphBuilder<T, P>.Build(seedEntities, getRelations, Settings.Instance.maxGraphNodes);
+            graph = GraphBuilder<T, P>.Build(seedEntities, graphBackend.GetRelations, Settings.Instance.maxGraphNodes);
             if (graph == null)
                 return;
             
@@ -251,8 +248,7 @@ namespace RelationsInspector
             var entity = entityObj as T;
             if ( entity == null )
                 return;
-            GraphBuilder<T, P>.GetRelations getRelations = ent => graphBackend.GetRelated( ent ).Concat( graphBackend.GetRelating( ent ) );
-            GraphBuilder<T, P>.Expand( graph, entity, getRelations, graph.VertexCount + Settings.Instance.maxGraphNodes );
+            GraphBuilder<T, P>.Expand( graph, entity, graphBackend.GetRelations, graph.VertexCount + Settings.Instance.maxGraphNodes );
             Exec( () => DoAutoLayout( false ) );
         }
 

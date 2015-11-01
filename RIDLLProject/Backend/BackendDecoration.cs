@@ -27,16 +27,13 @@ namespace RelationsInspector
             return backend.Init(targets, api);
         }
         
-        public IEnumerable<Relation<T, P>> GetRelated(T entity)
+        public IEnumerable<Relation<T, P>> GetRelations(T entity)
         {
-            return backend.GetRelated( entity ).Select( tuple => new Relation<T, P>( entity, tuple._1, tuple._2 ) );
+            var related = backend.GetRelated( entity ).Select( tuple => new Relation<T, P>( entity, tuple._1, tuple._2 ) );
+            var relating = backend.GetRelating(entity).Select( tuple => new Relation<T, P>( tuple._1, entity, tuple._2 ) );
+            return related.Concat( relating );
         }
-
-        public IEnumerable<Relation<T, P>> GetRelating(T entity)
-        {
-            return backend.GetRelating(entity).Select( tuple => new Relation<T, P>( tuple._1, entity, tuple._2 ) );
-        }
-
+        
         public void CreateEntity(Vector2 position)
         {
             backend.CreateEntity(position);
@@ -116,14 +113,9 @@ namespace RelationsInspector
             return backend.Init(targets, api);
         }
 
-        public IEnumerable<Relation<T, P>> GetRelated(T entity)
+        public IEnumerable<Relation<T, P>> GetRelations(T entity)
         {
-            return backend.GetRelated(entity);
-        }
-
-        public IEnumerable<Relation<T, P>> GetRelating(T entity)
-        {
-            return backend.GetRelating(entity);
+            return backend.GetRelations( entity ).Select( rel => rel.Copy() );
         }
 
         public void CreateEntity(Vector2 position)

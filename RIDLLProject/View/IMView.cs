@@ -612,7 +612,7 @@ namespace RelationsInspector
         void HandleRelationContextClick(Relation<T,P> clickEdge)
         {
             var menu = new GenericMenu();
-            parent.GetBackend().OnRelationContextClick( clickEdge, menu );
+            parent.GetBackend().OnRelationContextClick( clickEdge.Copy(), menu );
             if ( menu.GetItemCount() > 0 )
                 menu.ShowAsContext();
         }

@@ -57,7 +57,7 @@ namespace RelationsInspector.Backend.SceneHierarchy
 
         public virtual void OnUnitySelectionChange(){}
 
-        public IEnumerable<Relation<Object, string>> GetRelated(Object entity)
+        public IEnumerable<Relation<Object, string>> GetRelations(Object entity)
 		{
 			var asGameObject = entity as GameObject;
 			if (asGameObject == null)
@@ -71,11 +71,6 @@ namespace RelationsInspector.Backend.SceneHierarchy
 			foreach (var c in asGameObject.GetComponents<Component>())
 				yield return new Relation<Object, string>(entity, c, string.Empty);
 		}
-
-        public IEnumerable<Relation<Object, string>> GetRelating(Object entity)
-        {
-            yield break;
-        }
 
 		public GUIContent GetContent(Object entity)
 		{

@@ -53,7 +53,12 @@ namespace RelationsInspector.Backend.TypeHierarchy
 			return targetTypes;
 		}
 
-		public override IEnumerable<Relation<Type, TypeRelation>> GetRelated(Type entity)
+        public override IEnumerable<Relation<Type, TypeRelation>> GetRelations( Type entity )
+        {
+            return GetRelated( entity ).Concat( GetRelating( entity ) );
+        }
+
+        IEnumerable<Relation<Type, TypeRelation>> GetRelated(Type entity)
 		{
             if ( includeSubTypes && touchedSubTypes.Contains( entity ) )
             {
@@ -64,7 +69,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
             }
         }
 
-        public override IEnumerable<Relation<Type, TypeRelation>> GetRelating(Type entity)
+        IEnumerable<Relation<Type, TypeRelation>> GetRelating(Type entity)
         {
             if ( !includeSuperTypes || !touchedSuperTypes.Contains( entity ) )
                 yield break;

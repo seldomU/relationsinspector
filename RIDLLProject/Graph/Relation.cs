@@ -47,5 +47,10 @@ namespace RelationsInspector
             var otherRelation = otherObj as Relation<T, P>;
             return ( otherRelation == null ) ? false : Equals( otherRelation );
         }
+
+        public Relation<T, P> Copy()
+        {
+            return new Relation<T, P>( Source, Target, Tag );
+        }
     }
 }

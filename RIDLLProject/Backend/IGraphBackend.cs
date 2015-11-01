@@ -31,10 +31,7 @@ namespace RelationsInspector
     {
         // initialize the backend object
         IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api);
-
-        // 
-        IEnumerable<Relation<T, P>> GetRelated(T entity);
-        IEnumerable<Relation<T, P>> GetRelating(T entity);
+        IEnumerable<Relation<T, P>> GetRelations(T entity);
         void CreateEntity(Vector2 position);
         void CreateRelation(T source, T target, P tag);
         void OnEntitySelectionChange(T[] selection);
