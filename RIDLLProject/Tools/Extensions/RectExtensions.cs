@@ -31,6 +31,11 @@ namespace RelationsInspector.Extensions
             return Util.CenterRect( rect.center, rect.GetExtents() * factor );
         }
 
+        public static Rect Scale( this Rect rect, Vector2 scale )
+        {
+            return Util.CenterRect( rect.center, rect.width * scale.x, rect.height * scale.y );
+        }
+
 		public static Rect Move(this Rect rect, Vector2 shift)
 		{
 			return new Rect

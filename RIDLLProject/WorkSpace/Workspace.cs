@@ -16,16 +16,17 @@ namespace RelationsInspector
 		IGraphView<T,P> view;
         IGraphBackendInternal<T,P> graphBackend;
 		Rect drawRect;
-		IEnumerator layoutEnumerator;
 		LayoutType layoutType;
 		LayoutType defaultLayoutType = LayoutType.Graph;
 		HashSet<T> seedEntities; 
 		TweenCollection graphPosTweens;
         bool hasGraphPosChanges;
 
-		//layout
-		Stopwatch layoutTimer = new Stopwatch();
+        //layout
+        IEnumerator layoutEnumerator;
+        Stopwatch layoutTimer = new Stopwatch();
 		float nextVertexPosTweenUpdate;
+        bool firstLayoutRun;
 
         Action Repaint;
         Action<Action> Exec;
@@ -146,7 +147,7 @@ namespace RelationsInspector
 			if (view != null)
 			{
 				if (hasGraphPosChanges)
-					view.FitViewRectToGraph();
+					view.FitViewRectToGraph(firstLayoutRun);
 				
 				try
 				{
@@ -172,7 +173,7 @@ namespace RelationsInspector
                 if (EditorGUI.EndChangeCheck())
                 {
                     GUIUtil.SetPrefsInt(GetPrefsKeyLayout(), (int)layoutType);
-                    Exec(() => DoAutoLayout());
+                    Exec(() => DoAutoLayout(false));
                 }
             }
 
@@ -216,8 +217,10 @@ namespace RelationsInspector
 				return;
 
 			layoutEnumerator = GraphLayout<T, P>.Run(graph,  firstTime, layoutType, Settings.Instance.layoutParams);
+            firstLayoutRun = firstTime;
 
-			view = new IMView<T, P>(graph, this);
+            if (firstTime)
+			    view = new IMView<T, P>(graph, this);
 		}
 
 		#region implementing IWorkspace

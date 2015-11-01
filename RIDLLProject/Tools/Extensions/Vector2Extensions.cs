@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace RelationsInspector.Extensions
 {
@@ -13,7 +13,16 @@ namespace RelationsInspector.Extensions
 				);
 		}
 
-		public static Vector2 RotateAround(this Vector2 source, Vector2 pivot, float angle)
+        public static Vector2 Clamp( this Vector2 source, Vector2 min, Vector2 max)
+        {
+            return new Vector2
+                (
+                Mathf.Clamp( source.x, min.x, max.x ),
+                Mathf.Clamp( source.y, min.y, max.y )
+                );
+        }
+
+        public static Vector2 RotateAround(this Vector2 source, Vector2 pivot, float angle)
 		{
 			source -= pivot;
 			float radius = source.magnitude;

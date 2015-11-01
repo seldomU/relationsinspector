@@ -93,8 +93,8 @@ namespace RelationsInspector
 			entityWidgetType = (EntityWidgetType)GUIUtil.GetPrefsInt(PrefsKeyLayout, (int)defaultWidgetType);
 			InitEntityWidget();
 
-			// make the graph fill the view
-			FitViewRectToGraph();
+            // make the graph fill the view
+            transform = GetOptimalTransform();
 		}
 
 		void InitEntityWidget()
@@ -110,8 +110,54 @@ namespace RelationsInspector
 			}
 		}
 
-		// set the transform such that it can display the whole graph in the parent rect
-		public void FitViewRectToGraph()
+        public void FitViewRectToGraph(bool immediately)
+        {
+            if ( immediately )
+            {
+                transform = GetOptimalTransform();
+                return;
+            }
+
+            // viewRect: canvas shrunk down to 80%
+            Rect viewRect = parent.GetViewRect();
+            viewRect = Util.CenterRect( viewRect.center, viewRect.GetExtents() * 0.8f );
+
+            // find graphRect (logical coords)
+            var logicalPositions = graph.VerticesData.Values.Select( v => v.pos );
+            Rect logicalPosBounds = Util.GetBounds( logicalPositions ).ClampExtents( 0.01f, 0.01f, float.MaxValue, float.MaxValue );
+
+            var logicalExtents = logicalPosBounds.GetExtents();
+            var viewExtents = viewRect.GetExtents();
+
+            // fit logical extents into display extents
+            var fullScale = new Vector2(
+                viewExtents.x / logicalExtents.x,
+                viewExtents.y / logicalExtents.y
+                );
+
+            var targetScale = transform.scale.Clamp(fullScale * 0.5f, fullScale );
+            bool scaleChange = targetScale != transform.scale;
+            var targetTransform = new Transform2d( transform.translation, targetScale, transform.rotation );
+            var targetViewGraphBounds = targetTransform.Apply( logicalPosBounds );
+            float xOver = targetViewGraphBounds.xMax - viewRect.xMax;
+            float xUnder = targetViewGraphBounds.xMin - viewRect.xMin;
+            float yOver = targetViewGraphBounds.yMax - viewRect.yMax;
+            float yUnder = targetViewGraphBounds.yMin - viewRect.yMin;
+
+            var shift = new Vector2(
+                xOver > 0 ? xOver : xUnder < 0 ? xUnder : 0,
+                yOver > 0 ? yOver : yUnder < 0 ? yUnder : 0 );
+            bool translateChanged = shift != Vector2.zero;
+
+            if ( scaleChange || translateChanged )
+            {
+                targetTransform.translation -= shift;
+                Tweener.gen.Add( new Tween<Transform2d>( t => transform = t, 0.2f, TweenUtil.Transform2( transform, targetTransform, TwoValueEasing.Linear ) ) );
+            }
+        }
+
+        // set the transform such that it can display the whole graph in the parent rect
+        public Transform2d GetOptimalTransform()
 		{
 			var entityPositions = graph.VerticesData.Values.Select(v => v.pos);
 
@@ -119,7 +165,7 @@ namespace RelationsInspector
             Rect viewRect = parent.GetViewRect();
             Rect graphRect = Util.CenterRect( viewRect.center, viewRect.GetExtents() * 0.7f );
 
-			transform = ViewUtil.FitPointsIntoRect(entityPositions, graphRect);
+			return ViewUtil.FitPointsIntoRect(entityPositions, graphRect);
 		}
 
 		IEnumerable<Tuple<IEnumerable<Relation<T, P>>, IEnumerable<Relation<T, P>>>> GetEdgesPerEntityPair()
