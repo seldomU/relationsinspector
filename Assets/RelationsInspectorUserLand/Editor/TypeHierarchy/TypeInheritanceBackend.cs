@@ -11,14 +11,11 @@ namespace RelationsInspector.Backend.TypeHierarchy
 	// we have two kinds of relations in the inheritance graph:
 	public enum TypeRelation { SubType, SuperType};
 
-	public class TypeInheritanceBackend : MinimalBackend2<Type, TypeRelation>
+	public class TypeInheritanceBackend : MinimalBackend<Type, TypeRelation>
 	{	
 		static bool includeSuperTypes = true;
 		static bool includeSubTypes = true;
 		static bool includeInterfaces = true;
-
-		static int maxNodes = 60;	// upper limit on number of graph nodes
-
 		string searchstring;
 
 		/*static Assembly[] gameAssemblies = new[]
@@ -37,7 +34,6 @@ namespace RelationsInspector.Backend.TypeHierarchy
 			{ TypeRelation.SuperType, Color.yellow}
 		};
 
-		int nodeCount = 0;	// number of graph nodes
 		HashSet<Type> touchedSubTypes;
 		HashSet<Type> touchedSuperTypes;
 		object[] targets;
@@ -103,9 +99,6 @@ namespace RelationsInspector.Backend.TypeHierarchy
 				}
 				if (EditorGUI.EndChangeCheck())
 					riAPI.ResetTargets(targets);
-
-				//GUILayout.FlexibleSpace();
-				//maxNodes = EditorGUILayout.IntField("max nodes", maxNodes);
 
 				GUILayout.FlexibleSpace();
 				EditorGUI.BeginChangeCheck();

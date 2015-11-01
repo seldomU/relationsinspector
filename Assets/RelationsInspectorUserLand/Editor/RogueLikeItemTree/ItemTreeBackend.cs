@@ -11,13 +11,13 @@ namespace RelationsInspector.Backend.ItemTree
 	{
 		static Dictionary<Sprite, Texture2D> textures = new Dictionary<Sprite, Texture2D>();
 
-		public override IEnumerable<Tuple<InventoryItemType, string>> GetRelated(InventoryItemType entity)
+		public override IEnumerable<Relation<InventoryItemType, string>> GetRelations(InventoryItemType entity)
 		{
 			if (entity.children == null)
 				entity.children = new List<InventoryItemType>();
 
 			foreach (var other in entity.children)
-				yield return new Tuple<InventoryItemType, string>(other, string.Empty);
+				yield return new Relation<InventoryItemType, string>(entity, other, string.Empty);
 		}
 
 		public override void CreateRelation(InventoryItemType source, InventoryItemType target, string tag)

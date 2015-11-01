@@ -8,13 +8,13 @@ namespace RelationsInspector.Backend.Techtree
 {
 	public class TechTreeBackend : ScriptableObjectBackend<Tech, string>
 	{
-		public override IEnumerable<Tuple<Tech, string>> GetRelated(Tech entity)
+		public override IEnumerable<Relation<Tech, string>> GetRelations(Tech entity)
 		{
 			if (entity.dependentTechs == null)
 				yield break;
 
 			foreach (var tech in entity.dependentTechs)
-				yield return new Tuple<Tech, string>(tech, string.Empty);
+				yield return new Relation<Tech, string>(entity, tech, string.Empty);
 		}
 
 		// returns true if the relation was created

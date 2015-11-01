@@ -9,13 +9,13 @@ namespace RelationsInspector.Backend.SocialNetwork
 {
 	public class StudyNetworkBackend : ScriptableObjectBackend<Person, string>
 	{
-		public override IEnumerable<Tuple<Person, string>> GetRelated(Person person)
+		public override IEnumerable<Relation<Person, string>> GetRelations(Person person)
 		{
 			if (person.studyPartners == null)
 				yield break;
 
 			foreach (var partner in person.studyPartners)
-				yield return new Tuple<Person, string>(partner, string.Empty);
+				yield return new Relation<Person, string>(person, partner, string.Empty);
 		}
 
 		public override void CreateRelation(Person source, Person target, string tag)

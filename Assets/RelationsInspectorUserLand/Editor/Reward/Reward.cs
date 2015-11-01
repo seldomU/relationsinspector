@@ -26,13 +26,13 @@ namespace RelationsInspector.Backend.Techtree
 	{
 		public class RewardBackend : ScriptableObjectBackend<RewardItem, string>
 		{
-			public override IEnumerable<Tuple<RewardItem, string>> GetRelated(RewardItem rewardItem)
+			public override IEnumerable<Relation<RewardItem, string>> GetRelations(RewardItem rewardItem)
 			{
 				if (rewardItem.successors == null)
 					yield break;
 
 				foreach (var successor in rewardItem.successors)
-					yield return new Tuple<RewardItem, string>(successor.rewardItem, "");
+					yield return new Relation<RewardItem, string>(rewardItem, successor.rewardItem, "");
 			}
 
 			public override void CreateRelation(RewardItem source, RewardItem target, string tag)

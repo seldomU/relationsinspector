@@ -24,13 +24,13 @@ namespace RelationsInspector.Backend.BenchmarkTool
 		public int dagBranchingFactor;
 
 		RelationsInspectorAPI relationsInspectorAPI;
-		Dictionary<Number, IList<Tuple<Number, NumberRelation>>> explicitRelations;
+		Dictionary<Number, IList<Relation<Number, NumberRelation>>> explicitRelations;
 
 		Editor selfEditor;
 
 		void OnEnable()
 		{
-			relationsInspectorAPI = GetWindow<RelationsInspectorWindow>() as RelationsInspectorAPI;
+			relationsInspectorAPI = GetWindow<RelationsInspectorWindow>().GetAPI();
 			selfEditor = Editor.CreateEditor(this);
 		}
 
@@ -53,9 +53,9 @@ namespace RelationsInspector.Backend.BenchmarkTool
 			}
 		}
 
-		static Dictionary<Number, IList<Tuple<Number, NumberRelation>>> MakeDAGRelations(int numItems, int branchingFactor)
+		static Dictionary<Number, IList<Relation<Number, NumberRelation>>> MakeDAGRelations(int numItems, int branchingFactor)
 		{
-			var dict = new Dictionary<Number, IList<Tuple<Number, NumberRelation>>>();
+			var dict = new Dictionary<Number, IList<Relation<Number, NumberRelation>>>();
 			var items = Enumerable.Range(0, numItems).Select(i => new Number() { value = i }).ToArray();
 
 			for (int i = 0; i < numItems; i++)
@@ -63,15 +63,15 @@ namespace RelationsInspector.Backend.BenchmarkTool
 				// find _branchingFactor_ other items (may include self)
 				int numLinks = Mathf.Min(branchingFactor, numItems);
 				var linkIds = Util.Shuffle(numItems).Take(numLinks);
-				var linkRelations = linkIds.Select(id => new Tuple<Number, NumberRelation>(items[id], NumberRelation.Unspecified));
+				var linkRelations = linkIds.Select(id => new Relation<Number, NumberRelation>(items[i], items[id], NumberRelation.Unspecified));
 				dict[items[i]] = linkRelations.ToList();
 			}
 			return dict;
 		}
 
-		static Dictionary<Number, IList<Tuple<Number, NumberRelation>>> MakeTreeRelations(int numItems, int branchingFactor)
+		static Dictionary<Number, IList<Relation<Number, NumberRelation>>> MakeTreeRelations(int numItems, int branchingFactor)
 		{
-			var dict = new Dictionary<Number, IList<Tuple<Number, NumberRelation>>>();
+			var dict = new Dictionary<Number, IList<Relation<Number, NumberRelation>>>();
 			var items = Enumerable.Range(0, numItems).Select(i => new Number() { value = i }).ToArray();
 
 			for (int i = 0; i < numItems; i++)
@@ -80,14 +80,14 @@ namespace RelationsInspector.Backend.BenchmarkTool
 				int firstRelationObjectId = Mathf.Min(i * branchingFactor + 1, numItems);
 				int numRelationObjects = Mathf.Min(branchingFactor, numItems - firstRelationObjectId);
 				var linkIds = Enumerable.Range(firstRelationObjectId, numRelationObjects);
-				var relations = linkIds.Select(id => new Tuple<Number, NumberRelation>(items[id], NumberRelation.Unspecified));
+				var relations = linkIds.Select(id => new Relation<Number, NumberRelation>(items[i], items[id], NumberRelation.Unspecified));
 
 				dict[items[i]] = relations.ToList();
 			}
 			return dict;
 		}
 
-		public IEnumerable<Tuple<Number, NumberRelation>> GetRelated(Number item)
+		public IEnumerable<Relation<Number, NumberRelation>> GetRelated(Number item)
 		{
 			return explicitRelations[item];
 		}

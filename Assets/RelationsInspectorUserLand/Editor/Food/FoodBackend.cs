@@ -8,13 +8,13 @@ namespace RelationsInspector.Backend.Food
 {
 	public class FoodBackend : ScriptableObjectBackend<FoodItem, string>
 	{
-		public override IEnumerable<Tuple<FoodItem, string>> GetRelated(FoodItem entity)
+		public override IEnumerable<Relation<FoodItem, string>> GetRelations(FoodItem entity)
 		{
 			if (entity.dependentFoods == null)
 				entity.dependentFoods = new List<FoodItem>();
 
 			foreach (var other in entity.dependentFoods)
-				yield return new Tuple<FoodItem, string>(other, string.Empty);
+				yield return new Relation<FoodItem, string>(entity, other, string.Empty);
 		}
 
 		public override void CreateRelation(FoodItem source, FoodItem target, string tag)

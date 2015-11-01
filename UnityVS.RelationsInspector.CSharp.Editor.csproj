@@ -111,7 +111,6 @@
   <ItemGroup>
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\BackendUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\DrawUtil.cs" />
-    <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\MinimalBackend2.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\MinimalBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ScriptableObjectBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ScriptableObjectBackendToolbar.cs" />

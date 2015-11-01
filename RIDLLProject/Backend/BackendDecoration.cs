@@ -21,32 +21,29 @@ namespace RelationsInspector
             return backend.GetType();
         }
 
-        // initialize the backend object
-        public IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
+        public IEnumerable<T> Init( IEnumerable<object> targets, RelationsInspectorAPI api )
         {
-            return backend.Init(targets, api);
-        }
-        
-        public IEnumerable<Relation<T, P>> GetRelations(T entity)
-        {
-            var related = backend.GetRelated( entity ).Select( tuple => new Relation<T, P>( entity, tuple._1, tuple._2 ) );
-            var relating = backend.GetRelating(entity).Select( tuple => new Relation<T, P>( tuple._1, entity, tuple._2 ) );
-            return related.Concat( relating );
-        }
-        
-        public void CreateEntity(Vector2 position)
-        {
-            backend.CreateEntity(position);
+            return backend.Init( targets, api );
         }
 
-        public void CreateRelation(T source, T target, P tag)
+        public IEnumerable<Relation<T, P>> GetRelations( T entity )
         {
-            backend.CreateRelation(source, target, tag);
+            return backend.GetRelations( entity ).Select( rel => rel.Copy() );
         }
 
-        public void OnEntitySelectionChange(T[] selection)
+        public void CreateEntity( Vector2 position )
         {
-            backend.OnEntitySelectionChange(selection);
+            backend.CreateEntity( position );
+        }
+
+        public void CreateRelation( T source, T target, P tag )
+        {
+            backend.CreateRelation( source, target, tag );
+        }
+
+        public void OnEntitySelectionChange( T[] selection )
+        {
+            backend.OnEntitySelectionChange( selection );
         }
 
         public void OnUnitySelectionChange()
@@ -59,34 +56,34 @@ namespace RelationsInspector
             return backend.OnGUI();
         }
 
-        public string GetEntityTooltip(T entity)
+        public string GetEntityTooltip( T entity )
         {
-            return backend.GetEntityTooltip(entity);
+            return backend.GetEntityTooltip( entity );
         }
 
-        public string GetTagTooltip(P tag)
+        public string GetTagTooltip( P tag )
         {
-            return backend.GetTagTooltip(tag);
+            return backend.GetTagTooltip( tag );
         }
 
-        public Rect DrawContent(T entity, EntityDrawContext drawContext)
+        public Rect DrawContent( T entity, EntityDrawContext drawContext )
         {
-            return backend.DrawContent(entity, drawContext);
+            return backend.DrawContent( entity, drawContext );
         }
 
-        public void OnEntityContextClick(IEnumerable<T> entities, GenericMenu menu)
+        public void OnEntityContextClick( IEnumerable<T> entities, GenericMenu menu )
         {
-            backend.OnEntityContextClick(entities);
+            backend.OnEntityContextClick( entities, menu );
         }
 
-        public void OnRelationContextClick(Relation<T,P> relation, GenericMenu menu )
+        public void OnRelationContextClick( Relation<T, P> relation, GenericMenu menu )
         {
-            backend.OnRelationContextClick(relation.Source, relation.Target, relation.Tag);
+            backend.OnRelationContextClick( relation, menu );
         }
 
-        public Color GetRelationColor(P relationTagValue)
+        public Color GetRelationColor( P relationTagValue )
         {
-            return backend.GetRelationColor(relationTagValue);
+            return backend.GetRelationColor( relationTagValue );
         }
 
         // V1 has no OnEvent handler

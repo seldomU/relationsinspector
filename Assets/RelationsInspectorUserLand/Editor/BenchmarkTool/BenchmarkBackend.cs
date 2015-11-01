@@ -10,7 +10,7 @@ namespace RelationsInspector.Backend.BenchmarkTool
     [SaveLayout]
     public class BenchmarkBackend : MinimalBackend<Number, NumberRelation>
 	{
-		public override IEnumerable<Tuple<Number, NumberRelation>> GetRelated(Number item)
+		public override IEnumerable<Relation<Number, NumberRelation>> GetRelations(Number item)
 		{
 			return EditorWindow.GetWindow<BenchmarkWindow>().GetRelated(item);
 		}

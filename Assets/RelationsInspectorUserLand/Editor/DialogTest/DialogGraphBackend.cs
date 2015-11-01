@@ -10,13 +10,13 @@ namespace RelationsInspector.Backend.DialogGraph
 {
 	public class DialogGraphBackend : ScriptableObjectBackend<DialogItem, string>
 	{
-		public override IEnumerable<Tuple<DialogItem, string>> GetRelated(DialogItem entity)
+		public override IEnumerable<Relation<DialogItem, string>> GetRelations(DialogItem entity)
 		{
 			if (entity.options == null)
 				yield break;
 
 			foreach (var option in entity.options)
-				yield return new Tuple<DialogItem, string>(option.target, option.text);
+				yield return new Relation<DialogItem, string>(entity, option.target, option.text);
 		}
 
 		public override void CreateRelation(DialogItem sourceItem, DialogItem targetItem, string tag)	//Edge<DialogItem, string> relation)
