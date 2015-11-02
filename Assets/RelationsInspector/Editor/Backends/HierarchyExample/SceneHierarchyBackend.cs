@@ -7,7 +7,7 @@ using RelationsInspector.Backend;
 
 namespace RelationsInspector.Backend.SceneHierarchy
 {
-	public class SceneHierarchyBackend : IGraphBackend2<Object, string>
+	public class SceneHierarchyBackend : IGraphBackend<Object, string>
 	{
 		public IEnumerable<Object> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
 		{
@@ -84,10 +84,5 @@ namespace RelationsInspector.Backend.SceneHierarchy
 			content.tooltip = content.text;
 			return content;
 		}
-        
-        public void OnEvent( Event e )
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
