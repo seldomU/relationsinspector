@@ -7,7 +7,13 @@ using System.IO;
 public class ExportPackage
 {
     // don't include these in builds
-    static string[] excludePaths = new[] { SkinManager.LightSkinPath, SkinManager.DarkSkinPath, Settings.SettingsPath };
+    static string[] excludePaths = new[] 
+    {
+        SkinManager.LightSkinPath,
+        SkinManager.DarkSkinPath,
+        Settings.SettingsPath,
+        ProjectSettings.LayoutCachesPath
+    };
 
     [MenuItem("Window/Build/Export package")]
 	public static void DoExportPackage()
