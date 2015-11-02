@@ -4,13 +4,13 @@ using UnityEditor;
 
 namespace RelationsInspector
 {
-    class Settings
+    public class Settings
     {
         const string SettingsFileName = "Settings.asset";
         public static string SettingsPath = Path.Combine( ProjectSettings.ResourcesPath, SettingsFileName ).Replace( '\\', '/' );
 
-        private static RelationsInspectorSettings storage = LoadStorage();
-        public static RelationsInspectorSettings Instance
+        static RelationsInspectorSettings storage = LoadStorage();
+        internal static RelationsInspectorSettings Instance
         {
             get { return storage; }
         }

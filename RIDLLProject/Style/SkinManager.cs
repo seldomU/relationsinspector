@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace RelationsInspector
 {
-	class SkinManager
+	public class SkinManager
 	{
 
-		public const string darkSkinName = "RIWindowDarkSkin";
-		public const string lightSkinName = "RIWindowLightSkin";
+		const string darkSkinName = "RIWindowDarkSkin";
+		const string lightSkinName = "RIWindowLightSkin";
 
         // public so build tool code can use these
 		public static string LightSkinPath = Path.Combine(ProjectSettings.ResourcesPath, lightSkinName + ".asset");
@@ -17,12 +17,12 @@ namespace RelationsInspector
 		static RelationInspectorSkin LightSkin = LoadSkin(lightSkin: true);
 		static RelationInspectorSkin DarkSkin = LoadSkin(lightSkin: false);
 
-		public static RelationInspectorSkin GetSkin()
+		internal static RelationInspectorSkin GetSkin()
 		{
 			return EditorGUIUtility.isProSkin ? DarkSkin : LightSkin;
 		}
 
-		public static RelationInspectorSkin LoadSkin(bool lightSkin)
+		static RelationInspectorSkin LoadSkin(bool lightSkin)
 		{
 			string path = lightSkin ? LightSkinPath : DarkSkinPath;
 			path = path.Replace('\\', '/');
@@ -35,12 +35,12 @@ namespace RelationsInspector
 			else
 				PopulateDarkSkinAsset(skin);		
 
-			UnityEditor.AssetDatabase.CreateAsset(skin, path);
-			UnityEditor.AssetDatabase.SaveAssets();
+			AssetDatabase.CreateAsset(skin, path);
+			AssetDatabase.SaveAssets();
 			return skin;
 		}
 
-		public static void PopulateLightSkinAsset(RelationInspectorSkin skin)
+		static void PopulateLightSkinAsset(RelationInspectorSkin skin)
 		{
 			skin.windowColor = new Color(0.76f, 0.76f, 0.76f);
             skin.settingsIcon = EditorGUIUtility.Load( "icons/_Popup.png" ) as Texture2D;
@@ -74,7 +74,7 @@ namespace RelationsInspector
 			skin.relationDrawer.markerImage = Util.LoadAsset<Texture2D>( Path.Combine(ProjectSettings.ResourcesPath, "ArrowHead.png"));
 		}
 
-		public static void PopulateDarkSkinAsset(RelationInspectorSkin skin)
+		static void PopulateDarkSkinAsset(RelationInspectorSkin skin)
 		{
 			skin.windowColor = new Color(0.2f, 0.2f, 0.2f);
             skin.settingsIcon = EditorGUIUtility.Load( "icons/d__Popup.png" ) as Texture2D;
