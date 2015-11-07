@@ -233,10 +233,15 @@ namespace RelationsInspector
             if ( !asT.Any() )
                 return;
 
-            // transform pos to graph space
             seedEntities.UnionWith( asT );
-            var graphPos = (view == null) ? Vector2.zero : view.GetGraphPosition( pos );
-            GraphBuilder<T, P>.Append( graph, asT, graphPos, graphBackend.GetRelations, builderRNG, graph.VertexCount + Settings.Instance.maxGraphNodes );
+
+            // when no position is given, use the top-left corner of the graph bounds
+            if ( pos == Vector2.zero )
+                pos = Util.GetBounds( graph.VerticesData.Values.Select( v => v.pos ) ).GetOrigin();
+            else // transform pos to graph space
+                pos = (view == null) ? Vector2.zero : view.GetGraphPosition( pos );
+
+            GraphBuilder<T, P>.Append( graph, asT, pos, graphBackend.GetRelations, builderRNG, graph.VertexCount + Settings.Instance.maxGraphNodes );
             Exec( () => DoAutoLayout( false ) );
         }
 

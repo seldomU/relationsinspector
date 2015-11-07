@@ -37,9 +37,9 @@ namespace RelationsInspector
         }
 
         // if a graph exists, add targets. else create a new one from the targets
-        public void AddTargets(object[] targets, Vector2 pos)
+        public void AddTargets(object[] targets)
         {
-            internalAPI.AddTargets(targets, pos);
+            internalAPI.AddTargets(targets, Vector2.zero);
         }
 
         // manipulate the graph directly

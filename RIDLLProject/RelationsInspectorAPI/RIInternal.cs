@@ -201,6 +201,11 @@ namespace RelationsInspector
             return (IWorkspace)Activator.CreateInstance(genericWorkspaceType, flags, null, ctorArguments, null);
         }
 
+        internal void AddTargetObjects( object[] targetsToAdd )
+        {
+            AddTargetObjects( targetsToAdd, Vector2.zero );
+        }
+
         internal void AddTargetObjects(object[] targetsToAdd, Vector2 pos)
         {
             if ( targetObjects == null )
