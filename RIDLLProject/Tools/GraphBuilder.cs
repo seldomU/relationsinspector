@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
-//using System;
 using UnityEngine;
+using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
@@ -11,18 +11,18 @@ namespace RelationsInspector
         delegate void OnVertexAdded( T vertex, T related );
 
 
-		public static GraphWithRoots<T,P> Build(IEnumerable<T> roots, GetRelations getRelations, int maxNodeCount)
+		public static GraphWithRoots<T,P> Build(IEnumerable<T> seeds, GetRelations getRelations, int maxNodeCount)
 		{
 			var graph = new GraphWithRoots<T, P>();
 			
 			// add the root element
-			if ( roots == null || !roots.Any() )
+			if ( seeds == null || !seeds.Any() )
 				return graph;
 
-			foreach(var root in roots)
+			foreach(var root in seeds)
 				graph.AddVertex(root);
 
-            AddRelations( graph, roots, getRelations, (a,b)=> { }, maxNodeCount);
+            AddRelations( graph, seeds, getRelations, (a,b)=> { }, maxNodeCount);
 			return graph;
 		}
 
@@ -71,7 +71,7 @@ namespace RelationsInspector
                 AddRelations( graph, unexploredEntities, getRelations, onVertexAdded, maxNodeCount );
         }
 
-        // returns tree if the given relation contains entity and can be added to the graph
+        // returns tree if the given entity is part of the given relation, and if relation can be added to the graph
         static bool IsValidFor( Relation<T, P> relation, T entity )
         {
             if ( relation == null )
@@ -83,6 +83,7 @@ namespace RelationsInspector
             return true;
         }
 
+        // add relations involving the given entity (which is part of the given graph). stop when the graph size hits maxNodes
         internal static void Expand( Graph<T, P> graph, T entity, GetRelations getRelations, int maxNodes )
         {
             OnVertexAdded setPos = ( v, rel ) =>
@@ -93,6 +94,25 @@ namespace RelationsInspector
 
             graph.VerticesData[ entity ].unexplored = false;
             AddRelations( graph, new[] { entity }, getRelations, setPos, maxNodes );
+        }
+
+        internal static void Append( Graph<T, P> graph, IEnumerable<T> appendTargets, Vector2 position, GetRelations getRelations, int maxNodes )
+        {
+            var newTargets = appendTargets.Where( ent => !graph.ContainsVertex( ent ) ).ToArray();
+
+            foreach ( var entity in newTargets )
+            {
+                var pos = position + new Vector2( Random.Range( -1f, 1f ), Random.Range( -1f, 1f ) );
+                graph.AddVertex( entity, pos );
+            }
+
+            OnVertexAdded setPos = ( v, rel ) =>
+            {
+                var pos = graph.GetPos( rel ) + new Vector2( Random.Range( -0.5f, 0.5f ), Random.Range( -0.5f, 0.5f ) );
+                graph.SetPos( v, pos );
+            };
+
+            AddRelations( graph, newTargets, getRelations, setPos, maxNodes );
         }
     }
 }

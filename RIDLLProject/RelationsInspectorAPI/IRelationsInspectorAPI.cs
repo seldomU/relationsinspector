@@ -18,7 +18,7 @@ namespace RelationsInspector
 
 		// manipulate the graph through targets
 		void ResetTargets(object[] targets);
-		void AddTargets(object[] targets);
+		void AddTargets(object[] targets, Vector2 pos);
 
 		#region direct graph manipulation
 
@@ -59,7 +59,7 @@ namespace RelationsInspector
 
         // manipulate the graph through targets
         void ResetTargets(object[] targets);
-        void AddTargets(object[] targets);
+        void AddTargets(object[] targets, Vector2 pos);
 
         #region direct graph manipulation
 

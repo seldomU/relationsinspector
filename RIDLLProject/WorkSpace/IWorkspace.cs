@@ -12,6 +12,7 @@ namespace RelationsInspector
         void OnDestroy();
         void OnEvent(Event e);
 
+        void AddTargets( object[] targetsToAdd, Vector2 pos );
         void AddEntity(object vertex, Vector2 position);
 		void RemoveEntity(object vertex);
         void ExpandEntity( object entity );
@@ -23,6 +24,5 @@ namespace RelationsInspector
 
 		void SelectEntityNodes(System.Predicate<object> doSelect);
         void Relayout();
-        
     }
 }

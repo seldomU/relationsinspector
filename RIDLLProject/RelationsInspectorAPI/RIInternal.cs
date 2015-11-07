@@ -89,9 +89,9 @@ namespace RelationsInspector
         }
 
         // if a graph exists, add targets. else create a new one from the targets
-        public void AddTargets(object[] targets)
+        public void AddTargets(object[] targets, Vector2 pos)
         {
-            Exec(() => AddTargetObjects(targets));
+            Exec(() => AddTargetObjects(targets, pos));
         }
 
         // manipulate the graph directly
@@ -181,8 +181,6 @@ namespace RelationsInspector
             return (workspace != null);
         }
 
-
-
         IWorkspace CreateWorkspace()
         {
             var backendArguments = BackendUtil.GetGenericArguments(selectedBackendType);
@@ -200,17 +198,19 @@ namespace RelationsInspector
                 (Action)window.Repaint,
                 (Action<Action>)window.ExecOnUpdate
             };
-            return (IWorkspace)System.Activator.CreateInstance(genericWorkspaceType, flags, null, ctorArguments, null);
+            return (IWorkspace)Activator.CreateInstance(genericWorkspaceType, flags, null, ctorArguments, null);
         }
 
-        internal void AddTargetObjects(object[] targetsToAdd)
+        internal void AddTargetObjects(object[] targetsToAdd, Vector2 pos)
         {
-            if (targetObjects == null)
-                targetObjects = new HashSet<object>(targetsToAdd);
-            else
-                targetObjects.UnionWith(targetsToAdd);
+            if ( targetObjects == null )
+            {
+                SetTargetObjects( targetsToAdd );
+                return;
+            }
 
-            OnTargetChange();
+            targetObjects.UnionWith(targetsToAdd);
+            workspace.AddTargets( targetsToAdd, pos );
         }
 
         internal void SetTargetObjects(object[] targets)
@@ -359,7 +359,7 @@ namespace RelationsInspector
                         var dragObjs = GetDragObjects();
 
                         if (doAddObjects)
-                            AddTargets(dragObjs);
+                            AddTargets(dragObjs, Event.current.mousePosition);
                         else
                             ResetTargets(dragObjs);
 

@@ -220,7 +220,23 @@ namespace RelationsInspector
 			    view = new IMView<T, P>(graph, this);
 		}
 
-		#region implementing IWorkspace
+        #region implementing IWorkspace
+
+        void IWorkspace.AddTargets( object[] targetsToAdd, Vector2 pos )
+        {
+            if ( targetsToAdd == null )
+                return;
+
+            var asT = targetsToAdd.OfType<T>().ToArray();
+            if ( !asT.Any() )
+                return;
+
+            // transform pos to graph space
+            seedEntities.UnionWith( asT );
+            var graphPos = (view == null) ? Vector2.zero : view.GetGraphPosition( pos );
+            GraphBuilder<T, P>.Append( graph, asT, graphPos, graphBackend.GetRelations, graph.VertexCount + Settings.Instance.maxGraphNodes );
+            Exec( () => DoAutoLayout( false ) );
+        }
 
 		void IWorkspace.AddEntity(object entity, Vector2 position)
 		{

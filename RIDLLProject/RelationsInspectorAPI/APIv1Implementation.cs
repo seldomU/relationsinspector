@@ -37,9 +37,9 @@ namespace RelationsInspector
         }
 
         // if a graph exists, add targets. else create a new one from the targets
-        public void AddTargets(object[] targets)
+        public void AddTargets(object[] targets, Vector2 pos)
         {
-            internalAPI.AddTargets(targets);
+            internalAPI.AddTargets(targets, pos);
         }
 
         // manipulate the graph directly
@@ -84,7 +84,7 @@ namespace RelationsInspector
             internalAPI.SetBackend(backendType);
         }
 
-        public void SelectEntityNodes(System.Predicate<object> doSelect)
+        public void SelectEntityNodes(Predicate<object> doSelect)
         {
             internalAPI.SelectEntityNodes(doSelect);
         }
