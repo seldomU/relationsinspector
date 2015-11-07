@@ -43,9 +43,9 @@ namespace RelationsInspector
 		static void PopulateLightSkinAsset(RelationInspectorSkin skin)
 		{
 			skin.windowColor = new Color(0.76f, 0.76f, 0.76f);
-            skin.settingsIcon = EditorGUIUtility.Load( "icons/_Popup.png" ) as Texture2D;
-            skin.prevIcon = EditorGUIUtility.Load( "icons/Profiler.PrevFrame.png" ) as Texture2D;
-            skin.nextIcon = EditorGUIUtility.Load( "icons/Profiler.NextFrame.png" ) as Texture2D;
+            skin.settingsIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "SettingsLight.png" ) );
+            skin.prevIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "prevIconLight.png" ) );
+            skin.nextIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "nextIconLight.png" ) );
 
             skin.minimap = new MinimapStyle();
 			skin.minimap.backgroundColor = new Color(0.76f, 0.76f, 0.76f);
@@ -60,12 +60,12 @@ namespace RelationsInspector
 			skin.entityWidget.contentPadding = 4;
 			skin.entityWidget.highlightStrength = 4;
 			skin.entityWidget.widgetRadius = 13;
-			skin.entityWidget.backgroundColor = new Color(0.76f, 0.76f, 0.76f);
+			skin.entityWidget.backgroundColor = new Color(0.93f, 0.93f, 0.93f);
 			skin.entityWidget.highlightColor = new Color(0.35f, 0.55f, 1f);
             skin.entityWidget.unexploredColor = Color.red;
-			skin.entityWidget.targetBackgroundColor = Color.white;
+			skin.entityWidget.targetBackgroundColor = new Color( 0.55f, 0.55f, 0.55f );
 
-			skin.relationDrawer = new RelationDrawerStyle();
+            skin.relationDrawer = new RelationDrawerStyle();
 			skin.relationDrawer.markerSize = new Vector2(15, 15);
 			skin.relationDrawer.regularEdgeColor = Color.black;
 			skin.relationDrawer.regularEdgeWidth = 2;
@@ -77,9 +77,9 @@ namespace RelationsInspector
 		static void PopulateDarkSkinAsset(RelationInspectorSkin skin)
 		{
 			skin.windowColor = new Color(0.2f, 0.2f, 0.2f);
-            skin.settingsIcon = EditorGUIUtility.Load( "icons/d__Popup.png" ) as Texture2D;
-            skin.prevIcon = EditorGUIUtility.Load( "icons/d_Profiler.PrevFrame.png" ) as Texture2D;
-            skin.nextIcon = EditorGUIUtility.Load( "icons/d_Profiler.NextFrame.png" ) as Texture2D;
+            skin.settingsIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "SettingsDark.png" ) );
+            skin.prevIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "prevIconDark.png" ) );
+            skin.nextIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "nextIconDark.png" ) );
 
             skin.minimap = new MinimapStyle();
 			skin.minimap.backgroundColor = new Color(0.4f, 0.4f, 0.4f, 1f);
