@@ -12,5 +12,8 @@ Backend development:
 https://github.com/seldomU/RIBackendUtil/wiki/Backend-development
 
 
-The included ArrowHead texture was made by Nemo: 
+ArrowHead icon by Nemo: 
 http://pixabay.com/en/arrow-left-point-pointer-sharp-40169/
+
+Gears icon by sempron:
+https://pixabay.com/en/gear-icon-innovation-industry-856921/
