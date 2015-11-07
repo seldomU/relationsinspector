@@ -6,11 +6,11 @@ namespace RelationsInspector
 {
     public class RelationDrawUtil
 	{
-		internal static void DrawRotatedTexture(Texture2D texture, Vector2 center, Vector2 scale, float rotation, Color color)
+		internal static void DrawRotatedTexture(Texture2D texture, Vector2 pivot, Vector2 scale, float rotation, Color color)
 		{
-			var rect = Util.CenterRect(center, scale);
+			var rect = Util.CenterRect(pivot, scale);
 			rotation *= Mathf.Rad2Deg;
-			GUIUtility.RotateAroundPivot(rotation, center);
+            GUIUtility.RotateAroundPivot(rotation, pivot);
 
 			var colorBackup = GUI.color;
 			GUI.color = color;
