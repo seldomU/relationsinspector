@@ -10,8 +10,7 @@ namespace RelationsInspector
 		public delegate IEnumerable<Relation<T,P>> GetRelations(T item);
         delegate void OnVertexAdded( T vertex, T related );
 
-
-		public static GraphWithRoots<T,P> Build(IEnumerable<T> seeds, GetRelations getRelations, int maxNodeCount)
+		public static GraphWithRoots<T,P> Build(IEnumerable<T> seeds, GetRelations getRelations, RNG rng, int maxNodeCount)
 		{
 			var graph = new GraphWithRoots<T, P>();
 			
@@ -20,13 +19,13 @@ namespace RelationsInspector
 				return graph;
 
 			foreach(var root in seeds)
-				graph.AddVertex(root);
+				graph.AddVertex(root, RndPos(rng, 5f) );
 
-            AddRelations( graph, seeds, getRelations, (a,b)=> { }, maxNodeCount);
+            AddRelations( graph, seeds, getRelations, rng, maxNodeCount);
 			return graph;
 		}
 
-        static void AddRelations( Graph<T, P> graph, IEnumerable<T> entities, GetRelations getRelations, OnVertexAdded onVertexAdded, int maxNodeCount)
+        static void AddRelations( Graph<T, P> graph, IEnumerable<T> entities, GetRelations getRelations, RNG rng, int maxNodeCount)
         {
             var unexploredEntities = new List<T>();
             foreach ( var entity in entities )
@@ -54,11 +53,11 @@ namespace RelationsInspector
                     {
                         if ( graph.VertexCount < maxNodeCount )
                         {
-                            if ( graph.AddVertex( otherEntity ) )
+                            var pos = graph.GetPos( entity ) + RndPos( rng, 1f );
+                            if ( graph.AddVertex( otherEntity, pos ) )
                             {
                                 unexploredEntities.Add( otherEntity );
                                 graph.AddEdge( relation );
-                                onVertexAdded( otherEntity, entity );
                             }
                         }
                         else
@@ -68,7 +67,7 @@ namespace RelationsInspector
             }
 
             if( unexploredEntities.Any() )
-                AddRelations( graph, unexploredEntities, getRelations, onVertexAdded, maxNodeCount );
+                AddRelations( graph, unexploredEntities, getRelations, rng, maxNodeCount );
         }
 
         // returns tree if the given entity is part of the given relation, and if relation can be added to the graph
@@ -83,36 +82,26 @@ namespace RelationsInspector
             return true;
         }
 
-        // add relations involving the given entity (which is part of the given graph). stop when the graph size hits maxNodes
-        internal static void Expand( Graph<T, P> graph, T entity, GetRelations getRelations, int maxNodes )
+        static Vector2 RndPos( RNG rng, float range )
         {
-            OnVertexAdded setPos = ( v, rel ) =>
-            {
-                var pos = graph.GetPos( rel ) + new Vector2( Random.Range( 0.3f, 1f ), Random.Range( 0.3f, 1f ) );
-                graph.SetPos( v, pos );
-            };
-
-            graph.VerticesData[ entity ].unexplored = false;
-            AddRelations( graph, new[] { entity }, getRelations, setPos, maxNodes );
+            return new Vector2( rng.Range( -range / 2, range / 2 ), rng.Range( -range / 2, range / 2 ) );
         }
 
-        internal static void Append( Graph<T, P> graph, IEnumerable<T> appendTargets, Vector2 position, GetRelations getRelations, int maxNodes )
+        // add relations involving the given entity (which is part of the given graph). stop when the graph size hits maxNodes
+        internal static void Expand( Graph<T, P> graph, T entity, GetRelations getRelations, RNG rng, int maxNodes )
+        {
+            graph.VerticesData[ entity ].unexplored = false;
+            AddRelations( graph, new[] { entity }, getRelations, rng, maxNodes );
+        }
+
+        internal static void Append( Graph<T, P> graph, IEnumerable<T> appendTargets, Vector2 position, GetRelations getRelations, RNG rng, int maxNodes )
         {
             var newTargets = appendTargets.Where( ent => !graph.ContainsVertex( ent ) ).ToArray();
 
             foreach ( var entity in newTargets )
-            {
-                var pos = position + new Vector2( Random.Range( -1f, 1f ), Random.Range( -1f, 1f ) );
-                graph.AddVertex( entity, pos );
-            }
-
-            OnVertexAdded setPos = ( v, rel ) =>
-            {
-                var pos = graph.GetPos( rel ) + new Vector2( Random.Range( -0.5f, 0.5f ), Random.Range( -0.5f, 0.5f ) );
-                graph.SetPos( v, pos );
-            };
-
-            AddRelations( graph, newTargets, getRelations, setPos, maxNodes );
+                graph.AddVertex( entity, position + RndPos(rng,1f) );
+            
+            AddRelations( graph, newTargets, getRelations, rng, maxNodes );
         }
     }
 }

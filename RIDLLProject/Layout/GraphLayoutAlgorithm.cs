@@ -17,9 +17,6 @@ namespace RelationsInspector
 		Graph<T, P> graph;
 		Dictionary<T, Vector2> positions;
 		Dictionary<T, Vector2> forces;
-		private RNG rng;
-		Vector2 graphCenter;
-
 		
 		public GraphLayoutAlgorithm(Graph<T, P> graph)
 		{
@@ -28,11 +25,8 @@ namespace RelationsInspector
 			forces = new Dictionary<T, Vector2>();
 		}
 
-		public IEnumerator Compute(bool rndInitPos)
+		public IEnumerator Compute()
 		{
-            if (rndInitPos)
-                InitVertexPositions();
-
 			int iterationId = 0;
 			while (iterationId++ < 200)
 			{
@@ -42,29 +36,16 @@ namespace RelationsInspector
 			}
 		}
 
-		public void InitVertexPositions()
-		{
-			rng = new RNG(4);	// chosen by fair dice role. guaranteed to be random.
-
-			foreach(var vertex in graph.Vertices)
-				positions[vertex] = new Vector2(rng.Range(0, posInitRange), rng.Range(0, posInitRange));
-
-			UpdateCenter();
-		}
-
-		void UpdateCenter()
-		{
-			if (!positions.Any())
-				return;
-
-			var posSum = positions.Values.Aggregate(Vector2.zero, (sum, pos) => sum + pos);
-			graphCenter = posSum * (1 / positions.Count);
-		}
+        static Vector2 Average( IEnumerable<Vector2> vectors )
+        {
+            var posSum = vectors.Aggregate( Vector2.zero, ( sum, pos ) => sum + pos );
+            return posSum * ( 1 / vectors.Count() );
+        }
 
 		void RunIteration(float maxMove)
 		{
 			forces.Clear();
-			//
+            Vector2 graphCenter = Average( positions.Values );
 
 			// collect repulsive forces between all pairs of vertices
 			foreach (var vertex in graph.Vertices)
@@ -90,7 +71,7 @@ namespace RelationsInspector
 
 			// collect gravity forces
 			foreach (var vertex in graph.Vertices)
-				forces[vertex] += GetGravity(vertex);
+				forces[vertex] += GetGravity(vertex, graphCenter);
 
 			// clamp forces to temperature
 			// and apply them
@@ -103,8 +84,6 @@ namespace RelationsInspector
 
 				positions[vertex] += force;
 			}
-
-			UpdateCenter();
 		}
 
 		// get force repulsing the edge source vertex from the edge target vertex
@@ -132,9 +111,10 @@ namespace RelationsInspector
 			return direction * forceMagnitude;
 		}
 
-		Vector2 GetGravity(T vertex)
+        // get force attracting the vertex towards the graph center
+		Vector2 GetGravity(T vertex, Vector2 attractor)
 		{
-			Vector2 displacement = graphCenter - positions[vertex];
+			Vector2 displacement = attractor - positions[vertex];
 			float distance = Mathf.Max(displacement.magnitude, Mathf.Epsilon);	// avoid division by 0
 			Vector2 direction = displacement / distance;
 

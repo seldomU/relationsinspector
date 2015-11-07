@@ -4,25 +4,25 @@ namespace RelationsInspector
 {
     internal class GraphLayout<T, P> where T : class
 	{
-		internal static IEnumerator Run(GraphWithRoots<T, P> graph, bool firstTime, LayoutType layoutType, GraphLayoutParams layoutParams)
+		internal static IEnumerator Run(GraphWithRoots<T, P> graph, LayoutType layoutType, GraphLayoutParams layoutParams)
 		{
 			switch(layoutType)
 			{
 				case LayoutType.Graph:
-                    return RunGraphLayout(graph, firstTime);
+                    return RunGraphLayout(graph);
 				case LayoutType.Tree:
 				default:
 					if ( graph.IsTree() )
 						return RunTreeLayout(graph);
 					else
-                        return RunGraphLayout(graph, firstTime);
+                        return RunGraphLayout(graph);
 			}
 		}
 
-        internal static IEnumerator RunGraphLayout(Graph<T, P> graph, bool rndInitPos)
+        internal static IEnumerator RunGraphLayout(Graph<T, P> graph)
 		{
 			var algorithm = new GraphLayoutAlgorithm<T, P>(graph);
-			return algorithm.Compute(rndInitPos);
+			return algorithm.Compute();
 		}
 
 		internal static IEnumerator RunTreeLayout(Graph<T, P> graph)

@@ -31,6 +31,7 @@ namespace RelationsInspector
         Action Repaint;
         Action<Action> Exec;
         RelationsInspectorAPI API;
+        RNG builderRNG;
 
 		static Dictionary<LayoutType, GUIContent> layoutButtonContent = new Dictionary<LayoutType, GUIContent>()
 		{
@@ -50,6 +51,7 @@ namespace RelationsInspector
 			graphPosTweens = new TweenCollection();
 
             seedEntities = graphBackend.Init(targets, API ).ToHashSet();
+            builderRNG = new RNG( 4 ); // chosen by fair dice role. guaranteed to be random.
 
             // when targets is null, show the toolbar only. don't create a graph (and view)
             // when rootEntities is empty, create graph and view anyway, so the user can add entities
@@ -64,7 +66,7 @@ namespace RelationsInspector
 
 		void InitGraph(object[] targets)
 		{
-            graph = GraphBuilder<T, P>.Build(seedEntities, graphBackend.GetRelations, Settings.Instance.maxGraphNodes);
+            graph = GraphBuilder<T, P>.Build(seedEntities, graphBackend.GetRelations, builderRNG, Settings.Instance.maxGraphNodes);
             if (graph == null)
                 return;
             
@@ -213,7 +215,7 @@ namespace RelationsInspector
 			if (graph == null)
 				return;
 
-			layoutEnumerator = GraphLayout<T, P>.Run(graph,  firstTime, layoutType, Settings.Instance.layoutParams);
+			layoutEnumerator = GraphLayout<T, P>.Run(graph, layoutType, Settings.Instance.layoutParams);
             firstLayoutRun = firstTime;
 
             if (firstTime)
@@ -234,7 +236,7 @@ namespace RelationsInspector
             // transform pos to graph space
             seedEntities.UnionWith( asT );
             var graphPos = (view == null) ? Vector2.zero : view.GetGraphPosition( pos );
-            GraphBuilder<T, P>.Append( graph, asT, graphPos, graphBackend.GetRelations, graph.VertexCount + Settings.Instance.maxGraphNodes );
+            GraphBuilder<T, P>.Append( graph, asT, graphPos, graphBackend.GetRelations, builderRNG, graph.VertexCount + Settings.Instance.maxGraphNodes );
             Exec( () => DoAutoLayout( false ) );
         }
 
@@ -264,7 +266,7 @@ namespace RelationsInspector
             var entity = entityObj as T;
             if ( entity == null )
                 return;
-            GraphBuilder<T, P>.Expand( graph, entity, graphBackend.GetRelations, graph.VertexCount + Settings.Instance.maxGraphNodes );
+            GraphBuilder<T, P>.Expand( graph, entity, graphBackend.GetRelations, builderRNG, graph.VertexCount + Settings.Instance.maxGraphNodes );
             Exec( () => DoAutoLayout( false ) );
         }
 
