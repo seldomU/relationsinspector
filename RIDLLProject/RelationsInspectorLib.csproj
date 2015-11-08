@@ -63,6 +63,7 @@
     <Compile Include="Backend\IGraphBackendInternal.cs" />
     <Compile Include="DemoRestriction.cs" />
     <Compile Include="Graph\FoldUtil.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="RelationDrawer\BasicRelation.cs" />
     <Compile Include="RelationDrawer\RelationDrawUtil.cs" />
     <Compile Include="EdgePlacement\EdgePlacement.cs" />

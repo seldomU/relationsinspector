@@ -203,7 +203,10 @@ namespace RelationsInspector
 
         public void OnEvent(Event e)
         {
-            if ( graphBackend != null && e.type == EventType.ExecuteCommand )
+            if ( graphBackend != null && 
+                e != null && 
+                e.type == EventType.ExecuteCommand &&
+                !string.IsNullOrEmpty(e.commandName) )
             {
                 graphBackend.OnCommand( e.commandName );
                 e.Use();
@@ -233,10 +236,19 @@ namespace RelationsInspector
         void IWorkspace.AddTargets( object[] targetsToAdd, Vector2 pos )
         {
             if ( targetsToAdd == null )
+            {
+                Log.Error( "Can't add null targets" );
                 return;
+            }
 
             var asT = targetsToAdd.OfType<T>().ToArray();
-            if ( !asT.Any() )
+            if ( asT.Count() != targetsToAdd.Count() )
+            {
+                Log.Error( "Can't add targets: not all entities are of type " + typeof( T ) );
+                return;
+            }
+
+            if ( graph == null )
                 return;
 
             seedEntities.UnionWith( asT );
@@ -254,20 +266,37 @@ namespace RelationsInspector
 		void IWorkspace.AddEntity(object entity, Vector2 position)
 		{
 			var asT = entity as T;
-			if (asT == null )
-				return;
+            if ( asT == null )
+            {
+                Log.Error( "Can't add entity: it is not of type " + typeof( T ) );
+                return;
+            }
 
-			if(graph != null)
-				graph.AddVertex(asT, position);
+            if ( graph == null )
+                return;
+
+            if ( !graph.AddVertex( asT, position ) )
+                Log.Error( "Can't add entity to graph" );
 		}
 
 		void IWorkspace.RemoveEntity(object entityObj)
 		{
 			var entity = entityObj as T;
-			if (entity == null)
-				return;
+            if ( entity == null )
+            {
+                Log.Error( "Can't remove entity: it is not of type " + typeof( T ) );
+                return;
+            }
 
-			graph.RemoveVertex(entity);
+            if ( graph == null )
+                return;
+
+            if ( !graph.RemoveVertex( entity ) )
+            {
+                Log.Error( "Can't remove entity: it is not part of the graph." );
+                return;
+            }
+
 			if (view != null)
 				view.OnRemovedEntity(entity);
 		}
@@ -276,7 +305,14 @@ namespace RelationsInspector
         {
             var entity = entityObj as T;
             if ( entity == null )
+            {
+                Log.Error( "Can't expand entity: it is not of type " + typeof( T ) );
                 return;
+            }
+
+            if ( graph == null )
+                return;
+
             GraphBuilder<T, P>.Expand( graph, entity, graphBackend.GetRelations, builderRNG, graph.VertexCount + Settings.Instance.maxGraphNodes );
             Exec( () => DoAutoLayout( false ) );
         }
@@ -285,65 +321,133 @@ namespace RelationsInspector
         {
             var entity = entityObj as T;
             if ( entity == null )
+            {
+                Log.Error( "Can't fold entity: it is not part of the graph." );
                 return;
+            }
 
-            FoldUtil.Fold( graph, entity, IsSeed );
+            if(graph != null )
+                FoldUtil.Fold( graph, entity, IsSeed );
         }
 
 		void IWorkspace.CreateRelation(object[] sourceEntities, object tagObj)
 		{
-			if (sourceEntities == null)
-				throw new System.ArgumentException("sourceEntities");
+            // validate source entities
+            if ( sourceEntities == null )
+            {
+                Log.Error( "Can't create relations: entities are missing." );
+                return;
+            }
 
-			var tag = (P)tagObj;
+            var asT = sourceEntities.OfType<T>();
+            if ( asT.Count() != sourceEntities.Count() )
+            {
+                Log.Error("Can't create relations: not all entities are of type " + typeof( T ) );
+                return;
+            }
 
-			if (view != null)
-				view.CreateEdge(sourceEntities.Select(obj => obj as T), tag);
+            // validate tag
+            if ( tagObj == null )
+            {
+                Log.Error( "Can't create relations: tag is null" );
+                return;
+            }
+
+            P tag;
+            try
+            {
+                tag = (P) tagObj;
+            }
+            catch ( InvalidCastException )
+            {
+                Log.Error( string.Format( "Can't create relations: tag is of type {0}, expected {1}", tagObj.GetType(), typeof( P ) ) );
+                return;
+            }
+
+            if ( view != null )
+                view.CreateEdge(asT, tag);
 		}
 
 		void IWorkspace.AddRelation(object sourceObj, object targetObj, object tagObj)
 		{
-			if (graph == null)
-				return;
-
+            // validate source
 			var source = sourceObj as T;
+            if ( source == null )
+            {
+                Log.Error( "Can't add relation: source entity is not of type " + typeof( T ) );
+                return;
+            }
+
+            // validate target
 			var target = targetObj as T;
-			
-			P tag;
-			try{
+            if ( target == null )
+            {
+                Log.Error( "Can't add relation: target entity is not of type " + typeof( T ) );
+                return;
+            }
+
+            // validate tag
+            if ( tagObj == null )
+            {
+                Log.Error( "Can't add relations: tag is null" );
+                return;
+            }
+
+            P tag;
+			try
+            {
 				tag = (P)tagObj;
-			}catch(System.InvalidCastException){
-				return;
+			}
+            catch (InvalidCastException)
+            {
+                Log.Error(string.Format( "Can't add relation. Tag is of type {0}, expected {1}", tagObj.GetType(), typeof( P ) ) );
+                return;
 			}
 
-			if (source == null || target == null)
-				return;
-
-			var relation = new Relation<T, P>(source, target, tag);
-			graph.AddEdge(relation);
+            if ( graph != null )
+			    graph.AddEdge( new Relation<T, P>( source, target, tag ) );
 		}
 
 		void IWorkspace.RemoveRelation(object sourceObj, object targetObj, object tagObj)
 		{
-			if (graph == null) return;
+            // validate source
+            var source = sourceObj as T;
+            if ( source == null )
+            {
+                Log.Error( "Can't remove relation: source entity is not of type " + typeof( T ) );
+                return;
+            }
 
-			var source = sourceObj as T;
-			var target = targetObj as T;
+            // validate target
+            var target = targetObj as T;
+            if ( target == null )
+            {
+                Log.Error( "Can't remove relation: target entity is not of type " + typeof( T ) );
+                return;
+            }
 
-			P tag;
-			try
-			{
-				tag = (P)tagObj;
-			}
-			catch (System.InvalidCastException)
-			{
-				return;
-			}
+            // validate tag
+            if ( tagObj == null )
+            {
+                Log.Error( "Can't remove relation: tag is null" );
+                return;
+            }
 
-			if (source == null || target == null)
-				return;
+            P tag;
+            try
+            {
+                tag = (P) tagObj;
+            }
+            catch ( InvalidCastException )
+            {
+                Log.Error( string.Format( "Can't add relation. Tag is of type {0}, expected {1}", tagObj.GetType(), typeof( P ) ) );
+                return;
+            }
 
-			var sourceOutEdges = graph.GetOutEdges(source);
+            if ( graph == null )
+                return;
+
+            var sourceOutEdges = graph.GetOutEdges(source);
 			if (sourceOutEdges == null)
 			{
 				return;
@@ -358,7 +462,8 @@ namespace RelationsInspector
 
 		void IWorkspace.SelectEntityNodes(System.Predicate<object> doSelect)
 		{
-			view.SelectEntityNodes(doSelect);
+            if(view != null )
+			    view.SelectEntityNodes(doSelect);
 		}
 
 		#endregion
