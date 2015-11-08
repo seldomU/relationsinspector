@@ -22,6 +22,7 @@ namespace RelationsInspector
         void OnEntityContextClick( IEnumerable<T> entities, GenericMenu contextMenu );
         void OnRelationContextClick( Relation<T, P> relation, GenericMenu contextMenu );
         Color GetRelationColor( P relationTagValue );
+        void OnCommand( string command );
     }
 
     internal interface IGraphBackend2<T, P> where T : class
@@ -42,7 +43,7 @@ namespace RelationsInspector
         void OnEntityContextClick(IEnumerable<T> entities, GenericMenu contextMenu );
         void OnRelationContextClick(Relation<T,P> relation, GenericMenu contextMenu);
         Color GetRelationColor(P relationTagValue);
-        void OnEvent(Event e);
+        void OnCommand(string command);
     }
 
 }

@@ -23,6 +23,6 @@ namespace RelationsInspector
         void OnEntityContextClick(IEnumerable<T> entities, GenericMenu menu);
         void OnRelationContextClick(Relation<T,P> relation, GenericMenu menu);
         Color GetRelationColor(P relationTagValue);
-        void OnEvent(Event e);
+        void OnCommand(string command);
     }
 }

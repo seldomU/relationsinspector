@@ -200,8 +200,11 @@ namespace RelationsInspector
 
         public void OnEvent(Event e)
         {
-            if (graphBackend != null)
-                graphBackend.OnEvent(e);
+            if ( graphBackend != null && e.type == EventType.ExecuteCommand )
+            {
+                graphBackend.OnCommand( e.commandName );
+                e.Use();
+            }
         }
 
         public void OnDestroy()

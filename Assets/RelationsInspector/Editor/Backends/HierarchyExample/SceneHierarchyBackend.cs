@@ -84,5 +84,8 @@ namespace RelationsInspector.Backend.SceneHierarchy
 			content.tooltip = content.text;
 			return content;
 		}
+
+        // event handler for generic commands
+        public virtual void OnCommand( string command ) { }
     }
 }

@@ -87,7 +87,7 @@ namespace RelationsInspector
         }
 
         // V1 has no OnEvent handler
-        public void OnEvent(Event e){ }
+        public void OnCommand(string command){ }
     }
 
     // decorator class for IGraphBackend version 2
@@ -170,9 +170,9 @@ namespace RelationsInspector
             return backend.GetRelationColor(relationTagValue);
         }
 
-        public void OnEvent(Event e)
+        public void OnCommand(string command)
         {
-            backend.OnEvent(e);
+            backend.OnCommand( command );
         }
     }
 }
