@@ -70,18 +70,6 @@ namespace RelationsInspector
                 AddRelations( graph, unexploredEntities, getRelations, rng, maxNodeCount );
         }
 
-        // returns tree if the given entity is part of the given relation, and if relation can be added to the graph
-        static bool IsValidFor( Relation<T, P> relation, T entity )
-        {
-            if ( relation == null )
-                return false;
-            if ( relation.Source != entity && relation.Target != entity )
-                return false;
-            if ( Util.IsBadRef( relation.Source ) || Util.IsBadRef( relation.Target ) )
-                return false;
-            return true;
-        }
-
         static Vector2 RndPos( RNG rng, float range )
         {
             return new Vector2( rng.Range( -range / 2, range / 2 ), rng.Range( -range / 2, range / 2 ) );
@@ -102,6 +90,42 @@ namespace RelationsInspector
                 graph.AddVertex( entity, position + RndPos(rng,1f) );
             
             AddRelations( graph, newTargets, getRelations, rng, maxNodes );
+        }
+
+        // returns tree if the given entity is part of the given relation, and if relation can be added to the graph
+        static bool IsValidFor( Relation<T, P> relation, T entity )
+        {
+            if ( relation == null )
+            {
+                Log.Error( "Can't extend graph: relation is null" );
+                return false;
+            }
+
+            if ( relation.Source != entity && relation.Target != entity )
+            {
+                Log.Error( "Can't extend graph: relation does not involve entity." );
+                return false;
+            }
+
+            if ( Util.IsBadRef( relation.Source ) )
+            {
+                Log.Error( "Can't extend graph: source entity is null" );
+                return false;
+            }
+
+            if ( Util.IsBadRef( relation.Target ) )
+            {
+                Log.Error( "Can't extend graph: target entity is null" );
+                return false;
+            }
+
+            if ( Util.IsBadRef( relation.Tag ) )
+            {
+                Log.Error( "Can't extend graph: relation tag is null" );
+                return false;
+            }
+
+            return true;
         }
     }
 }
