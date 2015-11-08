@@ -9,8 +9,8 @@ namespace RelationsInspector
         public Color backgroundColor;
         public Color highlightColor;
         public Color unexploredColor;
-        public float highlightStrength;
-        public float contentPadding;
+        public int highlightStrength;
+        public int contentPadding;
         public GUIStyle contentStyle;
         public float widgetRadius;  // for circle widget only
         public Color targetBackgroundColor;
