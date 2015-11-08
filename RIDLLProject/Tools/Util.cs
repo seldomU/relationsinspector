@@ -36,6 +36,7 @@ namespace RelationsInspector
 			Handles.DrawBezier(start, end, startTangent, endTangent, Color.white, null, 4);
 		}
 
+        // doesn't produce a perfect rect, coords can be off by 1
 		public static void DrawRectOutline(Rect rect, Color color)
 		{
 			var backupColor = Handles.color;
