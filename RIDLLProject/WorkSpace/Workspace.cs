@@ -165,6 +165,9 @@ namespace RelationsInspector
 		{		
 			EditorGUI.BeginChangeCheck();
 
+            if ( graph != null && GUILayout.Button( "Relayout", EditorStyles.miniButton, GUILayout.ExpandWidth( false ) ) )
+                Exec( () => API.Relayout() );
+
             // let user pick a layout type (iff tree layout is an option)
             if (graph != null && graph.IsTree())
             {
