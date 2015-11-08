@@ -11,6 +11,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
 	// we have two kinds of relations in the inheritance graph:
 	public enum TypeRelation { SubType, SuperType};
 
+    [SaveLayout]
 	public class TypeInheritanceBackend : MinimalBackend<Type, TypeRelation>
 	{	
 		static bool includeSuperTypes = true;
