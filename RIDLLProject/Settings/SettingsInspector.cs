@@ -35,6 +35,8 @@ namespace RelationsInspector
             if ( EditorGUI.EndChangeCheck() && riWindow != null )
                 riWindow.GetAPI().Repaint();
 
+            settings.logToConsole = EditorGUILayout.Toggle( "Log to console", settings.logToConsole );
+
 #if DEBUG
             ShowLayoutParams( settings.layoutParams );
 #endif           
