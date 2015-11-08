@@ -58,6 +58,9 @@ namespace RelationsInspector
             var storage = ScriptableObject.CreateInstance<VertexPositionStorage>();
             
             storage.vertexPositions = graph.Vertices.Select(v => new VertexPosition(GetVertexId(v), graph.GetPos(v))).ToList();
+            // todo: hook these up to view
+            storage.transform = new Transform2d();
+            storage.widgetType = EntityWidgetType.Rect;
 
             return storage;
         }
@@ -115,6 +118,8 @@ namespace RelationsInspector
                 if ( idToPosition.ContainsKey(id) )
                     graph.SetPos(vertex, idToPosition[id].vertexPosition);
             }
+
+            // todo: apply storage.widgetType storage.transform to view
 
             return true;
         }

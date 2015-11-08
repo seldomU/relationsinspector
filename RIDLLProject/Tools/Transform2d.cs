@@ -3,6 +3,7 @@ using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
+    [System.Serializable]
     public class Transform2d
 	{
 		public Vector2 translation;
