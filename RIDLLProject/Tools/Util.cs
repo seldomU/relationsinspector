@@ -151,7 +151,21 @@ namespace RelationsInspector
             AssetDatabase.CreateAsset(obj, path);
         }
 
-		internal static void DrawCenteredInspector(Editor editor, int width = 350)
+        // load asset at path, if it exists. if not, create it
+        internal static T LoadOrCreate<T>( string assetPath, System.Func<T> create ) where T : Object
+        {
+            // if the asset file exists, load it and return the object
+            if ( System.IO.File.Exists( assetPath ) )
+                return LoadAsset<T>( assetPath );
+
+            // the asset file does not exist. create the object, and from it create the asset
+            var obj = create();
+            AssetDatabase.CreateAsset( obj, assetPath );
+            AssetDatabase.SaveAssets();
+            return obj;
+        }
+
+        internal static void DrawCenteredInspector(Editor editor, int width = 350)
 		{
 			// vertical space on top
 			GUILayout.FlexibleSpace();

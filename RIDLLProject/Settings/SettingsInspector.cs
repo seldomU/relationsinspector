@@ -50,7 +50,7 @@ namespace RelationsInspector
         {
             EditorGUILayout.Space();
             foldLayoutSettings = EditorGUILayout.Foldout( foldLayoutSettings, "Graph layout settings" );
-            if ( !foldLayoutSettings )
+            if ( foldLayoutSettings )
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Space( 10 );
@@ -71,7 +71,7 @@ namespace RelationsInspector
         {
             EditorGUILayout.Space();
             foldLayoutTweenSettings = EditorGUILayout.Foldout( foldLayoutTweenSettings, "Layout tween settings" );
-            if ( !foldLayoutTweenSettings )
+            if ( foldLayoutTweenSettings )
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Space( 10 );

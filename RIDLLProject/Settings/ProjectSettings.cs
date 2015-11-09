@@ -10,25 +10,37 @@ namespace RelationsInspector
 
 		public const string resourcesDirectoryName = "RelationsInspectorResources";
         public const string layoutCacheDirectoryName = "LayoutCaches";
-		public const string expectedRIBasePath = @"Assets\RelationsInspector\Editor";
+
+        const string darkSkinName = "RIWindowDarkSkin.asset";
+        const string lightSkinName = "RIWindowLightSkin.asset";
+        const string SettingsFileName = "Settings.asset";
+
+        public const string expectedRIBasePath = @"Assets\RelationsInspector\Editor";
         public const string dllName = "RelationsInspector.dll";
         public const string ProgramVersion = "1.0.0";
 
+
         public static string[] obligatoryFileNames = new[]
 		{
-			"ArrowHead.png",
+			"ArrowHead.png", "nextIconDark.png", "nextIconLight.png", "prevIconDark.png", "prevIconLight.png", "settingsIconLight.png", "settingsIconDark.png"
 		};
 
         public static string RIBasePath { get; private set; }
         public static string ResourcesPath { get; private set; }
         public static string LayoutCachesPath { get; private set; }
+        public static string SettingsPath { get; private set; }
+        public static string LightSkinPath { get; private set; }
+        public static string DarkSkinPath { get; private set; }
 
         static ProjectSettings()
         {
             RIBasePath = FindRIBasePath();
-            ResourcesPath = GetAbsoluteRIDirectoryPath( resourcesDirectoryName );
             LayoutCachesPath = GetAbsoluteRIDirectoryPath( layoutCacheDirectoryName );
-        }
+            ResourcesPath = GetAbsoluteRIDirectoryPath( resourcesDirectoryName );
+            SettingsPath = Path.Combine( ResourcesPath, SettingsFileName );
+            LightSkinPath = Path.Combine( ResourcesPath, lightSkinName );
+            DarkSkinPath = Path.Combine( ResourcesPath, darkSkinName );
+    }
 
         static string FindRIBasePath()
         {
@@ -67,5 +79,7 @@ namespace RelationsInspector
 			// all good
 			return string.Empty;
 		}
-	}
+
+
+    }
 }

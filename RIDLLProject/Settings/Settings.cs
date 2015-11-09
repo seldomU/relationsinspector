@@ -4,27 +4,12 @@ using UnityEditor;
 
 namespace RelationsInspector
 {
-    public class Settings
+    internal class Settings
     {
-        const string SettingsFileName = "Settings.asset";
-        public static string SettingsPath = Path.Combine( ProjectSettings.ResourcesPath, SettingsFileName ).Replace( '\\', '/' );
-
-        static RelationsInspectorSettings storage = LoadStorage();
+        static RelationsInspectorSettings storage = Util.LoadOrCreate( ProjectSettings.SettingsPath, CreateDefaultStorage );
         internal static RelationsInspectorSettings Instance
         {
             get { return storage; }
-        }
-
-        static RelationsInspectorSettings LoadStorage()
-        {
-            if ( File.Exists( SettingsPath ) )
-                return Util.LoadAsset<RelationsInspectorSettings>( SettingsPath );
-
-            // doesn't exist, so create it
-            var storage = CreateDefaultStorage();
-            AssetDatabase.CreateAsset( storage, SettingsPath );
-            AssetDatabase.SaveAssets();
-            return storage;
         }
 
         static RelationsInspectorSettings CreateDefaultStorage()
@@ -32,7 +17,7 @@ namespace RelationsInspector
             var storage = ScriptableObject.CreateInstance<RelationsInspectorSettings>();
 
             // initialize with default values
-            storage.maxGraphNodes = 100;
+            storage.maxGraphNodes = 40;
             storage.treeRootLocation = TreeRootLocation.Left;
             storage.showMinimap = true;
             storage.minimapLocation = MinimapLocation.TopLeft;

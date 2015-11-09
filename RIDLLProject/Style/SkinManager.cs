@@ -4,46 +4,30 @@ using UnityEngine;
 
 namespace RelationsInspector
 {
-	public class SkinManager
+	internal class SkinManager
 	{
+		static RelationInspectorSkin LightSkin = Util.LoadOrCreate( ProjectSettings.LightSkinPath, ()=> CreateSkin( true ) );
+        static RelationInspectorSkin DarkSkin = Util.LoadOrCreate( ProjectSettings.DarkSkinPath, () => CreateSkin( false ) );
 
-		const string darkSkinName = "RIWindowDarkSkin";
-		const string lightSkinName = "RIWindowLightSkin";
-
-        // public so build tool code can use these
-		public static string LightSkinPath = Path.Combine(ProjectSettings.ResourcesPath, lightSkinName + ".asset");
-		public static string DarkSkinPath = Path.Combine(ProjectSettings.ResourcesPath, darkSkinName + ".asset");
-
-		static RelationInspectorSkin LightSkin = LoadSkin(lightSkin: true);
-		static RelationInspectorSkin DarkSkin = LoadSkin(lightSkin: false);
-
-		internal static RelationInspectorSkin GetSkin()
+        internal static RelationInspectorSkin GetSkin()
 		{
 			return EditorGUIUtility.isProSkin ? DarkSkin : LightSkin;
 		}
 
-		static RelationInspectorSkin LoadSkin(bool lightSkin)
-		{
-			string path = lightSkin ? LightSkinPath : DarkSkinPath;
-			path = path.Replace('\\', '/');
-			if (File.Exists(path))
-				return Util.LoadAsset<RelationInspectorSkin>(path);
-
-			var skin = ScriptableObject.CreateInstance<RelationInspectorSkin>();
-			if (lightSkin)
-				PopulateLightSkinAsset(skin);
-			else
-				PopulateDarkSkinAsset(skin);		
-
-			AssetDatabase.CreateAsset(skin, path);
-			AssetDatabase.SaveAssets();
-			return skin;
-		}
+        static RelationInspectorSkin CreateSkin( bool light )
+        {
+            var skin = ScriptableObject.CreateInstance<RelationInspectorSkin>();
+            if ( light )
+                PopulateLightSkinAsset( skin );
+            else
+                PopulateDarkSkinAsset( skin );
+            return skin;
+        }
 
 		static void PopulateLightSkinAsset(RelationInspectorSkin skin)
 		{
 			skin.windowColor = new Color(0.76f, 0.76f, 0.76f);
-            skin.settingsIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "SettingsLight.png" ) );
+            skin.settingsIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "settingsIconLight.png" ) );
             skin.prevIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "prevIconLight.png" ) );
             skin.nextIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "nextIconLight.png" ) );
 
@@ -77,7 +61,7 @@ namespace RelationsInspector
 		static void PopulateDarkSkinAsset(RelationInspectorSkin skin)
 		{
 			skin.windowColor = new Color(0.2f, 0.2f, 0.2f);
-            skin.settingsIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "SettingsDark.png" ) );
+            skin.settingsIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "settingsIconDark.png" ) );
             skin.prevIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "prevIconDark.png" ) );
             skin.nextIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "nextIconDark.png" ) );
 

@@ -9,9 +9,9 @@ public class ExportPackage
     // don't include these in builds
     static string[] excludePaths = new[] 
     {
-        SkinManager.LightSkinPath,
-        SkinManager.DarkSkinPath,
-        Settings.SettingsPath,
+        ProjectSettings.LightSkinPath,
+        ProjectSettings.DarkSkinPath,
+        ProjectSettings.SettingsPath,
         ProjectSettings.LayoutCachesPath
     };
 
