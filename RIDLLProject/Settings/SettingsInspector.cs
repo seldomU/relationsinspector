@@ -9,7 +9,8 @@ namespace RelationsInspector
     {
         RelationsInspectorWindow riWindow;
         RelationsInspectorSettings settings;
-        bool foldGraphSettings;
+        bool foldLayoutTweenSettings;
+        bool foldLayoutSettings;
 
         void OnEnable()
         {
@@ -38,17 +39,39 @@ namespace RelationsInspector
             settings.logToConsole = EditorGUILayout.Toggle( "Log to console", settings.logToConsole );
 
 #if DEBUG
-            ShowLayoutParams( settings.layoutParams );
+            ShowGraphLayoutParams( settings.graphLayoutParameters );
+            ShowLayoutTweenParams( settings.layoutTweenParameters );
 #endif           
             if ( GUI.changed )
                 EditorUtility.SetDirty( settings );             
         }
 
-        void ShowLayoutParams(GraphLayoutParams lParams)
+        void ShowGraphLayoutParams( GraphLayoutParameters parameters )
         {
             EditorGUILayout.Space();
-            foldGraphSettings = EditorGUILayout.Foldout( foldGraphSettings, "Graph layout settings" );
-            if ( !foldGraphSettings )
+            foldLayoutSettings = EditorGUILayout.Foldout( foldLayoutSettings, "Graph layout settings" );
+            if ( !foldLayoutSettings )
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Space( 10 );
+                GUILayout.BeginVertical();
+
+                parameters.posInitRange = EditorGUILayout.FloatField( "Init positioning range", parameters.posInitRange );
+                parameters.idealDistance = EditorGUILayout.FloatField( "Ideal vertex spacing", parameters.idealDistance );
+                parameters.initalMaxMove = EditorGUILayout.FloatField( "Inital max move", parameters.initalMaxMove );
+                parameters.numIterations = EditorGUILayout.IntField( "Number of iterations", parameters.numIterations );
+                parameters.gravityStrength = EditorGUILayout.FloatField( "Gravity strength", parameters.gravityStrength );
+
+                GUILayout.EndVertical();
+                GUILayout.EndHorizontal();
+            }
+        }
+
+        void ShowLayoutTweenParams(LayoutTweenParameters lParams)
+        {
+            EditorGUILayout.Space();
+            foldLayoutTweenSettings = EditorGUILayout.Foldout( foldLayoutTweenSettings, "Layout tween settings" );
+            if ( !foldLayoutTweenSettings )
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Space( 10 );

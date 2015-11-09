@@ -103,7 +103,7 @@ namespace RelationsInspector
 			layoutTimer.Reset();
 			layoutTimer.Start();
 			bool generatorActive;
-            var parms = Settings.Instance.layoutParams;
+            var parms = Settings.Instance.layoutTweenParameters;
 			do
 			{
 				generatorActive = layoutEnumerator.MoveNext();
@@ -224,7 +224,7 @@ namespace RelationsInspector
 			if (graph == null)
 				return;
 
-			layoutEnumerator = GraphLayout<T, P>.Run(graph, layoutType, Settings.Instance.layoutParams);
+			layoutEnumerator = GraphLayout<T, P>.Run(graph, layoutType, Settings.Instance.layoutTweenParameters);
             firstLayoutRun = firstTime;
 
             if (firstTime)

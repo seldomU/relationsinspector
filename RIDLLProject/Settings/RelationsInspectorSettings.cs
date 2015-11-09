@@ -9,7 +9,9 @@ namespace RelationsInspector
         public bool showMinimap;
         public MinimapLocation minimapLocation;
         [HideInInspector]
-        public GraphLayoutParams layoutParams;
+        public LayoutTweenParameters layoutTweenParameters;
+        [HideInInspector]
+        public GraphLayoutParameters graphLayoutParameters;
         public bool logToConsole;
     }
 }

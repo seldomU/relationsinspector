@@ -18,8 +18,8 @@ namespace RelationsInspector
 			if ( seeds == null || !seeds.Any() )
 				return graph;
 
-			foreach(var root in seeds)
-				graph.AddVertex(root, RndPos(rng, 5f) );
+            foreach (var root in seeds)
+				graph.AddVertex(root, RndPos(rng, Settings.Instance.graphLayoutParameters.posInitRange ) );
 
             AddRelations( graph, seeds, getRelations, rng, maxNodeCount);
 			return graph;

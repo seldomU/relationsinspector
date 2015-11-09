@@ -5,15 +5,21 @@ using System.Linq;
 
 namespace RelationsInspector
 {
+    [System.Serializable]
+    internal class GraphLayoutParameters
+    {
+        public float idealDistance = 1f; // steer for this radius of space around each vertex
+        public float posInitRange = 5f; // range of random values used to generate initial vertex x and y coordinates
+        public int numIterations = 200;  // run the algorithm this many times
+        public float initalMaxMove = 1 / 5f;  // move range of the first iteration (tempature). relative to ideal distance
+        public float gravityStrength = 0.7f;
+    }
+
 	internal class GraphLayoutAlgorithm<T,P> where T : class
 	{
 		Vector2 minimalDisplacement = new Vector2(Mathf.Epsilon, Mathf.Epsilon);
-		const float idealDistance = 1f;	// we want the algorithm to steer for this radius of space around each vertex
-		const float posInitRange = 10f;	// range of random values used to generate initial vertex x and y coordinates
-		const int numIterations = 200;	// run the algorithm this many times
-		const float initalMaxMove = idealDistance / 5;	// move range of the first iteration (tempature)
-		const float gravityStrength = 0.7f;
 
+        GraphLayoutParameters settings;
 		Graph<T, P> graph;
 		Dictionary<T, Vector2> positions;
 		Dictionary<T, Vector2> forces;
@@ -25,12 +31,13 @@ namespace RelationsInspector
 			forces = new Dictionary<T, Vector2>();
 		}
 
-		public IEnumerator Compute()
+		public IEnumerator Compute(GraphLayoutParameters settings)
 		{
+            this.settings = settings;
 			int iterationId = 0;
-			while (iterationId++ < 200)
+			while (iterationId++ < settings.numIterations)
 			{
-				float maxMove = initalMaxMove * ( 1 - ((float)iterationId / (float)numIterations) );
+				float maxMove = settings.initalMaxMove * ( 1 - ((float)iterationId / (float)settings.numIterations) );
 				RunIteration(maxMove);
 				yield return positions;
 			}
@@ -96,7 +103,7 @@ namespace RelationsInspector
 			float distance = displacement.magnitude;
 			Vector2 direction = displacement / distance;
 
-			float forceMagnitude = idealDistance / distance;
+			float forceMagnitude = settings.idealDistance / distance;
 			return direction * forceMagnitude;
 		}
 
@@ -107,7 +114,7 @@ namespace RelationsInspector
 			float distance = Mathf.Max(displacement.magnitude, Mathf.Epsilon);	// avoid division by 0
 			Vector2 direction = displacement / distance;
 
-			float forceMagnitude = distance * distance / idealDistance;
+			float forceMagnitude = distance * distance / settings.idealDistance;
 			return direction * forceMagnitude;
 		}
 
@@ -120,7 +127,7 @@ namespace RelationsInspector
 
 			int degree = graph.GetNeighbors(vertex).Count();
 
-			return direction * gravityStrength * degree;	// add distance factor?
+			return direction * settings.gravityStrength * degree;	// add distance factor?
 		}
 	}
 }

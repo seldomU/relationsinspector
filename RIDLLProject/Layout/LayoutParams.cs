@@ -2,7 +2,7 @@
 namespace RelationsInspector
 {
     [System.Serializable]
-	internal class GraphLayoutParams
+	internal class LayoutTweenParameters
 	{
         public float maxFrameDuration = 0.004f;  // seconds
         public float vertexPosTweenDuration = 0.4f; // seconds
