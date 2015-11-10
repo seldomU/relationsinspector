@@ -22,6 +22,7 @@ namespace RelationsInspector
             storage.showMinimap = true;
             storage.minimapLocation = MinimapLocation.TopLeft;
             storage.layoutTweenParameters = new LayoutTweenParameters();
+            storage.graphLayoutParameters = new GraphLayoutParameters();
             storage.logToConsole = true;
             return storage;
         }
