@@ -24,12 +24,14 @@ public class ExportPackage
 	[MenuItem("Window/Build/Export demo package")]
 	public static void DoExportDemoPackage()
 	{
+        // no source code archive!
+        AssetDatabase.DeleteAsset( @"Assets\RelationsInspector\Editor\SourceCodeRI.zip" );
         RunBuild( "RelationsInspectorDemo.unitypackage" );
     }
 
     static void RunBuild(string packageName)
     {
-        string[] includedFilePaths = new[] { @"Assets\RelationsInspector", @"Assets\Editor Default Resources" };
+        string[] includedFilePaths = new[] { @"Assets\RelationsInspector" };
 
         PreparePackageExport(); // remove files not intended for distribution
         AssetDatabase.ExportPackage( includedFilePaths, packageName, ExportPackageOptions.Recurse );
@@ -59,6 +61,8 @@ public class ExportPackage
     {
         foreach ( var path in excludePaths )
             AssetDatabase.MoveAsset( GetTempPath( path ), path );
+
+        AssetDatabase.DeleteAsset( @"Assets\RelationsInspector\Editor\SourceCodeRI.zip" );
     }
 
     static string GetTempPath( string path )
