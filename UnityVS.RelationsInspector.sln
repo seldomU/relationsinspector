@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.RelationsInspector.CSharp", "UnityVS.RelationsInspector.CSharp.csproj", "{E8843C8F-F948-2DA4-4C71-DF4E5632E180}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.RelationsInspector.CSharp.Editor", "UnityVS.RelationsInspector.CSharp.Editor.csproj", "{C38CFD78-FF64-5009-F345-ADBF987E026F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RelationsInspectorLib", "RIDLLProject\RelationsInspectorLib.csproj", "{8564B945-82F3-4C72-9661-3D6A6B311764}"
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E8843C8F-F948-2DA4-4C71-DF4E5632E180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8843C8F-F948-2DA4-4C71-DF4E5632E180}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8843C8F-F948-2DA4-4C71-DF4E5632E180}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8843C8F-F948-2DA4-4C71-DF4E5632E180}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C38CFD78-FF64-5009-F345-ADBF987E026F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C38CFD78-FF64-5009-F345-ADBF987E026F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C38CFD78-FF64-5009-F345-ADBF987E026F}.Release|Any CPU.ActiveCfg = Release|Any CPU
