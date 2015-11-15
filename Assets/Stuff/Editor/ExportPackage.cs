@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections;
 using RelationsInspector;
 using System.IO;
 
@@ -15,23 +14,35 @@ public class ExportPackage
         ProjectSettings.LayoutCachesPath
     };
 
-    [MenuItem("Window/Build/Export package")]
+    const string packageBasePath = @"Assets\RelationsInspector";
+    public const string releasePackageName = "RelationsInspector.unitypackage";
+    public const string demoPackageName = "RelationsInspectorDemo.unitypackage";
+
+    public static void CreatePackage( bool demo )
+    {
+        if ( demo )
+            DoExportDemoPackage();
+        else
+            DoExportPackage();
+    }
+
+    [ MenuItem("Window/Build/Export package")]
 	public static void DoExportPackage()
 	{
-        RunBuild( "RelationsInspector.unitypackage" );
+        RunBuild( releasePackageName );
 	}
 
 	[MenuItem("Window/Build/Export demo package")]
 	public static void DoExportDemoPackage()
 	{
         // no source code archive!
-        AssetDatabase.DeleteAsset( @"Assets\RelationsInspector\Editor\SourceCodeRI.zip" );
-        RunBuild( "RelationsInspectorDemo.unitypackage" );
+        AssetDatabase.DeleteAsset( BuildPackage.relSourceArchivePath );
+        RunBuild( demoPackageName );
     }
 
     static void RunBuild(string packageName)
     {
-        string[] includedFilePaths = new[] { @"Assets\RelationsInspector" };
+        string[] includedFilePaths = new[] { packageBasePath };
 
         PreparePackageExport(); // remove files not intended for distribution
         AssetDatabase.ExportPackage( includedFilePaths, packageName, ExportPackageOptions.Recurse );
@@ -62,7 +73,7 @@ public class ExportPackage
         foreach ( var path in excludePaths )
             AssetDatabase.MoveAsset( GetTempPath( path ), path );
 
-        AssetDatabase.DeleteAsset( @"Assets\RelationsInspector\Editor\SourceCodeRI.zip" );
+        AssetDatabase.DeleteAsset( BuildPackage.relSourceArchivePath );
     }
 
     static string GetTempPath( string path )
