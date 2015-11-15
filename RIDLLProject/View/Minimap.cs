@@ -42,7 +42,7 @@ namespace RelationsInspector
             EditorGUI.DrawRect( drawRect, style.backgroundColor );
 
             // fit vertex positions and viewRect into drawRect
-            var pointsToFit = vertexPositions.Concat( new[] { viewRect.min, viewRect.max } );
+            var pointsToFit = vertexPositions.Concat( new[] { new Vector2(viewRect.xMin, viewRect.yMin), new Vector2( viewRect.xMax, viewRect.yMax ) } );
             var mmTransform = ViewUtil.FitPointsIntoRect( pointsToFit, drawRect.Scale(0.9f) );
 
             // draw view rect
