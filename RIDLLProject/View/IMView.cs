@@ -335,8 +335,8 @@ namespace RelationsInspector
 					if(Event.current.type == EventType.Repaint)
 					{
 						var content = new GUIContent(tooltip);
-						var size = GUI.skin.box.CalcSize(content);
-						var contentRect = FindTooltipRect(Event.current.mousePosition, size);
+						var size = GUI.skin.label.CalcSize(content);           
+                        var contentRect = FindTooltipRect(Event.current.mousePosition, size);
 						var contentPadding = new[] { 3f, 1f, 2f, 0f };					
 						var bgColor = skin.windowColor;
 						DrawPaddedLabel(content, contentRect, contentPadding, bgColor);
@@ -359,7 +359,7 @@ namespace RelationsInspector
 		// draw label with padding around the content rect
 		static void DrawPaddedLabel(GUIContent label, Rect labelRect, float[] padding, Color bgColor, bool outLined = true)
 		{
-			Rect paddedRect = labelRect.AddBorder(padding[0], padding[1], padding[2], padding[3]);
+            Rect paddedRect = labelRect.AddBorder(padding[0], padding[1], padding[2], padding[3]);
 			if (outLined)
 				EditorGUI.DrawRect(paddedRect.AddBorder(1f), Color.black);
 
@@ -369,12 +369,11 @@ namespace RelationsInspector
 
 		Rect FindTooltipRect(Vector2 mousePos, Vector2 extents)
 		{
-			Rect parentRect = parent.GetViewRect();
 			var mousePosToRectMargin = new Vector2(0, 20);
 			var rectCenter = mousePos + mousePosToRectMargin;
 			rectCenter.y += extents.y / 2;
 
-			return Util.CenterRect(rectCenter, extents);
+			return Util.CenterRect(rectCenter, extents );
 		}
 
 		EdgePlacement GetEdgePlacement(Relation<T, P> edge)
