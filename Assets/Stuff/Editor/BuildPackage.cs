@@ -87,31 +87,29 @@ class BuildPackage
         [MenuItem("Window/Build release")]
     public static void Release()
     {
-        DoBuildPackage( false );
+        Build( false );
     }
 
     [MenuItem( "Window/Build demo" )]
     public static void Demo()
     {
-        DoBuildPackage( true );
+        Build( true );
     }
 
-    static void DoBuildPackage( bool demo )
+    static void Build( bool demo )
     {
-        //var log = new StringBuilder();
-
-        string log = DoBuildPackage3( demo );
+        string log = DoBuildPackage( demo );
 
         // flush the log
-        //string uniquePath = logDir + logFileName + DateTime.Now.ToString() + ".txt";
+        string uniquePath = logDir + logFileName + DateTime.Now.ToString( "yyyy-MM-dd-HH-mm-ss" ) + ".txt";
         string path = logDir + logFileName + ".txt";
         string text = log.ToString();
 
-        //File.WriteAllText( uniquePath, text);
+        File.WriteAllText( uniquePath, text);
         File.WriteAllText( path, text );
 
         // return when the files are written
-        WaitFor( () => /*File.Exists( uniquePath ) &&*/ File.Exists( path ), 1000 );
+        WaitFor( () => File.Exists( uniquePath ) && File.Exists( path ), 1000 );
     }
 
     static string RunSteps( List<BuildStep> steps )
@@ -151,7 +149,7 @@ class BuildPackage
         };
     }
 
-    static string DoBuildPackage3( bool demo )
+    static string DoBuildPackage( bool demo )
     {
         var steps = new List<BuildStep>();
         
@@ -207,56 +205,6 @@ class BuildPackage
         steps.Add( DeleteFileStep( absSourceArchivePath ) );
         return RunSteps( steps );
     }
-    /*
-    static void DoBuildPackage2( StringBuilder log, bool demo )
-    {
-        // build dll
-        var config = demo ? demoBuildConfig : releaseBuildConfig;
-        var buildArgs = new[] { projectToBuild, buildTarget, config };
-        log.Append( RunSysCmd( msbuildPath, buildArgs ) );
-
-        //System.Func<bool> riDllBuilt = () => File.Exists( dllPath );
-        ;
-        if ( !WaitFor( () => File.Exists( dllPath ), 2000 ) )
-        {
-            log.AppendLine( "ri dll build timed out. aborting." );
-            return;
-        }
-
-        // relase build: zip the ri dll source
-        if ( !demo )
-            log.Append( RunSysCmd( zipPath, new[] { "a", "-tzip", absSourceArchivePath, sourceCodePath, excludePatterns } ) );
-        else // demo build: make sure the file is not present
-            File.Delete( absSourceArchivePath );
-
-        System.Func<bool> sourceArchiveReady = () => File.Exists( absSourceArchivePath );
-        if ( demo )
-            sourceArchiveReady = () => !sourceArchiveReady();   // for the demo the zip has to be gone
-        
-        if ( !WaitFor( sourceArchiveReady, 1000 ) )
-        {
-            log.AppendLine( "adding/removing the source zip timed out. aborting." );
-            return;
-        }
-
-        // build the package
-        ExportPackage.CreatePackage( demo );
-        string packagePath = projectPath + (demo ? ExportPackage.demoPackageName : ExportPackage.releasePackageName);
-        // wait for the package
-        if ( !WaitFor( () => File.Exists( packagePath ), 5000 ) )
-        {
-            log.AppendLine( "building the package timed out. aborting." );
-        }
-
-        // delete the source archive
-        File.Delete( absSourceArchivePath );
-        System.Func<bool> sourceArchiveDeleted = () => !File.Exists( absSourceArchivePath );
-        if ( !WaitFor( sourceArchiveDeleted, 1000 ) )
-        {
-            log.AppendLine( "failed to delete source archive. aborting." );
-            return;
-        }
-    }*/
 
     public static string RunSysCmd( string cmdPath, string[] args, int timeout = 0 )
     {
@@ -295,7 +243,7 @@ class BuildPackage
 
     // stalls execution until condition is true or maxTime has passed
     // returns true if condition is true
-    public static bool WaitFor( System.Func<bool> condition, float maxTime )
+    public static bool WaitFor( Func<bool> condition, float maxTime )
     {
         var timer = System.Diagnostics.Stopwatch.StartNew();
         while ( !condition() )
@@ -310,6 +258,6 @@ class BuildPackage
 
     static bool AssetExists( string path )
     {
-        return null != UnityEditor.AssetDatabase.LoadAssetAtPath( path, typeof( UnityEngine.Object ) );
+        return null != AssetDatabase.LoadAssetAtPath( path, typeof( UnityEngine.Object ) );
     }
 }
