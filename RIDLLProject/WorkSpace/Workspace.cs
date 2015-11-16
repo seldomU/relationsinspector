@@ -26,12 +26,14 @@ namespace RelationsInspector
         IEnumerator layoutEnumerator;
         Stopwatch layoutTimer = new Stopwatch();
 		float nextVertexPosTweenUpdate;
-        bool firstLayoutRun;
 
         Action Repaint;
         Action<Action> Exec;
         RelationsInspectorAPI API;
         RNG builderRNG;
+
+        enum AdjustTransformMode { Not, Smooth, Instant }; // how to adjust the view transform to layout (vertex position) changes
+        AdjustTransformMode adjustTransformMode = AdjustTransformMode.Instant;
 
 		static Dictionary<LayoutType, GUIContent> layoutButtonContent = new Dictionary<LayoutType, GUIContent>()
 		{
@@ -69,15 +71,17 @@ namespace RelationsInspector
             graph = GraphBuilder<T, P>.Build(seedEntities, graphBackend.GetRelations, builderRNG, Settings.Instance.maxGraphNodes);
             if (graph == null)
                 return;
-            
+
+            // delay the view construction, so this.drawRect can be set before that runs.
+            Exec( () => view = new IMView<T, P>( graph, this ) );
+
             bool didLoadLayout = GraphPosSerialization.LoadGraphLayout(graph, graphBackend.GetDecoratedType());
-            if (didLoadLayout)
+            if ( !didLoadLayout )
             {
-                // delay the view construction, so this.drawRect can be set before that runs.
-                Exec( () => view = new IMView<T, P>(graph, this) );
+                // make the view focus on the initial graph unfolding
+                adjustTransformMode = AdjustTransformMode.Instant;
+                Exec( DoAutoLayout );
             }
-            else
-                Exec(() => DoAutoLayout(true));
             				
 		}
 
@@ -136,7 +140,8 @@ namespace RelationsInspector
 
         public void Relayout()
         {
-            Exec( () => DoAutoLayout( false ) );
+            adjustTransformMode = AdjustTransformMode.Smooth;
+            Exec( DoAutoLayout );
         }
 
 		public void OnGUI(Rect drawRect)
@@ -145,8 +150,11 @@ namespace RelationsInspector
 
 			if (view != null)
 			{
-				if (hasGraphPosChanges)
-					view.FitViewRectToGraph(firstLayoutRun);
+                if ( hasGraphPosChanges && adjustTransformMode != AdjustTransformMode.Not )
+                {
+                    bool instant = adjustTransformMode == AdjustTransformMode.Instant;
+                    view.FitViewRectToGraph( instant );
+                }
 				
 				try
 				{
@@ -175,7 +183,8 @@ namespace RelationsInspector
                 if (EditorGUI.EndChangeCheck())
                 {
                     GUIUtil.SetPrefsInt(GetPrefsKeyLayout(), (int)layoutType);
-                    Exec(() => DoAutoLayout(false));
+                    adjustTransformMode = AdjustTransformMode.Smooth;
+                    Exec( DoAutoLayout );
                 }
             }
 
@@ -219,16 +228,12 @@ namespace RelationsInspector
                 GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetDecoratedType());
         }
 
-		void DoAutoLayout(bool firstTime = false )
+		void DoAutoLayout()
 		{
 			if (graph == null)
 				return;
 
 			layoutEnumerator = GraphLayout<T, P>.Run(graph, layoutType, Settings.Instance.layoutTweenParameters);
-            firstLayoutRun = firstTime;
-
-            if (firstTime)
-			    view = new IMView<T, P>(graph, this);
 		}
 
         #region implementing IWorkspace
@@ -260,7 +265,8 @@ namespace RelationsInspector
                 pos = (view == null) ? Vector2.zero : view.GetGraphPosition( pos );
 
             GraphBuilder<T, P>.Append( graph, asT, pos, graphBackend.GetRelations, builderRNG, graph.VertexCount + Settings.Instance.maxGraphNodes );
-            Exec( () => DoAutoLayout( false ) );
+            adjustTransformMode = AdjustTransformMode.Not;  // don't mess with the user's transform settings
+            Exec( DoAutoLayout );
         }
 
 		void IWorkspace.AddEntity(object entity, Vector2 position)
@@ -314,7 +320,8 @@ namespace RelationsInspector
                 return;
 
             GraphBuilder<T, P>.Expand( graph, entity, graphBackend.GetRelations, builderRNG, graph.VertexCount + Settings.Instance.maxGraphNodes );
-            Exec( () => DoAutoLayout( false ) );
+            adjustTransformMode = AdjustTransformMode.Not;  // don't mess with the user's transform settings
+            Exec( DoAutoLayout );
         }
 
         void IWorkspace.FoldEntity( object entityObj )
