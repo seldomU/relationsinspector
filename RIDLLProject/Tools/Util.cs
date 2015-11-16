@@ -129,12 +129,6 @@ namespace RelationsInspector
 			return LoadAsset<T>(path);
 		}
 
-		internal static IEnumerable<T> LoadAllAssets<T>() where T : Object
-		{
-			string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).ToString());
-			return guids.Select(guid => Util.LoadGUIDAsset<T>(guid)).Where(obj => obj != null);
-		}
-
 		internal static string AssetToSystemPath(string path)
 		{
 			return Application.dataPath.Replace("Assets", "") + path; 
