@@ -35,11 +35,17 @@ namespace RelationsInspector
 
 		public virtual bool AddVertex(T vertex)
 		{
-			if (vertex == null)
-				return false;
+            if ( vertex == null )
+            {
+                Log.Error( "Can't add null vertex to graph." );
+                return false;
+            }
 
-			if (VerticesData.ContainsKey(vertex))
-				return false;
+            if ( VerticesData.ContainsKey( vertex ) )
+            {
+                Log.Error( "Can't add vertex to graph. It is a member already." );
+                return false;
+            }
 
 			VerticesData[vertex] = new VertexData<T, P>(vertex);
 			return true;
@@ -79,14 +85,23 @@ namespace RelationsInspector
 
 		public virtual bool AddEdge(Relation<T, P> relation)
 		{
-			if (relation == null || relation.Source == null || relation.Target == null)
-				return false;
+            if ( relation == null || relation.Source == null || relation.Target == null )
+            {
+                Log.Error( "can't add relation to graph. relation or vertex is null." );
+                return false;
+            }
 
-			if (!VerticesData.ContainsKey(relation.Source) || !VerticesData.ContainsKey(relation.Target))
-				return false;
+            if ( !VerticesData.ContainsKey( relation.Source ) || !VerticesData.ContainsKey( relation.Target ) )
+            {
+                Log.Error( "can't add relation to graph. vertex missing." );
+                return false;
+            }
 
-			if (!Edges.Add(relation))
-				return false;
+            if ( !Edges.Add( relation ) )
+            {
+                Log.Error( "can't add relation to graph. Is is a member already." );
+                return false;
+            }
 
 			VerticesData[relation.Source].OutEdges.Add(relation);
 			VerticesData[relation.Target].InEdges.Add(relation);
@@ -118,10 +133,7 @@ namespace RelationsInspector
 
         public bool ContainsEdge( Relation<T, P> relation )
         {
-            return ContainsVertex(relation.Source) &&
-                VerticesData[ relation.Source ]
-                .OutEdges.Get()
-                .Any( rel => rel.Equals( relation ) );
+            return Edges.Contains( relation );
         }
 
 		public Vector2 GetPos(T vertex)
@@ -129,7 +141,7 @@ namespace RelationsInspector
 			VertexData<T, P> data;
 			if (!VerticesData.TryGetValue(vertex, out data))
 			{
-				Debug.LogError("Graph.GetPos: unknown vertex " + vertex);
+				Log.Error("Graph.GetPos: unknown vertex " + vertex);
 				return Vector2.zero;
 			}
 
@@ -141,7 +153,7 @@ namespace RelationsInspector
 			VertexData<T, P> data;
 			if (!VerticesData.TryGetValue(vertex, out data))
 			{
-				Debug.LogError("Graph.SetPos: unknown vertex " + vertex);
+				Log.Error("Graph.SetPos: unknown vertex " + vertex);
 				return;
 			}
 

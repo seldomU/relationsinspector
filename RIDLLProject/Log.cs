@@ -13,12 +13,12 @@ namespace RelationsInspector
 
         public static void Warning( string warning )
         {
-            LogItem( LogType.Message, warning );
+            LogItem( LogType.Warning, warning );
         }
 
         public static void Error( string error )
         {
-            LogItem( LogType.Message, error );
+            LogItem( LogType.Error, error );
         }
 
         static void LogItem( LogType type, string item )
