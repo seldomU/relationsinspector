@@ -16,11 +16,6 @@ namespace RelationsInspector
 			this.Tag = tag;
 		}
 
-		public bool Matches(T source, T target, P tag)
-		{
-			return Source == source && Target == target && (Tag == null && tag == null || Tag != null && Tag.Equals(tag));
-		}
-
         public T Opposite( T entity )
         {
             if ( entity == Source ) return Target;
@@ -39,7 +34,11 @@ namespace RelationsInspector
 
         public bool Equals( Relation<T, P> other )
         {
-            return ( other == null ) ? false : GetHashCode() == other.GetHashCode();
+            return ( 
+                other != null &&
+                Source.Equals( other.Source ) && 
+                Target.Equals( other.Target ) && 
+                Tag.Equals( other.Tag ) );
         }
 
         public override bool Equals( object otherObj )
@@ -48,9 +47,19 @@ namespace RelationsInspector
             return ( otherRelation == null ) ? false : Equals( otherRelation );
         }
 
+        public bool Matches( T source, T target, P tag )
+        {
+            return Source == source && Target == target && ( Tag == null && tag == null || Tag != null && Tag.Equals( tag ) );
+        }
+
         public Relation<T, P> Copy()
         {
             return new Relation<T, P>( Source, Target, Tag );
+        }
+
+        public override string ToString()
+        {
+            return string.Format( "source: {0}, target: {1}, tag: {2}, hash {3}", Source, Target, Tag, GetHashCode() );
         }
     }
 }
