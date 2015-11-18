@@ -75,14 +75,17 @@ namespace RelationsInspector
             // delay the view construction, so this.drawRect can be set before that runs.
             Exec( () => view = new IMView<T, P>( graph, this ) );
 
-            bool didLoadLayout = GraphPosSerialization.LoadGraphLayout(graph, graphBackend.GetDecoratedType());
-            if ( !didLoadLayout )
+            // run layout, unless the user wants to use caches and a cache could be loaded
+            bool runLayout = Settings.Instance.cacheLayouts ?
+                !GraphPosSerialization.LoadGraphLayout( graph, graphBackend.GetDecoratedType() ) :
+                true;
+
+            if ( runLayout )
             {
                 // make the view focus on the initial graph unfolding
                 adjustTransformMode = AdjustTransformMode.Instant;
                 Exec( DoAutoLayout );
             }
-            				
 		}
 
 		public void Update()
@@ -224,7 +227,7 @@ namespace RelationsInspector
 
         public void OnDestroy()
         {
-            if (graph != null)
+            if ( graph != null && Settings.Instance.cacheLayouts )
                 GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetDecoratedType());
         }
 

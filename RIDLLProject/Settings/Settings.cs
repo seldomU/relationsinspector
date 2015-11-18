@@ -17,6 +17,7 @@ namespace RelationsInspector
             var storage = ScriptableObject.CreateInstance<RelationsInspectorSettings>();
 
             // initialize with default values
+            storage.cacheLayouts = true;
             storage.maxGraphNodes = 40;
             storage.treeRootLocation = TreeRootLocation.Left;
             storage.showMinimap = true;

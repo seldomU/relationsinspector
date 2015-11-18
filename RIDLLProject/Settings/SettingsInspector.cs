@@ -23,6 +23,7 @@ namespace RelationsInspector
             GUILayout.Label( "Relations inspector settings", EditorStyles.boldLabel );
             EditorGUILayout.Space();
 
+            settings.cacheLayouts = EditorGUILayout.Toggle( "Cache layouts", settings.cacheLayouts );
             settings.maxGraphNodes = EditorGUILayout.IntField( "Max graph nodes", settings.maxGraphNodes );
 
             EditorGUI.BeginChangeCheck();
