@@ -54,11 +54,9 @@ namespace RelationsInspector
                         if ( graph.VertexCount < maxNodeCount )
                         {
                             var pos = graph.GetPos( entity ) + RndPos( rng, 1f );
-                            if ( graph.AddVertex( otherEntity, pos ) )
-                            {
-                                unexploredEntities.Add( otherEntity );
-                                graph.AddEdge( relation );
-                            }
+                            graph.AddVertex( otherEntity, pos );
+                            unexploredEntities.Add( otherEntity );
+                            graph.AddEdge( relation );
                         }
                         else
                             graph.VerticesData[ entity ].unexplored = true;

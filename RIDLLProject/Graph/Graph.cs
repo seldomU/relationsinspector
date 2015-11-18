@@ -33,22 +33,21 @@ namespace RelationsInspector
 			Edges.RemoveWhere(edge => Util.IsBadRef(edge.Source) || Util.IsBadRef(edge.Target) );
 		}
 
-		public virtual bool AddVertex(T vertex)
+		public virtual void AddVertex(T vertex)
 		{
             if ( vertex == null )
             {
-                Log.Error( "Can't add null vertex to graph." );
-                return false;
+                Log.Error( "Vertex is null." );
+                return;
             }
 
             if ( VerticesData.ContainsKey( vertex ) )
             {
-                Log.Error( "Can't add vertex to graph. It is a member already." );
-                return false;
+                Log.Error( "Vertex is already part of the graph: " + vertex );
+                return;
             }
 
 			VerticesData[vertex] = new VertexData<T, P>(vertex);
-			return true;
 		}
 
         public bool CanRegenerate( T source, T target)
@@ -60,65 +59,79 @@ namespace RelationsInspector
             throw new Exception( "source and target are not related" );
         }
 
-        public virtual bool RemoveVertex(T vertex)
+        public virtual void RemoveVertex(T vertex)
 		{
-			if (vertex == null)
-				return false;
+            if ( vertex == null )
+            {
+                Log.Error("Vertex is null.");
+                return;
+            }
 
 			var affectedEdges = Edges.Where(e => e.Source == vertex || e.Target == vertex).ToArray();
 			foreach (var edge in affectedEdges)
 				RemoveEdge(edge);
 
-			if (!VerticesData.Remove(vertex))
-				return false;
-
-			return true;
+            if ( !VerticesData.Remove( vertex ) )
+            {
+                Log.Error( "Vertex is not a member: " + vertex );
+                return;
+            }
 		}
 
-		public virtual bool AddVertex(T vertex, Vector2 position)
+		public virtual void AddVertex(T vertex, Vector2 position)
 		{
-			bool ret = AddVertex(vertex);
-			if (ret)
+			AddVertex(vertex);
+            // only set position if vertex was added
+			if ( ContainsVertex( vertex ) )
 				SetPos(vertex, position);
-			return ret;
 		}
 
-		public virtual bool AddEdge(Relation<T, P> relation)
+		public virtual void AddEdge(Relation<T, P> relation)
 		{
             if ( relation == null || relation.Source == null || relation.Target == null )
             {
-                Log.Error( "can't add relation to graph. relation or vertex is null." );
-                return false;
+                Log.Error( "Relation or vertex is null." );
+                return;
             }
 
-            if ( !VerticesData.ContainsKey( relation.Source ) || !VerticesData.ContainsKey( relation.Target ) )
+            if ( !VerticesData.ContainsKey( relation.Source ) )
             {
-                Log.Error( "can't add relation to graph. vertex missing." );
-                return false;
+                Log.Error( "Relation source is missing from the graph: " + relation.Source );
+                return;
+            }
+
+            if ( !VerticesData.ContainsKey( relation.Target ) )
+            {
+                Log.Error( "Relation target is missing from the graph: " + relation.Target );
+                return;
             }
 
             if ( !Edges.Add( relation ) )
             {
-                Log.Error( "can't add relation to graph. Is is a member already." );
-                return false;
+                Log.Error( "Relation is already part of the graph: " + relation );
+                return;
             }
 
 			VerticesData[relation.Source].OutEdges.Add(relation);
 			VerticesData[relation.Target].InEdges.Add(relation);
-			return true;
 		}
 
-		public virtual bool RemoveEdge(Relation<T, P> relation)
+		public virtual void RemoveEdge(Relation<T, P> relation)
 		{
-			if (relation == null)
-				return false;
+            if ( relation == null )
+            {
+                Log.Error( "Relation is null." );
+                return;
+            }
 
-			if (!Edges.Remove(relation))
-				return false;
+            if ( !Edges.Remove( relation ) )
+            {
+                Log.Error( "Relation is not part of the graph: " + relation );
+                return;
+            }
 
 			VerticesData[relation.Source].OutEdges.Remove(relation);
 			VerticesData[relation.Target].InEdges.Remove(relation);
-			return true;
 		}
 
 		public bool IsRoot(T vertex)

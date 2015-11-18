@@ -245,14 +245,14 @@ namespace RelationsInspector
         {
             if ( targetsToAdd == null )
             {
-                Log.Error( "Can't add null targets" );
+                Log.Error( "Targets are null" );
                 return;
             }
 
             var asT = targetsToAdd.OfType<T>().ToArray();
             if ( asT.Count() != targetsToAdd.Count() )
             {
-                Log.Error( "Can't add targets: not all entities are of type " + typeof( T ) );
+                Log.Error( "Not all targets are of type " + typeof( T ) );
                 return;
             }
 
@@ -274,18 +274,32 @@ namespace RelationsInspector
 
 		void IWorkspace.AddEntity(object entity, Vector2 position)
 		{
+            if ( entity == null )
+            {
+                Log.Error( "Entity is null" );
+                return;
+            }
+
 			var asT = entity as T;
             if ( asT == null )
             {
-                Log.Error( "Can't add entity: it is not of type " + typeof( T ) );
+                Log.Error( string.Format("Can't add entity {0}. Backend type {1} is not assignable from its type {2}", entity, typeof( T ), entity.GetType() ) );
                 return;
             }
 
             if ( graph == null )
+            {
+                Log.Error( "Graph is missing" );
                 return;
+            }
 
-            if ( !graph.AddVertex( asT, position ) )
-                Log.Error( "Can't add entity to graph" );
+            if ( graph.ContainsVertex( asT ) )
+            {
+                Log.Message( "Graph already contains entity: " + asT);
+                return;
+            }
+
+            graph.AddVertex( asT, position );
 		}
 
 		void IWorkspace.RemoveEntity(object entityObj)
@@ -300,11 +314,13 @@ namespace RelationsInspector
             if ( graph == null )
                 return;
 
-            if ( !graph.RemoveVertex( entity ) )
+            if ( !graph.ContainsVertex( entity ) )
             {
                 Log.Error( "Can't remove entity: it is not part of the graph." );
                 return;
             }
+
+            graph.RemoveVertex( entity );
 
 			if (view != null)
 				view.OnRemovedEntity(entity);

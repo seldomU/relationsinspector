@@ -30,57 +30,54 @@ namespace RelationsInspector
             return isTree;
         }
 
-		public override bool AddVertex(T vertex)
+		public override void AddVertex(T vertex)
 		{
-			bool gotAdded = base.AddVertex(vertex);
-            if (gotAdded)
+			base.AddVertex(vertex);
+            // adding the vertex may have fail
+            if (ContainsVertex( vertex ) )
             {
                 recalcIsTree = true;
                 RootVertices.Add(vertex);
             }
-			return gotAdded;
 		}
 
-		public override bool RemoveVertex(T vertex)
+		public override void RemoveVertex(T vertex)
 		{
 			// get the outedge targets before vertex is removed
 			var targets = this.GetChildren(vertex);
 
-			bool gotRemoved = base.RemoveVertex(vertex);
-
-			if (gotRemoved)
+			base.RemoveVertex(vertex);
+            // removing the vertex may have failed
+			if ( !ContainsVertex(vertex) )
 			{
                 recalcIsTree = true;
                 RootVertices.Remove(vertex);
 				// add the targets that have no more in-edges
 				RootVertices.UnionWith(targets.Where(v => IsRoot(v) ) );
 			}
-
-			return gotRemoved;
 		}
 
-		public override bool AddEdge(Relation<T, P> relation)
+		public override void AddEdge(Relation<T, P> relation)
 		{
-			bool gotAdded = base.AddEdge(relation);
-            if (gotAdded)
+			base.AddEdge(relation);
+            // adding the relation may have failed
+            if (ContainsEdge(relation) )
             {
                 recalcIsTree = true;
                 RootVertices.Remove(relation.Target);
             }
-			return gotAdded;
 		}
 
-		public override bool RemoveEdge(Relation<T, P> relation)
+		public override void RemoveEdge(Relation<T, P> relation)
 		{
-			bool gotRemoved = base.RemoveEdge(relation);
-            if (gotRemoved)
+			base.RemoveEdge(relation);
+            // removing the relation may have failed
+            if (!ContainsEdge( relation ) )
             {
                 recalcIsTree = true;
                 if (IsRoot(relation.Target))
                     RootVertices.Add(relation.Target);
             }
-
-			return gotRemoved;
 		}
 	}
 }
