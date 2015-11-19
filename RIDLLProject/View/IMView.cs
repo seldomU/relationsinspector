@@ -358,7 +358,8 @@ namespace RelationsInspector
 				}
 			}
 
-            DrawMinimap();
+            if(Settings.Instance.showMinimap)
+                DrawMinimap();
 		}
 
         void DrawMinimap()
