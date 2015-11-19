@@ -10,8 +10,6 @@ namespace RelationsInspector
 
     internal class Minimap
 	{
-        const int verticalOffset = 16;  // the editor window draws this canvas in a layout group. that group adds space at the top
-
         internal static Rect GetRect(MinimapStyle mmStyle, MinimapLocation location, Rect contextRect)
         {
             int width, height;
@@ -21,16 +19,16 @@ namespace RelationsInspector
             {
                 case MinimapLocation.TopLeft:
                 default:
-                    return new Rect( contextRect.x + spacing, contextRect.y + spacing - verticalOffset, width, height );
+                    return new Rect( spacing, spacing, width, height );
 
                 case MinimapLocation.TopRight:
-                    return new Rect( contextRect.xMax - spacing - width, contextRect.y + spacing - verticalOffset, width, height );
+                    return new Rect( contextRect.width - spacing - width, spacing, width, height );
 
                 case MinimapLocation.BottomLeft:
-                    return new Rect(contextRect.x + spacing, contextRect.yMax - spacing - height - verticalOffset, width, height);
+                    return new Rect(spacing, contextRect.height - spacing - height, width, height);
 
                 case MinimapLocation.BottomRight:
-                    return new Rect(contextRect.xMax - spacing - width, contextRect.yMax - spacing - height - verticalOffset, width, height);
+                    return new Rect(contextRect.width - spacing - width, contextRect.height - spacing - height, width, height);
             }
         }
 

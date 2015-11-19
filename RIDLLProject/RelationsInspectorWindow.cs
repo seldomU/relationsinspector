@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using RelationsInspector.Extensions;
 
 // make internal classes accessible to unit tests
 #if DEBUG
@@ -53,12 +54,12 @@ namespace RelationsInspector
 			// allow the user to draw their own controls and return the remaining rect
 			var wsRect = internalAPI.DrawWorkspaceControls();
 
-			if (Event.current.type == EventType.repaint)
-				workspaceRect = wsRect;
+            if ( Event.current.type == EventType.repaint )
+                workspaceRect = wsRect;
 
             // clip at the rect borders
             GUI.BeginGroup( workspaceRect, GUIStyle.none );
-			internalAPI.OnWorkspaceGUI(workspaceRect);
+			internalAPI.OnWorkspaceGUI( workspaceRect.ResetOrigin() );
 			GUI.EndGroup();
 
 			internalAPI.HandleEvent(Event.current, position);
