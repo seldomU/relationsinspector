@@ -189,7 +189,8 @@ namespace RelationsInspector
 
             var genericWorkspaceType = typeof(Workspace<,>).MakeGenericType(backendArguments);
             var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
-            var targetArray = TypeUtil.MakeObjectsAssignable( targetObjects, entityType ).ToArray();
+            var assignableTargets = TypeUtil.MakeObjectsAssignable( targetObjects, entityType );
+            object[] targetArray = assignableTargets.Any() ? assignableTargets.ToArray() : null; // make sure to pass null, NOT an empty array
             var ctorArguments = new object[]
             {
                 selectedBackendType,
