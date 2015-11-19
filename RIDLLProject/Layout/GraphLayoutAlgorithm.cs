@@ -33,6 +33,9 @@ namespace RelationsInspector
 
 		public IEnumerator Compute(GraphLayoutParameters settings)
 		{
+            if ( !positions.Any() )
+                yield break;
+
             this.settings = settings;
 			int iterationId = 0;
 			while (iterationId++ < settings.numIterations)

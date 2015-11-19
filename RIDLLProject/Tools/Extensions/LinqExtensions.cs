@@ -7,6 +7,9 @@ namespace RelationsInspector.Extensions
 	{
 		public static HashSet<T> ToHashSet<T>(this IEnumerable<T> sequence)
 		{
+            if ( sequence == null )
+                throw new System.ArgumentException( "sequence" );
+
 			return new HashSet<T>(sequence);
 		}
 

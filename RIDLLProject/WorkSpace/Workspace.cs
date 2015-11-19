@@ -50,15 +50,15 @@ namespace RelationsInspector
 
             // create new layout params, they are not comming from the cfg yet
 			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);			
-			graphPosTweens = new TweenCollection();
+			this.graphPosTweens = new TweenCollection();
 
-            seedEntities = graphBackend.Init(targets, API ).ToHashSet();
-            builderRNG = new RNG( 4 ); // chosen by fair dice role. guaranteed to be random.
+            this.seedEntities = graphBackend.Init( targets, API ).ToHashSet();
+            this.builderRNG = new RNG( 4 ); // chosen by fair dice role. guaranteed to be random.
 
             // when targets is null, show the toolbar only. don't create a graph (and view)
             // when rootEntities is empty, create graph and view anyway, so the user can add entities
-            if (targets != null)
-                InitGraph(targets);
+            if ( targets != null )
+                InitGraph();
 		}
 
 		string GetPrefsKeyLayout()
@@ -66,7 +66,7 @@ namespace RelationsInspector
 			return System.IO.Path.Combine(graphBackend.GetType().ToString(), "LayoutType");
 		}
 
-		void InitGraph(object[] targets)
+		void InitGraph()
 		{
             graph = GraphBuilder<T, P>.Build(seedEntities, graphBackend.GetRelations, builderRNG, Settings.Instance.maxGraphNodes);
             if (graph == null)
