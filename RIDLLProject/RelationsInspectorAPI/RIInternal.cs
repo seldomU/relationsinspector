@@ -184,12 +184,12 @@ namespace RelationsInspector
         IWorkspace CreateWorkspace()
         {
             var backendArguments = BackendUtil.GetGenericArguments(selectedBackendType);
-            Type entityType = backendArguments[0];
+            Type entityType = BackendUtil.BackendAttrType(selectedBackendType) ?? backendArguments[0];
             Type relationTagType = backendArguments[1];
 
             var genericWorkspaceType = typeof(Workspace<,>).MakeGenericType(backendArguments);
             var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
-            var targetArray = TypeUtil.MakeObjectsAssignable( targetObjects, entityType );
+            var targetArray = TypeUtil.MakeObjectsAssignable( targetObjects, entityType ).ToArray();
             var ctorArguments = new object[]
             {
                 selectedBackendType,
@@ -240,13 +240,13 @@ namespace RelationsInspector
             else
             {
                 // find all possible backend entity types that can be derived from the set of target objects
-                var targetTypes = TypeUtil.GetTypesAssignableFrom(targetObjects.Select(obj => obj.GetType()));
-                var targetComponentTypes = TypeUtil.GetSharedComponentTypes( targetObjects );
-                var backendEntityTypes = targetTypes.Union( targetComponentTypes );
+                var entityTypes = TypeUtil.GetValidEntityTypes( targetObjects );
 
                 // find all backends that accept any of the possible entity types
                 validBackendTypes = allBackendTypes
-                    .Where( backendType => BackendUtil.IsEntityTypeAssignableFromAny( backendType, backendEntityTypes ) )
+                    .Where( backendType => 
+                        BackendUtil.IsEntityTypeAssignableFromAny( backendType, entityTypes ) ||
+                        BackendUtil.BackendAttributeFitsAny( backendType, entityTypes) )
                     .ToList();
             }
 

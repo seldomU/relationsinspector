@@ -112,5 +112,11 @@ namespace RelationsInspector
             var attributes = backendType.GetCustomAttributes<RelationsInspectorAttribute>(true);
             return attributes.Any(attr => types.Any(t => attr.type.IsAssignableFrom(t)));
         }
+
+        internal static Type BackendAttrType( Type backendType )
+        {
+            var attr = backendType.GetCustomAttributes<RelationsInspectorAttribute>( true ).FirstOrDefault();
+            return (attr== null ) ? null : attr.type;
+        }
     }
 }

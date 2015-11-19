@@ -162,6 +162,13 @@ namespace RelationsInspector
 				   SingleOrDefault(assembly => assembly.GetName().Name == name);
 		}
 
+        // valid entity types are either assignable from all the objects, or are component types that all objects share
+        internal static IEnumerable<Type> GetValidEntityTypes( IEnumerable<object> objects )
+        {
+            return GetTypesAssignableFrom( objects.Select( obj => obj.GetType() ) ).
+                Union( GetSharedComponentTypes( objects ) );
+        }
+
         // returns the types and their basetypes of all components that are shared between the given GameObjects
         // returns empty set if any of the objects is not a GameObject (or if they share no components)
         internal static IEnumerable<Type> GetSharedComponentTypes( IEnumerable<object> objects )
@@ -204,18 +211,34 @@ namespace RelationsInspector
 
         // returns representations of the given objects that are assignable to targetType
         // so that the resulting objects can be used as entities of a backend which uses taretType as entity type
-        internal static object[] MakeObjectsAssignable( IEnumerable<object> objects, Type targetType )
+        internal static IEnumerable<object> MakeObjectsAssignable( IEnumerable<object> objects, Type targetType )
         {
             if ( objects == null )
-                return null;
+                yield break;
 
-            return objects
-                .Select( obj => 
-                    targetType.IsAssignableFrom( obj.GetType() ) ? 
-                    obj : 
-                    GetGameObjectComponentOfType( obj, targetType ) 
-                )
-                .ToArray();
+            foreach ( var obj in objects )
+            {
+                if ( targetType.IsAssignableFrom( obj.GetType() ) )
+                {
+                    yield return obj;
+                    continue;
+                }
+
+                var componentOfType = GetGameObjectComponentOfType( obj, targetType );
+                if ( componentOfType != null )
+                {
+                    yield return componentOfType;
+                    continue;
+                }
+
+                throw new ArgumentException(
+                    string.Format(
+                        "unable to make object {0} of type {1} assignable to type {2}",
+                        obj,
+                        obj.GetType(),
+                        targetType )
+                        );
+            }
         }
     }
 }
