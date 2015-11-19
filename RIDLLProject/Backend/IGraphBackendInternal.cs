@@ -9,6 +9,7 @@ namespace RelationsInspector
         System.Type GetDecoratedType();
         // initialize the backend object
         IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api);
+        void OnDestroy();
         IEnumerable<Relation<T, P>> GetRelations(T entity);
         void CreateEntity(Vector2 position);
         void CreateRelation(T source, T target, P tag);

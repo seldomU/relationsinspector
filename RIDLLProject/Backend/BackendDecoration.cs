@@ -26,6 +26,11 @@ namespace RelationsInspector
             return backend.Init( targets, api );
         }
 
+        public void OnDestroy()
+        {
+            backend.OnDestroy();
+        }
+
         public IEnumerable<Relation<T, P>> GetRelations( T entity )
         {
             return backend.GetRelations( entity ).Select( rel => rel.Copy() );
@@ -108,6 +113,11 @@ namespace RelationsInspector
         public IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
         {
             return backend.Init(targets, api);
+        }
+
+        public void OnDestroy()
+        {
+            backend.OnDestroy();
         }
 
         public IEnumerable<Relation<T, P>> GetRelations(T entity)

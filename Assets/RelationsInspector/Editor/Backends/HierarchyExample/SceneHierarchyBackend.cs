@@ -13,9 +13,10 @@ namespace RelationsInspector.Backend.SceneHierarchy
 		{
             return (targets == null) ? Enumerable.Empty<Object>() : targets.OfType<Object>();
         }
-		
-		// this backend is only for display
-		// so don't perform any graph modification
+
+        // this backend is only for display
+        // so don't perform any graph modification
+        public void OnDestroy() { }
 		public void CreateEntity(Vector2 position) { }
 		public void CreateRelation(Object source, Object target, string tag) { }
 		public void OnEntityContextClick(IEnumerable<Object> entities, GenericMenu contextMenu ) { }

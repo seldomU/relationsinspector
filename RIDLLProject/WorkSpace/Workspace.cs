@@ -229,6 +229,7 @@ namespace RelationsInspector
         {
             if ( graph != null && Settings.Instance.cacheLayouts )
                 GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetDecoratedType());
+            graphBackend.OnDestroy();
         }
 
 		void DoAutoLayout()
