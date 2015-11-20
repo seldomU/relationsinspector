@@ -109,13 +109,13 @@ namespace RelationsInspector
         // true if any of the given types can be passed as a RI attribute type
         internal static bool BackendAttributeFitsAny(Type backendType, IEnumerable<Type> types)
         {
-            var attributes = backendType.GetCustomAttributes<RelationsInspectorAttribute>(true);
+            var attributes = backendType.GetCustomAttributes<AcceptTargetsAttribute>(true);
             return attributes.Any(attr => types.Any(t => attr.type.IsAssignableFrom(t)));
         }
 
         internal static Type BackendAttrType( Type backendType )
         {
-            var attr = backendType.GetCustomAttributes<RelationsInspectorAttribute>( true ).FirstOrDefault();
+            var attr = backendType.GetCustomAttributes<AcceptTargetsAttribute>( true ).FirstOrDefault();
             return (attr== null ) ? null : attr.type;
         }
     }

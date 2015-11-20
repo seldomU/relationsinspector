@@ -85,7 +85,7 @@
     <Compile Include="Layout\LayoutType.cs" />
     <Compile Include="Layout\TreeLayoutAlgorithm.cs" />
     <Compile Include="Settings\ProjectSettings.cs" />
-    <Compile Include="RelationsInspectorAttribute.cs" />
+    <Compile Include="Backend\AcceptTargetsAttribute.cs" />
     <Compile Include="RelationsInspectorWindow.cs" />
     <Compile Include="RelationsInspectorAPI\RIInternal.cs" />
     <Compile Include="Serialization\GraphPosSerialization.cs" />
