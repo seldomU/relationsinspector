@@ -13,8 +13,7 @@ namespace RelationsInspector
             string title = "Relations inspector";
 
 #endif
-
-            GUILayout.Label( title + " " + ProjectSettings.ProgramVersion);
+            GUILayout.Label( title + " " + GetType().Assembly.GetName().Version.ToString() );
         }
 
         internal static void Spawn()

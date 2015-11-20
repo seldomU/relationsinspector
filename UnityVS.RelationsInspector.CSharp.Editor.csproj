@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>4.3.0f4</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -77,9 +75,6 @@
     <Reference Include="Unity.PackageManager">
       <HintPath>Library\UnityAssemblies\Unity.PackageManager.dll</HintPath>
     </Reference>
-    <Reference Include="RelationsInspector">
-      <HintPath>Assets\RelationsInspector\Editor\RelationsInspector.dll</HintPath>
-    </Reference>
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>Assets\UnityVS\Editor\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
@@ -88,6 +83,9 @@
     </Reference>
     <Reference Include="UnityVS.VersionSpecific">
       <HintPath>Assets\UnityVS\Editor\UnityVS.VersionSpecific.dll</HintPath>
+    </Reference>
+    <Reference Include="RelationsInspector">
+      <HintPath>Assets\RelationsInspector\Editor\RelationsInspector.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,7 @@ class BuildPackage
     static string projectToBuild = projectPath + @"RIDLLProject\RelationsInspectorLib.csproj";
     const string releaseBuildConfig = "/property:Configuration=Release;DefineConstants=\"RELEASE\"";
     const string demoBuildConfig = "/property:Configuration=Release;DefineConstants=\"RELEASE;RIDEMO\"";
-    const string buildTarget = "/target:Rebuild";
+    const string buildTarget = @"/target:Rebuild";
     const string relDllPath = @"Assets\RelationsInspector\Editor\RelationsInspector.dll";
     static string dllPath = projectPath + relDllPath;
 
@@ -37,54 +37,8 @@ class BuildPackage
         public Func<bool> isCompleted;
         public float maxDuration;
     }
-    /*public static void Release()
-    {
-        var log = new StringBuilder();
 
-        // compile the dll
-        var buildArgs = new[] { projectToBuild, buildTarget, releaseBuildConfig };
-        RunSysCmd( msbuildPath, buildArgs, log );
-
-        // zip the ri dll source
-        RunSysCmd( zipPath, new[] { "a", "-tzip", absSourceArchivePath, sourceCodePath, excludePatterns }, log );
-
-        System.Func<bool> contentFilesReady = () => File.Exists( absSourceArchivePath ) && File.Exists( dllPath ) ;
-        WaitFor( contentFilesReady, 2000 );
-
-        // build the package
-        ExportPackage.DoExportPackage();
-
-        // wait for the package
-        WaitFor( () => File.Exists( projectPath + ExportPackage.releasePackageName ), 5000 );
-
-        // remove the source archive
-        File.Delete( absSourceArchivePath );
-
-        // flush the log
-        File.WriteAllText( logFilePath, log.ToString() );
-    }
-
-    public static void Demo()
-    {
-        var log = new StringBuilder();
-
-        var buildArgs = new[] { projectToBuild, buildTarget, demoBuildConfig };
-        RunSysCmd( msbuildPath, buildArgs, log );
-
-        // precaution: remove the source zip, if it somehow exists
-        File.Delete( absSourceArchivePath );
-
-        System.Func<bool> contentFilesReady = () => !File.Exists( absSourceArchivePath ) && File.Exists( dllPath );
-        WaitFor( contentFilesReady, 2000 );
-
-        // build the package
-        ExportPackage.DoExportDemoPackage();
-
-        // flush the log
-        File.WriteAllText( logFilePath, log.ToString() );
-    }*/
-
-        [MenuItem("Window/Build release")]
+    [MenuItem("Window/Build release")]
     public static void Release()
     {
         Build( false );
@@ -96,15 +50,51 @@ class BuildPackage
         Build( true );
     }
 
+    static string PackageName( bool demo )
+    {
+        return demo ? ExportPackage.demoPackageName : ExportPackage.releasePackageName;
+    }
+
+    static string TryCopy( string sourcePath, string targetPath )
+    {
+        try
+        {
+            File.Copy( sourcePath, targetPath );
+        }
+        catch ( Exception e )
+        {
+            return string.Format( "failed to copy {0} to {1}, exception: {2}", sourcePath, targetPath, e );
+        }
+        return string.Empty;
+    }
+
     static void Build( bool demo )
     {
         string log = DoBuildPackage( demo );
 
+        // use the dll version as build id
+        // if the dll is missing, use the date instead
+        string buildId;
+        try
+        {
+            buildId = System.Reflection.AssemblyName.GetAssemblyName( relDllPath ).Version.ToString();
+        }
+        catch (Exception e)
+        {
+            log += "\nFailed to retrieve assembly version: " + e.ToString();
+            // fall back to date-based naming
+            buildId = DateTime.Now.ToString( "yyyy-MM-dd-HH-mm-ss" ) + ".txt";
+        }
+
+        // copy the package
+        string buildDir = logDir + "Log" + buildId + @"\";
+        Directory.CreateDirectory( buildDir );
+        log += TryCopy( projectPath + PackageName( demo ), buildDir + PackageName( demo ) );
+
         // flush the log
-        string uniquePath = logDir + logFileName + DateTime.Now.ToString( "yyyy-MM-dd-HH-mm-ss" ) + ".txt";
+        string uniquePath = buildDir + logFileName + buildId + ".txt";
         string path = logDir + logFileName + ".txt";
         string text = log.ToString();
-
         File.WriteAllText( uniquePath, text);
         File.WriteAllText( path, text );
 
@@ -143,7 +133,15 @@ class BuildPackage
         return new BuildStep()
         {
             title = "Deleting " + path,
-            action = () => { File.Delete( path ); return ""; },
+            action = () => 
+            {
+                if ( File.Exists( path ) )
+                {
+                    File.SetAttributes( path, FileAttributes.Normal );
+                    File.Delete( path );
+                }
+                return "";
+            },
             isCompleted = () => !File.Exists( path ),
             maxDuration = 1000
         };
@@ -192,7 +190,7 @@ class BuildPackage
         } );
 
         // build the package
-        string packagePath = projectPath + ( demo ? ExportPackage.demoPackageName : ExportPackage.releasePackageName );
+        string packagePath = projectPath + PackageName( demo );
         steps.Add( new BuildStep()
         {
             title = "exporting asset package to " + packagePath,
