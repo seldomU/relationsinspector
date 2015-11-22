@@ -1,10 +1,19 @@
 using System;
+using System.Linq;
 
 namespace RelationsInspector.Extensions
 {
     public static class TypeExtensions
 	{
-		public static bool Implements(this Type candidateType, Type interfaceType)
+        public static bool IsOpen( this Type type )
+        {
+            if ( type == null )
+                throw new ArgumentException( "type" );
+
+            return type.GetGenericArguments().Any( arg => arg.IsGenericParameter );
+        }
+
+	    public static bool Implements(this Type candidateType, Type interfaceType)
 		{
 			return (
 				interfaceType.IsInterface && 

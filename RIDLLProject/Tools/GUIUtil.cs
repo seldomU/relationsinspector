@@ -52,31 +52,19 @@ namespace RelationsInspector
 			return EditorPrefs.GetString(prefsKey);
 		}
 
-		public static void SetPrefsType(string localKey, Type value)
+		public static void SetPrefsBackendType(string localKey, Type value)
 		{
 			SetPrefsString(localKey, value.ToString());
 		}
 		
-		public static Type GetPrefsType(string localKey)
+		public static Type GetPrefsBackendType(string localKey)
 		{
 			string typeName = GetPrefsString(localKey);
-			return TypeUtil.GetType(typeName);
-		}
+            if ( string.IsNullOrEmpty( typeName ) )
+                return null;
 
-		/*public static T GetPrefsEnum<T>(string localKey) where T : System.Enum
-		{
-			return (T)(Enum)(object)GetPrefsInt(localKey);
+            return BackendUtil.backendTypes.SingleOrDefault( t => t.ToString() == typeName );  //.Split( '`' )[ 0 ]
 		}
-
-		public static T GetPrefsEnum<T>(string localKey, T defaultValue) where T : System.Enum
-		{
-			return (T)(Enum)(object)GetPrefsInt(localKey, (int)(object)defaultValue);
-		}
-
-		public static void SetPrefsEnum<T>(string localKey, T enumValue) where T : System.Enum
-		{
-			SetPrefsInt(localKey, (int)(object)enumValue);
-		}*/
 
 		/// Creates a toolbar that is filled from an Enum. (CC-BY-SA, from http://wiki.unity3d.com/index.php?title=EditorGUIExtension)
 		public static Enum EnumToolbar(string prefixLabel, Enum selected, GUIStyle style, params GUILayoutOption[] options)

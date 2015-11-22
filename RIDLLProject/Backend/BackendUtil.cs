@@ -23,7 +23,7 @@ namespace RelationsInspector
 
         internal static readonly HashSet<Type> backEndInterfaces = backendToDecorator.Keys.ToHashSet();
 
-        static readonly Type[] backendTypes = backendSearchAssemblies
+        public static readonly Type[] backendTypes = backendSearchAssemblies
             .SelectMany( asm => asm.GetTypes() )
             .Where( t => IsBackendType( t ) )
             .ToArray();
@@ -31,12 +31,6 @@ namespace RelationsInspector
         static readonly Type autoBackendType = backendTypes
             .Where( IsAutoBackend )
             .SingleOrDefault();
-
-        // returns all types implementing IGraphBackend in the eligible assemblies
-        internal static IEnumerable<Type> GetClosedBackendTypes()
-        {
-            return backendTypes.Where( t => !IsOpenBackendType( t ) );
-        }
 
         internal static Type GetBackendInterface(Type potentialBackendType)
         {

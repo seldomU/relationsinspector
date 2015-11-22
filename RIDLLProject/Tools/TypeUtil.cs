@@ -9,25 +9,6 @@ namespace RelationsInspector
     internal static class TypeUtil
 	{
 		
-		// return type for given typeName, search all assemblies
-		internal static Type GetType(string typeName)
-		{
-			if (string.IsNullOrEmpty(typeName))
-				return null;
-
-			// remove any trailing generic arguments
-			typeName = typeName.Split('[')[0];
-
-			var assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
-			foreach (var asm in assemblies)
-			{
-				var type = asm.GetType(typeName, false);
-				if (type != null)
-					return type;
-			}
-			return null;
-		}
-		
 		// get common interfaces and the most specific base type (not all base types)
 		internal static IEnumerable<Type> GetTypesAssignableFrom(IEnumerable<Type> types)
 		{

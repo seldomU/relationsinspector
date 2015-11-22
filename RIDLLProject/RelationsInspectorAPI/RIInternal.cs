@@ -32,7 +32,8 @@ namespace RelationsInspector
             this.ShowNotification = ShowNotification;
             this.window = window;
             
-            validBackendTypes = allBackendTypes = BackendUtil.GetClosedBackendTypes().ToList();
+            // all closed backend types are eligible
+            validBackendTypes = allBackendTypes = BackendUtil.backendTypes.Where( t=>!t.IsOpen() ).ToList();
 
             targetHistory = new RIStateHistory();
 
@@ -43,7 +44,7 @@ namespace RelationsInspector
             if (fallbackBackendType == null)
                 fallbackBackendType = validBackendTypes.FirstOrDefault();
 
-            selectedBackendType = GUIUtil.GetPrefsType(PrefsKeyDefaultBackend) ?? fallbackBackendType;
+            selectedBackendType = GUIUtil.GetPrefsBackendType(PrefsKeyDefaultBackend) ?? fallbackBackendType;
 
             if (!allBackendTypes.Any())
             {
@@ -324,7 +325,9 @@ namespace RelationsInspector
             if (EditorGUI.EndChangeCheck())
             {
                 var newSelection = validBackendTypes[selectedBackendId];
-                GUIUtil.SetPrefsType(PrefsKeyDefaultBackend, newSelection);
+                // don't save constructed types (because we can't deserialize them yet)
+                if ( !newSelection.GetGenericArguments().Any() )
+                    GUIUtil.SetPrefsBackendType(PrefsKeyDefaultBackend, newSelection);
                 SetBackend(newSelection);
             }
 
