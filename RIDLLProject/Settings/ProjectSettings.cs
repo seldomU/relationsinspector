@@ -6,6 +6,7 @@ namespace RelationsInspector
     public static class ProjectSettings
 	{
 		public const string DefaultBackendClassName = "SceneHierarchyBackend";
+        public const string AutoBackendClassName = "RIAutoBackend";
 		public const string EditorPrefsProjectPrefix = "Relations inspector";
 
 		public const string resourcesDirectoryName = "RelationsInspectorResources";

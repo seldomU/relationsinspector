@@ -75,6 +75,9 @@
     <Reference Include="Unity.PackageManager">
       <HintPath>Library\UnityAssemblies\Unity.PackageManager.dll</HintPath>
     </Reference>
+    <Reference Include="RelationsInspector">
+      <HintPath>Assets\RelationsInspector\Editor\RelationsInspector.dll</HintPath>
+    </Reference>
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>Assets\UnityVS\Editor\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
@@ -84,14 +87,13 @@
     <Reference Include="UnityVS.VersionSpecific">
       <HintPath>Assets\UnityVS\Editor\UnityVS.VersionSpecific.dll</HintPath>
     </Reference>
-    <Reference Include="RelationsInspector">
-      <HintPath>Assets\RelationsInspector\Editor\RelationsInspector.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\BackendUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\DrawUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\MinimalBackend.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\RIAutoBackend.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ReflectionUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ScriptableObjectBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ScriptableObjectBackendToolbar.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\Backends\HierarchyExample\SceneHierarchyBackend.cs" />

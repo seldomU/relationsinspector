@@ -23,13 +23,19 @@ namespace RelationsInspector
 
         internal static readonly HashSet<Type> backEndInterfaces = backendToDecorator.Keys.ToHashSet();
 
+        static readonly Type[] backendTypes = backendSearchAssemblies
+            .SelectMany( asm => asm.GetTypes() )
+            .Where( t => IsBackendType( t ) )
+            .ToArray();
+
+        static readonly Type autoBackendType = backendTypes
+            .Where( IsAutoBackend )
+            .SingleOrDefault();
+
         // returns all types implementing IGraphBackend in the eligible assemblies
-        internal static List<Type> GetNonGenericBackendTypes()
+        internal static IEnumerable<Type> GetClosedBackendTypes()
         {
-            return backendSearchAssemblies
-                .SelectMany(asm => asm.GetTypes())
-                .Where( t => IsBackendType(t) && !GetGenericArguments(t).Any(arg => arg.IsGenericParameter ) )
-                .ToList();
+            return backendTypes.Where( t => !IsOpenBackendType( t ) );
         }
 
         internal static Type GetBackendInterface(Type potentialBackendType)
@@ -47,6 +53,12 @@ namespace RelationsInspector
             return GetBackendInterface(candidateType) != null;
         }
 
+        internal static bool IsOpenBackendType( Type backendType )
+        {
+            return GetGenericArguments( backendType )
+                .Any( arg => arg.IsGenericParameter );
+        }
+
         // returns the type parameters of IGraphBackend that backend uses
         // assumes that backend implements IGraphBackend
         internal static Type[] GetGenericArguments(Type backendType)
@@ -56,6 +68,22 @@ namespace RelationsInspector
                 throw new ArgumentException(backendType + " does not implement a backend interface");
 
             return backendInterface.GetGenericArguments();
+        }
+
+        internal static IEnumerable<Type> GetAutoBackendTypes( IEnumerable<Type> entityTypes )
+        {
+            if ( autoBackendType == null )
+                return Enumerable.Empty<Type>();
+            
+            return entityTypes
+                .Where( type => type.GetCustomAttributes<AutoBackendAttribute>( false ).Any() )
+                .Select( type => autoBackendType.MakeGenericType( new[] { type } ) ); 
+        }
+
+        internal static bool IsAutoBackend( Type backendType )
+        {
+            // not so good
+            return backendType.Name.StartsWith( ProjectSettings.AutoBackendClassName );
         }
 
         internal static bool? DoesBackendForceLayoutSaving(Type backendType)
@@ -79,20 +107,25 @@ namespace RelationsInspector
             return decoratorInterface;
         }
 
-        internal static object CreateBackendDecorator(System.Type backendType)
+        internal static object CreateBackendDecorator(Type backendType)
         {
             Type decoratorType = GetDecoratorInterface(backendType).MakeGenericType( GetGenericArguments(backendType) );
-            var ctorArgs = new object[] { System.Activator.CreateInstance(backendType) };
-            return System.Activator.CreateInstance(decoratorType, ctorArgs );
+            var ctorArgs = new object[] { Activator.CreateInstance(backendType) };
+            return Activator.CreateInstance(decoratorType, ctorArgs );
         }
 
 
-        internal static Type GetMostSpecificBackend(IList<Type> backends)
+        internal static Type GetMostSpecificBackendType(IList<Type> backendTypes)
         {
-            if (backends == null || backends.Count() == 0)
+            if (backendTypes == null || backendTypes.Count() == 0)
                 return null;
 
-            var groups = backends.GroupBy(backend => GetGenericArguments(backend).First());
+            // prefer auto-backends
+            var autoBackendTypes = backendTypes.Where( IsAutoBackend );
+            if ( autoBackendTypes.Any() )
+                return autoBackendTypes.First();
+
+            var groups = backendTypes.GroupBy(backend => GetGenericArguments(backend).First());
             var entityTypes = groups.Select(group => group.Key).ToHashSet();
 
             var bestEntityType = TypeUtil.GetMostSpecificType(entityTypes);

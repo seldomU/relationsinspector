@@ -32,7 +32,7 @@ namespace RelationsInspector
             this.ShowNotification = ShowNotification;
             this.window = window;
             
-            validBackendTypes = allBackendTypes = BackendUtil.GetNonGenericBackendTypes();
+            validBackendTypes = allBackendTypes = BackendUtil.GetClosedBackendTypes().ToList();
 
             targetHistory = new RIStateHistory();
 
@@ -236,23 +236,28 @@ namespace RelationsInspector
 
         void UpdateBackend()
         {
-            if (targetObjects == null || !targetObjects.Any())
-                validBackendTypes = allBackendTypes.ToList();
-            else
-            {
-                // find all possible backend entity types that can be derived from the set of target objects
-                var entityTypes = TypeUtil.GetValidEntityTypes( targetObjects );
-
-                // find all backends that accept any of the possible entity types
-                validBackendTypes = allBackendTypes
-                    .Where( backendType => 
-                        BackendUtil.IsEntityTypeAssignableFromAny( backendType, entityTypes ) ||
-                        BackendUtil.BackendAttributeFitsAny( backendType, entityTypes) )
-                    .ToList();
-            }
+            validBackendTypes = GetValidBackendTypes( targetObjects, allBackendTypes ).ToList();
 
             if (!validBackendTypes.Contains(selectedBackendType))
-                selectedBackendType = BackendUtil.GetMostSpecificBackend(validBackendTypes);
+                selectedBackendType = BackendUtil.GetMostSpecificBackendType(validBackendTypes);
+        }
+
+        static IEnumerable<Type> GetValidBackendTypes( IEnumerable<object> targetEntities, IEnumerable<Type> backendTypes )
+        {
+            if ( targetEntities == null || !targetEntities.Any() )
+                return backendTypes;
+
+            var entityTypes = TypeUtil.GetValidEntityTypes( targetEntities );
+
+            var autoBackendTypes = BackendUtil.GetAutoBackendTypes( entityTypes );
+
+            var matchingBackendTypes = backendTypes
+                .Where( t => !t.IsGenericType )
+                .Where( backendType =>
+                        BackendUtil.IsEntityTypeAssignableFromAny( backendType, entityTypes ) ||
+                        BackendUtil.BackendAttributeFitsAny( backendType, entityTypes ) );
+
+            return autoBackendTypes.Concat( matchingBackendTypes );
         }
 
         internal void OnSelectionChange()
