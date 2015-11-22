@@ -320,7 +320,7 @@ namespace RelationsInspector
             int selectedBackendId = selectedBackendType != null ? validBackendTypes.IndexOf(selectedBackendType) : -1;
             float popupWidth = selectedBackendType == null ? 150 : EditorStyles.toolbarPopup.CalcSize(new GUIContent(selectedBackendType.Name)).x + 5;
             EditorGUI.BeginChangeCheck();
-            selectedBackendId = EditorGUILayout.Popup(selectedBackendId, validBackendTypes.Select(t => t.Name).ToArray(), EditorStyles.toolbarPopup, GUILayout.Width(popupWidth));
+            selectedBackendId = EditorGUILayout.Popup(selectedBackendId, validBackendTypes.Select( TypeName ).ToArray(), EditorStyles.toolbarPopup, GUILayout.Width(popupWidth));
             if (EditorGUI.EndChangeCheck())
             {
                 var newSelection = validBackendTypes[selectedBackendId];
@@ -341,6 +341,13 @@ namespace RelationsInspector
                 SettingsMenu.Create();
 
             EditorGUILayout.EndHorizontal();
+        }
+
+        string TypeName( Type t )
+        {
+            if ( !t.IsGenericType )
+                return t.Name;
+            return t.Name.Remove( t.Name.IndexOf( '`' ) ) + " of " + t.GetGenericArguments()[ 0 ].Name;
         }
 
         internal void Update()
