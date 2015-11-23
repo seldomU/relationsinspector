@@ -129,12 +129,26 @@ namespace RelationsInspector
 			return LoadAsset<T>(path);
 		}
 
-		internal static string AssetToSystemPath(string path)
-		{
-			return Application.dataPath.Replace("Assets", "") + path; 
-		}
+        internal static string AbsolutePathToAssetPath( string path )
+        {
+            path = path.Replace( "\\", "/" );
+            var assetsPath = Application.dataPath;
+            if ( path == null || !path.StartsWith( assetsPath ) )
+                throw new System.ArgumentException( "path is " + path + " assetsPath is " + assetsPath );
 
-		internal static bool AssetPathExists(string path)
+            return "Assets" + path.Substring( assetsPath.Length );
+        }
+
+        internal static string AssetToSystemPath( string path )
+        {
+            var assetsPath = Application.dataPath;
+            if ( path == null || !path.StartsWith( "Assets" ) )
+                throw new System.ArgumentException( "path is " + path );
+
+            return assetsPath.Replace( "Assets", "" ) + path;
+        }
+
+        internal static bool AssetPathExists(string path)
 		{
 			return System.IO.File.Exists( AssetToSystemPath(path ) );
 		}

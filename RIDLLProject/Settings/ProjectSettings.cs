@@ -16,14 +16,15 @@ namespace RelationsInspector
         const string lightSkinName = "RIWindowLightSkin.asset";
         const string SettingsFileName = "Settings.asset";
 
-        public const string expectedRIBasePath = @"Assets\RelationsInspector\Editor";
-        public const string dllName = "RelationsInspector.dll";
-        public const string ProgramVersion = "1.0.0";
-
-
         public static string[] obligatoryFileNames = new[]
 		{
-			"ArrowHead.png", "nextIconDark.png", "nextIconLight.png", "prevIconDark.png", "prevIconLight.png", "settingsIconLight.png", "settingsIconDark.png"
+			"ArrowHead.png",
+            "nextIconDark.png",
+            "nextIconLight.png",
+            "prevIconDark.png",
+            "prevIconLight.png",
+            "settingsIconLight.png",
+            "settingsIconDark.png"
 		};
 
         public static string RIBasePath { get; private set; }
@@ -35,25 +36,19 @@ namespace RelationsInspector
 
         static ProjectSettings()
         {
-            RIBasePath = FindRIBasePath();
+            RIBasePath = GetRIBasePath();
             LayoutCachesPath = GetAbsoluteRIDirectoryPath( layoutCacheDirectoryName );
             ResourcesPath = GetAbsoluteRIDirectoryPath( resourcesDirectoryName );
             SettingsPath = Path.Combine( ResourcesPath, SettingsFileName );
             LightSkinPath = Path.Combine( ResourcesPath, lightSkinName );
             DarkSkinPath = Path.Combine( ResourcesPath, darkSkinName );
-    }
+        }
 
-        static string FindRIBasePath()
+        static string GetRIBasePath()
         {
-            if ( Directory.Exists( expectedRIBasePath ) )
-                return expectedRIBasePath;
-
-            string path = Directory.GetFiles( "Assets", dllName, SearchOption.AllDirectories ).SingleOrDefault();
-            if ( !string.IsNullOrEmpty( path ) )
-                return Path.GetDirectoryName( path );   // path has to be absolute
-
-            // no dll, no party. The editor should throw a warning and die
-            return null;
+            string dllAbsPath = System.Reflection.Assembly.GetAssembly( typeof( RelationsInspectorWindow ) ).Location;
+            string dllAssetPath = Util.AbsolutePathToAssetPath( dllAbsPath );
+            return Path.GetDirectoryName( dllAssetPath );
         }
 
         static string GetAbsoluteRIDirectoryPath( string relativeDirPath )
