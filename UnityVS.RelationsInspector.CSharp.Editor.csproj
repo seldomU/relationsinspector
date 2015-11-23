@@ -102,7 +102,6 @@
     <Compile Include="Assets\RelationsInspector\Editor\Backends\SocialNetworkExample\StudyNetworkBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\RelationsInspectorMenuItem.cs" />
     <Compile Include="Assets\Stuff\Editor\BuildPackage.cs" />
-    <Compile Include="Assets\Stuff\Editor\ExportPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\RelationsInspector\Editor\README.txt" />

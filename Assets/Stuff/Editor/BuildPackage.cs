@@ -4,10 +4,14 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEditor;
 using System.Linq;
+using System.Diagnostics;
 
 class BuildPackage
 {
     const string projectPath = @"I:\code\RelationsInspector\";
+
+    // root directory of the package
+    const string packageRootDir = @"Assets\RelationsInspector";
 
     // log file path
     static string logDir = projectPath + @"BuildLogs\";
@@ -16,10 +20,10 @@ class BuildPackage
     // ri dll build settings
     const string msbuildPath = @"C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe";
     static string projectToBuild = projectPath + @"RIDLLProject\RelationsInspectorLib.csproj";
-    const string releaseBuildConfig = "/property:Configuration=Release;DefineConstants=\"RELEASE\"";
-    const string demoBuildConfig = "/property:Configuration=Release;DefineConstants=\"RELEASE;RIDEMO\"";
     const string buildTarget = @"/target:Rebuild";
     const string relDllPath = @"Assets\RelationsInspector\Editor\RelationsInspector.dll";
+    const string relPDBPath = @"Assets\RelationsInspector\Editor\RelationsInspector.pdb";
+    const string relMDBPath = @"Assets\RelationsInspector\Editor\RelationsInspector.dll.mdb";
     static string dllPath = projectPath + relDllPath;
 
     // ri dll zip settings
@@ -29,6 +33,45 @@ class BuildPackage
     static string absSourceArchivePath = projectPath + relSourceArchivePath;
     const string excludePatterns = "-xr!obj -xr!bin -xr!.vs -x!*.csproj -x!*.sln -x!*.suo -x!*.user -x!DemoRestriction.cs";
 
+    enum BuildMode { Release, Debug, Demo };
+
+    class BuildSettings
+    {
+        public string config;
+        public string packageName;
+        public string[] requiredPaths;
+    }
+
+    static Dictionary<BuildMode, BuildSettings> buildSettings = new Dictionary<BuildMode, BuildSettings>()
+    {
+        {
+            BuildMode.Release,
+            new BuildSettings()
+            {
+                config = "/property:Configuration=Release;DefineConstants=\"RELEASE\"",
+                packageName = "RelationsInspector.unitypackage",
+                requiredPaths  = new[] {relDllPath, relSourceArchivePath }
+            }
+        },
+        {
+            BuildMode.Debug,
+            new BuildSettings()
+            {
+                config = "/property:Configuration=Debug;DefineConstants=\"DEBUG\"",
+                packageName = "RelationsInspectorDebug.unitypackage",
+                requiredPaths  = new[] { relDllPath }
+            }
+        },
+        {
+            BuildMode.Demo,
+            new BuildSettings()
+            {
+                config = "/property:Configuration=Release;DefineConstants=\"RELEASE;RIDEMO\"",
+                packageName = "RelationsInspectorDemo.unitypackage",
+                requiredPaths  = new[] { relDllPath }
+            }
+        }
+    };
 
     class BuildStep
     {
@@ -38,21 +81,24 @@ class BuildPackage
         public float maxDuration;
     }
 
+    
+
     [MenuItem("Window/Build release")]
     public static void Release()
     {
-        Build( false );
+        Build( BuildMode.Release );
     }
 
     [MenuItem( "Window/Build demo" )]
     public static void Demo()
     {
-        Build( true );
+        Build( BuildMode.Demo );
     }
 
-    static string PackageName( bool demo )
+    [MenuItem( "Window/Build debug" )]
+    public static void Debug()
     {
-        return demo ? ExportPackage.demoPackageName : ExportPackage.releasePackageName;
+        Build( BuildMode.Debug );
     }
 
     static string TryCopy( string sourcePath, string targetPath )
@@ -68,9 +114,9 @@ class BuildPackage
         return string.Empty;
     }
 
-    static void Build( bool demo )
+    static void Build( BuildMode mode )
     {
-        string log = DoBuildPackage( demo );
+        string log = DoBuildPackage( mode );
 
         // use the dll version as build id
         // if the dll is missing, use the date instead
@@ -89,7 +135,8 @@ class BuildPackage
         // copy the package
         string buildDir = logDir + "Log" + buildId + @"\";
         Directory.CreateDirectory( buildDir );
-        log += TryCopy( projectPath + PackageName( demo ), buildDir + PackageName( demo ) );
+        string packageName = buildSettings[ mode ].packageName;
+        log += TryCopy( projectPath + packageName, buildDir + packageName );
 
         // flush the log
         string uniquePath = buildDir + logFileName + buildId + ".txt";
@@ -99,7 +146,7 @@ class BuildPackage
         File.WriteAllText( path, text );
 
         // return when the files are written
-        WaitFor( () => File.Exists( uniquePath ) && File.Exists( path ), 1000 );
+        WaitFor( null, () => File.Exists( uniquePath ) && File.Exists( path ), 1000 );
     }
 
     static string RunSteps( List<BuildStep> steps )
@@ -111,12 +158,15 @@ class BuildPackage
             log.AppendLine( "entering step " + step.title );
             try
             {
-                log.Append( step.action() );
-                if ( !WaitFor( step.isCompleted, step.maxDuration ) )
+                var timer = Stopwatch.StartNew();
+                log.AppendLine( "step message: " + step.action() );
+
+                if ( !WaitFor( timer, step.isCompleted, step.maxDuration ) )
                 {
-                    log.AppendLine( step.title + " timed out" );
+                    log.AppendLine( "timed out after " + timer.ElapsedMilliseconds + "ms" );
                     break;
                 }
+                log.AppendLine( "step completed after " + timer.ElapsedMilliseconds + " ms" );
             }
             catch (Exception e)
             {
@@ -132,7 +182,7 @@ class BuildPackage
     {
         return new BuildStep()
         {
-            title = "Deleting " + path,
+            title = "Deleting file " + path,
             action = () => 
             {
                 if ( File.Exists( path ) )
@@ -147,7 +197,26 @@ class BuildPackage
         };
     }
 
-    static string DoBuildPackage( bool demo )
+    static BuildStep DeleteDirectoryStep( string path )
+    {
+        return new BuildStep()
+        {
+            title = "Deleting directory " + path,
+            action = () =>
+            {
+                if ( Directory.Exists( path ) )
+                {
+                    Directory.Delete( path, true );
+                }
+
+                return "";
+            },
+            isCompleted = () => !Directory.Exists( path ),
+            maxDuration = 1000
+        };
+    }
+
+    static string DoBuildPackage( BuildMode mode )
     {
         var steps = new List<BuildStep>();
         
@@ -157,8 +226,14 @@ class BuildPackage
         // delete the source archive
         steps.Add( DeleteFileStep( absSourceArchivePath ) );
 
+        // delete skin, settings, layout caches
+        steps.Add( DeleteFileStep( RelationsInspector.ProjectSettings.LightSkinPath ) );
+        steps.Add( DeleteFileStep( RelationsInspector.ProjectSettings.DarkSkinPath ) );
+        steps.Add( DeleteFileStep( RelationsInspector.ProjectSettings.SettingsPath ) );
+        steps.Add( DeleteDirectoryStep( RelationsInspector.ProjectSettings.LayoutCachesPath ) );
+
         // build the dll
-        var config = demo ? demoBuildConfig : releaseBuildConfig;
+        string config = buildSettings[ mode ].config;
         var buildArgs = new[] { projectToBuild, buildTarget, config };
         RunSysCmd( msbuildPath, buildArgs );
         steps.Add( new BuildStep() {
@@ -169,8 +244,8 @@ class BuildPackage
         } );
 
         // archive the source
-        if ( !demo ) {
-
+        if ( mode == BuildMode.Release )
+        {
             steps.Add( new BuildStep() {
                 title = "archiving RI source to file " + relSourceArchivePath,
                 action = () => RunSysCmd( zipPath, new[] { "a", "-tzip", absSourceArchivePath, sourceCodePath, excludePatterns } ),
@@ -179,23 +254,33 @@ class BuildPackage
             } );
         }
 
+        // remove debug symbols
+        if ( mode != BuildMode.Debug )
+        {
+            steps.Add( DeleteFileStep( projectPath + relPDBPath ) );
+            steps.Add( DeleteFileStep( projectPath + relMDBPath ) );
+        }
+
         // refresh the asset db
-        string[] requiredAssetPaths = demo ? new[] { relDllPath } : new[] { relDllPath, relSourceArchivePath };
         steps.Add( new BuildStep()
         {
             title = "refreshing asset db",
             action = () => { AssetDatabase.Refresh(); return ""; },
-            isCompleted = () => requiredAssetPaths.All( path => AssetExists( path ) ),
+            isCompleted = () => buildSettings[mode].requiredPaths.All( path => AssetExists( path ) ),
             maxDuration = 3000
         } );
 
         // build the package
-        string packagePath = projectPath + PackageName( demo );
+        string packageName = buildSettings[ mode ].packageName;
         steps.Add( new BuildStep()
         {
-            title = "exporting asset package to " + packagePath,
-            action = () => { ExportPackage.CreatePackage( demo ); return ""; },
-            isCompleted = () => File.Exists(packagePath),
+            title = "exporting asset package to " + projectPath + packageName,
+            action = () => 
+            {
+                AssetDatabase.ExportPackage( packageRootDir, packageName, ExportPackageOptions.Recurse );
+                return string.Empty;
+            },
+            isCompleted = () => File.Exists(packageName),
             maxDuration = 4000
         } );
 
@@ -241,9 +326,11 @@ class BuildPackage
 
     // stalls execution until condition is true or maxTime has passed
     // returns true if condition is true
-    public static bool WaitFor( Func<bool> condition, float maxTime )
+    public static bool WaitFor( Stopwatch timer, Func<bool> condition, float maxTime )
     {
-        var timer = System.Diagnostics.Stopwatch.StartNew();
+        if ( timer == null )
+            timer = Stopwatch.StartNew();
+
         while ( !condition() )
         {
             if ( timer.ElapsedMilliseconds > maxTime )
