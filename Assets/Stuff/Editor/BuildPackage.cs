@@ -116,7 +116,17 @@ class BuildPackage
 
     static void Build( BuildMode mode )
     {
-        string log = DoBuildPackage( mode );
+        string log;
+        try
+        {
+            log = DoBuildPackage( mode );
+        }
+        catch ( Exception e )
+        {
+            log = "Failed to build package due to exception: " + e.ToString();
+            File.WriteAllText( logDir + logFileName + ".txt", log );
+            return;
+        }
 
         // use the dll version as build id
         // if the dll is missing, use the date instead
@@ -139,14 +149,14 @@ class BuildPackage
         log += TryCopy( projectPath + packageName, buildDir + packageName );
 
         // flush the log
-        string uniquePath = buildDir + logFileName + buildId + ".txt";
-        string path = logDir + logFileName + ".txt";
+        string uniqueLogFilePath = buildDir + logFileName + buildId + ".txt";
+        string commonLogFilePath = logDir + logFileName + ".txt";
         string text = log.ToString();
-        File.WriteAllText( uniquePath, text);
-        File.WriteAllText( path, text );
+        File.WriteAllText( uniqueLogFilePath, text);
+        File.WriteAllText( commonLogFilePath, text );
 
         // return when the files are written
-        WaitFor( null, () => File.Exists( uniquePath ) && File.Exists( path ), 1000 );
+        WaitFor( null, () => File.Exists( uniqueLogFilePath ) && File.Exists( commonLogFilePath ), 1000 );
     }
 
     static string RunSteps( List<BuildStep> steps )
