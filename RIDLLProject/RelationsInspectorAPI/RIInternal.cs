@@ -250,7 +250,7 @@ namespace RelationsInspector
 
             var entityTypes = TypeUtil.GetValidEntityTypes( targetEntities );
 
-            var autoBackendTypes = BackendUtil.GetAutoBackendTypes( entityTypes );
+            var autoBackendTypes = BackendUtil.CreateAutoBackendTypes( entityTypes );
 
             var matchingBackendTypes = backendTypes
                 .Where( t => !t.IsGenericType )

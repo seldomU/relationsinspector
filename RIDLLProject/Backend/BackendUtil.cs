@@ -28,8 +28,8 @@ namespace RelationsInspector
             .Where( t => IsBackendType( t ) )
             .ToArray();
 
-        static readonly Type autoBackendType = backendTypes
-            .Where( IsAutoBackend )
+        static readonly Type openAutoBackendType = backendTypes
+            .Where( t => t.Name.StartsWith( ProjectSettings.AutoBackendClassName ) )
             .SingleOrDefault();
 
         internal static Type GetBackendInterface(Type potentialBackendType)
@@ -64,20 +64,21 @@ namespace RelationsInspector
             return backendInterface.GetGenericArguments();
         }
 
-        internal static IEnumerable<Type> GetAutoBackendTypes( IEnumerable<Type> entityTypes )
+        internal static IEnumerable<Type> CreateAutoBackendTypes( IEnumerable<Type> entityTypes )
         {
-            if ( autoBackendType == null )
+            if ( openAutoBackendType == null )
                 return Enumerable.Empty<Type>();
             
             return entityTypes
-                .Where( type => type.GetCustomAttributes<AutoBackendAttribute>( false ).Any() )
-                .Select( type => autoBackendType.MakeGenericType( new[] { type } ) ); 
+                .Where( IsMarkedAsAutoBackend )
+                .Select( type => openAutoBackendType.MakeGenericType( new[] { type } ) ); 
         }
 
-        internal static bool IsAutoBackend( Type backendType )
+        static bool IsMarkedAsAutoBackend( Type t )
         {
-            // not so good
-            return backendType.Name.StartsWith( ProjectSettings.AutoBackendClassName );
+            return t
+                .GetCustomAttributes( false )
+                .Any( attr => attr.GetType().Name == ProjectSettings.AutoBackendAttributeName );
         }
 
         internal static bool? DoesBackendForceLayoutSaving(Type backendType)
@@ -115,7 +116,7 @@ namespace RelationsInspector
                 return null;
 
             // prefer auto-backends
-            var autoBackendTypes = backendTypes.Where( IsAutoBackend );
+            var autoBackendTypes = backendTypes.Where( t => t.GetGenericTypeDefinition() == openAutoBackendType );  //IsAutoBackend );
             if ( autoBackendTypes.Any() )
                 return autoBackendTypes.First();
 

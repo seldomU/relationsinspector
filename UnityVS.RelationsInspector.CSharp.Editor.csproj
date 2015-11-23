@@ -89,13 +89,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="UnityVS.RelationsInspector.CSharp.csproj">
+      <Project>{E8843C8F-F948-2DA4-4C71-DF4E5632E180}</Project>
+      <Name>UnityVS.RelationsInspector.CSharp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\BackendUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\DrawUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\MinimalBackend.cs" />
-    <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\RIAutoBackend.cs" />
-    <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ReflectionUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ScriptableObjectBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\ScriptableObjectBackendToolbar.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\Backends\AutoBackend\RIAutoBackend.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\Backends\AutoBackend\ReflectionUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\Backends\HierarchyExample\SceneHierarchyBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\Backends\SocialNetworkExample\Person.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\Backends\SocialNetworkExample\SocialNetworkBackend.cs" />

@@ -61,7 +61,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Backend\AutoBackendAttribute.cs" />
     <Compile Include="Backend\BackendDecoration.cs" />
     <Compile Include="Backend\BackendUtil.cs" />
     <Compile Include="Backend\IGraphBackendInternal.cs" />

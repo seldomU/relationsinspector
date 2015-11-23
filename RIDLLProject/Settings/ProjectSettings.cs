@@ -5,8 +5,11 @@ namespace RelationsInspector
 {
     public static class ProjectSettings
 	{
-		public const string DefaultBackendClassName = "SceneHierarchyBackend";
+        // identify files outside the dll by name
+        public const string DefaultBackendClassName = "SceneHierarchyBackend";
         public const string AutoBackendClassName = "RIAutoBackend";
+        public const string AutoBackendAttributeName = "AutoBackendAttribute"; // has to live in the game dll
+
 		public const string EditorPrefsProjectPrefix = "Relations inspector";
 
 		public const string resourcesDirectoryName = "RelationsInspectorResources";
