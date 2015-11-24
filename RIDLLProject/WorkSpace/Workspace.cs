@@ -23,6 +23,7 @@ namespace RelationsInspector
         bool hasGraphPosChanges;
 
         //layout
+        bool layoutRunning = true;  // we can't use layoutEnumerator to determine if layout is in progress, because it is set too late
         IEnumerator layoutEnumerator;
         Stopwatch layoutTimer = new Stopwatch();
 		float nextVertexPosTweenUpdate;
@@ -82,6 +83,7 @@ namespace RelationsInspector
 
             if ( runLayout )
             {
+                layoutRunning = true;
                 // make the view focus on the initial graph unfolding
                 adjustTransformMode = AdjustTransformMode.Instant;
                 Exec( DoAutoLayout );
@@ -104,8 +106,12 @@ namespace RelationsInspector
 
 		void UpdateLayout()
 		{
-			if (layoutEnumerator == null)
-				return;
+            if ( !layoutRunning )
+                return;
+
+            // enumerator may not exist yet
+            if ( layoutEnumerator == null )
+                return;
 
 			layoutTimer.Reset();
 			layoutTimer.Start();
@@ -118,8 +124,8 @@ namespace RelationsInspector
 
 			var positions = layoutEnumerator.Current as Dictionary<T, Vector2>;
 			bool gotFinalPositions = !generatorActive;
-			if (!generatorActive)
-				layoutEnumerator = null;
+            if ( !generatorActive )
+                layoutRunning = false;
 
 			var time = EditorApplication.timeSinceStartup;
 			if (gotFinalPositions || time > nextVertexPosTweenUpdate)
@@ -227,7 +233,7 @@ namespace RelationsInspector
 
         public void OnDestroy()
         {
-            if ( graph != null && Settings.Instance.cacheLayouts )
+            if ( graph != null && !layoutRunning && Settings.Instance.cacheLayouts )
                 GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetDecoratedType());
             graphBackend.OnDestroy();
         }
@@ -237,7 +243,8 @@ namespace RelationsInspector
 			if (graph == null)
 				return;
 
-			layoutEnumerator = GraphLayout<T, P>.Run(graph, layoutType, Settings.Instance.layoutTweenParameters);
+            layoutRunning = true;
+            layoutEnumerator = GraphLayout<T, P>.Run(graph, layoutType, Settings.Instance.layoutTweenParameters);
 		}
 
         #region implementing IWorkspace
