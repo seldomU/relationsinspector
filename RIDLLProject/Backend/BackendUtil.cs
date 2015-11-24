@@ -116,7 +116,9 @@ namespace RelationsInspector
                 return null;
 
             // prefer auto-backends
-            var autoBackendTypes = backendTypes.Where( t => t.GetGenericTypeDefinition() == openAutoBackendType );  //IsAutoBackend );
+            var autoBackendTypes = backendTypes
+                .Where( t => t.IsGenericType && t.GetGenericTypeDefinition() == openAutoBackendType );
+
             if ( autoBackendTypes.Any() )
                 return autoBackendTypes.First();
 
