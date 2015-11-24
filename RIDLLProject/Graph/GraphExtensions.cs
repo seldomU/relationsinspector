@@ -85,10 +85,5 @@ namespace RelationsInspector
 			bool hasCycle = unvisited.Any();
 			return !hasCycle;
 		}
-
-		public static Dictionary<T, Vector2> GetVertexPositions<T,P>(this Graph<T,P> graph) where T : class
-		{
-			return graph.Vertices.ToDictionary( v => v, v => graph.GetPos(v) );
-		}
 	}
 }
