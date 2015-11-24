@@ -29,8 +29,6 @@ namespace RelationsInspector
         HashSet<Relation<T, P>> edges;
         Dictionary<T, Vector2> position;
         Dictionary<T, int> degree;
-        System.Action<T, Vector2> setPos;
-
 
         public GraphLayoutAlgorithm(Graph<T, P> graph)
 		{
@@ -38,7 +36,6 @@ namespace RelationsInspector
             position = graph.Vertices.ToDictionary( v => v, v => graph.GetPos( v ) );
             degree   = graph.Vertices.ToDictionary( v => v, v => graph.GetNeighbors( v ).Count() );
             edges = graph.Edges.ToHashSet();
-            setPos = (v,pos) => { if ( graph.ContainsVertex( v ) ) graph.SetPos( v, pos ); };
 
 			forces = new Dictionary<T, Vector2>();
 		}
@@ -106,9 +103,6 @@ namespace RelationsInspector
 
 				position[vertex] += force;
 			}
-
-            foreach ( var pair in position )
-                setPos( pair.Key, pair.Value );
 		}
 
 		// get force repulsing the edge source vertex from the edge target vertex
