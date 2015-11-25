@@ -56,7 +56,7 @@ namespace RelationsInspector
         }
 
         // return true if a graph of the give backend type should be saved
-        private static bool ShouldGraphOfTypeBeSaved(Type backendType)
+        private static bool ShouldGraphOfTypeBeSerialized(Type backendType)
         {
             // get first generic type parameter
             Type vertexType = BackendUtil.GetGenericArguments(backendType)[0];
@@ -66,7 +66,7 @@ namespace RelationsInspector
             bool defaultChoice = typeof(UnityEngine.Object).IsAssignableFrom(vertexType);
 
             // check for LayoutSaving attribute.
-            bool? userChoice = BackendUtil.DoesBackendForceLayoutSaving(backendType);
+            bool? userChoice = BackendUtil.GetLayoutSavingChoice(backendType);
 
             // respect the explicit attribute choice. fall back to default if there is none
             return userChoice ?? defaultChoice;
@@ -75,11 +75,11 @@ namespace RelationsInspector
         // save graph vertex positions to file
         internal static void SaveGraphLayout<T,P>(Graph<T,P> graph, IEnumerable<T> seeds, Type backendType) where T : class
         {
-            if (graph == null || !graph.Vertices.Any())
+            if ( !graph.Vertices.Any() )
                 return;
 
             // some backend types should not be included
-            if (!ShouldGraphOfTypeBeSaved(backendType))
+            if (!ShouldGraphOfTypeBeSerialized(backendType))
                 return;
 
             bool saveByDefault = typeof(UnityEngine.Object).IsAssignableFrom(typeof(T));
@@ -92,6 +92,9 @@ namespace RelationsInspector
         // load graph vertex positions from file
         internal static bool LoadGraphLayout<T, P>(Graph<T, P> graph, IEnumerable<T> seeds, Type backendType ) where T : class
         {
+            if ( !ShouldGraphOfTypeBeSerialized( backendType ) )
+                return false;
+
             string path = GetStorageFilePath(GetViewId(seeds, backendType), backendType);
             var storage = Util.LoadAsset<VertexPositionStorage>(path);
 
