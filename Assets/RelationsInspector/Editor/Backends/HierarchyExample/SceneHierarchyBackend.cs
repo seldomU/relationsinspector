@@ -1,16 +1,23 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using RelationsInspector.Backend;
 
-namespace RelationsInspector.Backend.SceneHierarchy
+namespace RelationsInspector.Backend.Scene
 {
-	public class SceneHierarchyBackend : IGraphBackend<Object, string>
+    // don't save layouts. graphs will have identical seeds (scene obj), but different content
+    [SaveLayout( false )]
+	public class MySceneHierarchyBackend : IGraphBackend<Object, string>
 	{
+        RelationsInspectorAPI api;
+        Object sceneObj;    // representing the scene, as a parent for all the top-level GameObjects in the hierarchy
+        static bool includeComponents;
+        
+
 		public IEnumerable<Object> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
 		{
+            this.api = api;
+            sceneObj = EditorGUIUtility.whiteTexture;   // any Object will do
             return (targets == null) ? Enumerable.Empty<Object>() : targets.OfType<Object>();
         }
 
@@ -24,7 +31,37 @@ namespace RelationsInspector.Backend.SceneHierarchy
 
 		// no need for toolbar or controls
 		public Rect OnGUI()
-		{ 
+		{
+            GUILayout.BeginHorizontal(EditorStyles.toolbar);
+            {
+                if ( GUILayout.Button( "Show active scene", EditorStyles.toolbarButton, GUILayout.ExpandWidth( false ) ) )
+                {
+                    api.ResetTargets( new object[] { sceneObj } );
+                }
+
+                EditorGUI.BeginChangeCheck();
+                includeComponents = GUILayout.Toggle( includeComponents, "Include components" );
+                if ( EditorGUI.EndChangeCheck() )
+                {
+                    var GOs = Object.FindObjectsOfType<GameObject>();
+                    foreach ( var go in GOs )
+                    {
+                        if ( includeComponents )
+                        {
+                            api.ExpandEntity( go );
+                        }
+                        else
+                        {
+                            foreach ( var c in go.GetComponents<Component>() )
+                                api.RemoveEntity( c );
+                        }
+                    }
+                    //api.Rebuild();
+                }
+
+                GUILayout.FlexibleSpace();
+            }
+            GUILayout.EndHorizontal();
 			return BackendUtil.GetMaxRect();
 		}
 
@@ -53,13 +90,24 @@ namespace RelationsInspector.Backend.SceneHierarchy
 		public void OnEntitySelectionChange(Object[] selection)
 		{
 			// forward our selection to unity's selection
-			Selection.objects = selection.ToArray();
+			Selection.objects = selection.Except(new[] { sceneObj }).ToArray();
 		}
 
         public virtual void OnUnitySelectionChange(){}
 
         public IEnumerable<Relation<Object, string>> GetRelations(Object entity)
 		{
+            // the fake scene object gets special care
+            if ( entity == sceneObj )
+            {
+                var allGOs = Object.FindObjectsOfType<GameObject>();
+                var rootGOs = allGOs.Where( go => go.transform.parent == null );
+                foreach ( var go in rootGOs )
+                    yield return new Relation<Object, string>( entity, go, string.Empty );
+
+                yield break;
+            }
+
 			var asGameObject = entity as GameObject;
 			if (asGameObject == null)
 				yield break;
@@ -68,13 +116,19 @@ namespace RelationsInspector.Backend.SceneHierarchy
 			foreach (Transform t in asGameObject.transform)
 				yield return new Relation<Object, string>(entity, t.gameObject, string.Empty);
 
-			// include components
-			foreach (var c in asGameObject.GetComponents<Component>())
-				yield return new Relation<Object, string>(entity, c, string.Empty);
+            // include components
+            if ( includeComponents )
+            {
+                foreach ( var c in asGameObject.GetComponents<Component>() )
+                    yield return new Relation<Object, string>( entity, c, string.Empty );
+            }
 		}
 
 		public GUIContent GetContent(Object entity)
 		{
+            if ( entity == sceneObj )
+                return new GUIContent("Scene", null, "The active scene");
+
 			var content = EditorGUIUtility.ObjectContent(entity, entity.GetType());
  
 			// components get their parent object's name as text
