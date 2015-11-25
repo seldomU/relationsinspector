@@ -215,7 +215,7 @@ namespace RelationsInspector
 
 			dragEdgeSource.Remove(entity);
 
-			if (hoverItem.IsEntity && hoverItem.entity == entity)
+			if ( hoverItem != null && hoverItem.IsEntity && hoverItem.entity == entity)
 				hoverItem = null;
 		}
 
