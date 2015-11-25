@@ -78,7 +78,7 @@ namespace RelationsInspector
 
             // run layout, unless the user wants to use caches and a cache could be loaded
             bool runLayout = Settings.Instance.cacheLayouts ?
-                !GraphPosSerialization.LoadGraphLayout( graph, graphBackend.GetDecoratedType() ) :
+                !GraphPosSerialization.LoadGraphLayout( graph, seedEntities, graphBackend.GetDecoratedType() ) :
                 true;
 
             if ( runLayout )
@@ -88,7 +88,7 @@ namespace RelationsInspector
                 adjustTransformMode = AdjustTransformMode.Instant;
                 Exec( DoAutoLayout );
             }
-		}
+        }
 
 		public void Update()
 		{
@@ -234,7 +234,7 @@ namespace RelationsInspector
         public void OnDestroy()
         {
             if ( graph != null && !layoutRunning && Settings.Instance.cacheLayouts )
-                GraphPosSerialization.SaveGraphLayout(graph, graphBackend.GetDecoratedType());
+                GraphPosSerialization.SaveGraphLayout(graph, seedEntities, graphBackend.GetDecoratedType());
             graphBackend.OnDestroy();
         }
 

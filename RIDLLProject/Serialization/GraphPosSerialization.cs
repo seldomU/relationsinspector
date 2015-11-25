@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace RelationsInspector
 {
@@ -15,33 +16,22 @@ namespace RelationsInspector
             if (vertex == null)
                 throw new System.ArgumentException("vertex is null");
 
-            bool isUnityObj = typeof(UnityEngine.Object).IsAssignableFrom(typeof(T));
-            if (isUnityObj)
-                return (vertex as UnityEngine.Object).GetInstanceID();
-
-            return vertex.GetHashCode();
-        }
-
-        // graph hash id, built from root nodes
-        static int GetGraphId<T, P>(Graph<T, P> graph) where T : class
-        {
-            var roots = graph.Vertices.Where(v => graph.IsRoot(v));
-
-            // we don't care about overflow
-            unchecked
-            {
-                return roots.Aggregate( 17, (hash, root) => hash * 23 + GetVertexId(root) );
-            }
+            var asUnityObj = vertex as UnityEngine.Object;
+            return ( asUnityObj != null) ? asUnityObj.GetInstanceID() : vertex.GetHashCode();
         }
 
         // view hash id
-        static int GetViewId<T, P>(Graph<T, P> graph, Type backendType) where T : class
+        static int GetViewId<T>(IEnumerable<T> seeds, Type backendType) where T : class
         {
-            int graphId = GetGraphId(graph);
             int backendId = backendType.ToString().GetHashCode();
             int hash = 17;
-            hash = hash * 23 + graphId;
             hash = hash * 23 + backendId;
+            // we don't care about overflow
+            unchecked
+            {
+                foreach ( var seed in seeds )
+                    hash = hash * 23 + GetVertexId( seed );
+            }
             return hash;
         }
 
@@ -83,7 +73,7 @@ namespace RelationsInspector
         }
 
         // save graph vertex positions to file
-        internal static void SaveGraphLayout<T,P>(Graph<T,P> graph, Type backendType) where T : class
+        internal static void SaveGraphLayout<T,P>(Graph<T,P> graph, IEnumerable<T> seeds, Type backendType) where T : class
         {
             if (graph == null || !graph.Vertices.Any())
                 return;
@@ -95,14 +85,14 @@ namespace RelationsInspector
             bool saveByDefault = typeof(UnityEngine.Object).IsAssignableFrom(typeof(T));
 
             var storage = GetVertexPositionStorage(graph);
-            string path = GetStorageFilePath( GetViewId(graph, backendType), backendType);
+            string path = GetStorageFilePath( GetViewId(seeds, backendType), backendType);
             Util.ForceCreateAsset(storage, path );          
         }
 
         // load graph vertex positions from file
-        internal static bool LoadGraphLayout<T, P>(Graph<T, P> graph, Type backendType) where T : class
+        internal static bool LoadGraphLayout<T, P>(Graph<T, P> graph, IEnumerable<T> seeds, Type backendType ) where T : class
         {
-            string path = GetStorageFilePath(GetViewId(graph, backendType), backendType);
+            string path = GetStorageFilePath(GetViewId(seeds, backendType), backendType);
             var storage = Util.LoadAsset<VertexPositionStorage>(path);
 
             if (storage == null || storage.vertexPositions == null)
