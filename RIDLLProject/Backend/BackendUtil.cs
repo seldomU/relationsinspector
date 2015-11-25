@@ -81,7 +81,7 @@ namespace RelationsInspector
                 .Any( attr => attr.GetType().Name == ProjectSettings.AutoBackendAttributeName );
         }
 
-        internal static bool? DoesBackendForceLayoutSaving(Type backendType)
+        internal static bool? GetLayoutSavingChoice(Type backendType)
         {
             var attributes = backendType.GetCustomAttributes<SaveLayoutAttribute>(true);
             if (!attributes.Any())
