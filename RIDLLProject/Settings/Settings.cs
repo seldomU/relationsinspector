@@ -18,7 +18,7 @@ namespace RelationsInspector
 
             // initialize with default values
             storage.cacheLayouts = true;
-            storage.maxGraphNodes = 40;
+            storage.maxGraphNodes = 50;
             storage.treeRootLocation = TreeRootLocation.Left;
             storage.showMinimap = true;
             storage.minimapLocation = MinimapLocation.TopLeft;
