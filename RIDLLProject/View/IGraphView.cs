@@ -9,10 +9,7 @@ namespace RelationsInspector
 		void OnToolbarGUI();
 		void HandleEvent(Event ev);
 
-		Rect GetViewRect(Rect source);
 		Vector2 GetGraphPosition(Vector2 windowPos);
-		T GetEntityAtPosition(Vector2 position);
-
 		void CreateEdge(IEnumerable<T> sourceEntities, P tag);
 
 		void OnRemovedEntity(T entity);

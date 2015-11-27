@@ -405,7 +405,7 @@ namespace RelationsInspector
 			return getEdgePlacement(sourceBounds, targetBounds, edgeGapSize);
 		}
 
-		public IMViewItem<T, P> GetItemAtPosition(Vector2 position)
+		IMViewItem<T, P> GetItemAtPosition(Vector2 position)
 		{
 			var entity = GetEntityAtPosition(position);
 			if (entity != null)
@@ -418,7 +418,7 @@ namespace RelationsInspector
 			return null;
 		}
 
-		public T GetEntityAtPosition(Vector2 position)
+		T GetEntityAtPosition(Vector2 position)
 		{
 			foreach(var pair in entityDrawerBounds)
 				if( pair.Value.Contains(position) )
