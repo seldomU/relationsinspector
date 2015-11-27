@@ -192,34 +192,25 @@ namespace RelationsInspector
 
         // returns representations of the given objects that are assignable to targetType
         // so that the resulting objects can be used as entities of a backend which uses taretType as entity type
-        internal static IEnumerable<object> MakeObjectsAssignable( IEnumerable<object> objects, Type targetType )
+        internal static object MakeAssignable( object obj, Type targetType )
         {
-            if ( objects == null )
-                yield break;
+            if ( targetType.IsAssignableFrom( obj.GetType() ) )
+                return obj;
 
-            foreach ( var obj in objects )
+            var componentOfType = GetGameObjectComponentOfType( obj, targetType );
+            if ( componentOfType != null )
             {
-                if ( targetType.IsAssignableFrom( obj.GetType() ) )
-                {
-                    yield return obj;
-                    continue;
-                }
-
-                var componentOfType = GetGameObjectComponentOfType( obj, targetType );
-                if ( componentOfType != null )
-                {
-                    yield return componentOfType;
-                    continue;
-                }
-
-                throw new ArgumentException(
-                    string.Format(
-                        "unable to make object {0} of type {1} assignable to type {2}",
-                        obj,
-                        obj.GetType(),
-                        targetType )
-                        );
+                return componentOfType;
             }
+
+            Log.Error(
+                string.Format(
+                    "unable to make object {0} of type {1} assignable to type {2}",
+                    obj,
+                    obj.GetType(),
+                    targetType )
+                    );
+            return null;
         }
     }
 }

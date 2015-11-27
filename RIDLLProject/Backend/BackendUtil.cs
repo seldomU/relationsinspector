@@ -130,9 +130,14 @@ namespace RelationsInspector
             return bestEntityTypeGroup.First();
         }
 
+        internal static Type GetEntityType( Type backendType )
+        {
+            return GetGenericArguments( backendType ).First();
+        }
+
         internal static bool IsEntityTypeAssignableFromAny(Type backendType, IEnumerable<Type> types)
         {
-            var entityType = GetGenericArguments(backendType).First();
+            var entityType = GetEntityType( backendType );
             return entityType != null && types.Where(t => entityType.IsAssignableFrom(t)).Any();
         }
 

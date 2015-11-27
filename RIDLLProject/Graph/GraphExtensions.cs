@@ -49,6 +49,22 @@ namespace RelationsInspector
 			return graph.VerticesData[vertex].InEdges.Get();
 		}
 
+        /*
+        public static bool IsMultipleTrees<T, P>( this Graph<T, P> graph ) where T : class
+        {
+            var roots = graph
+                .Vertices
+                .Where( v => graph.IsRoot( v ) );
+
+            return roots.All( r => graph.IsTree( r ) );
+        }
+
+
+        public static bool IsTree<T, P>( this Graph<T, P> graph, T root ) where T : class
+        {
+            HashSet
+        }*/
+
         public static bool IsSingleTree<T, P>(this Graph<T, P> graph) where T : class
         {
             var roots = graph

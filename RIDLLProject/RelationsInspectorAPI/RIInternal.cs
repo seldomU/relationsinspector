@@ -98,14 +98,20 @@ namespace RelationsInspector
         // manipulate the graph directly
         public void AddEntity(object entity, Vector2 position)
         {
-            if (workspace != null)
-                Exec(() => workspace.AddEntity(entity, position));
+            if ( workspace == null )
+                return;
+
+            var assignableEntity = MakeAssignableEntities( new[] { entity }, selectedBackendType ).FirstOrDefault();
+            Exec( () => workspace.AddEntity( assignableEntity, position ) );
         }
 
         public void RemoveEntity(object entity)
         {
-            if (workspace != null)
-                Exec(() => workspace.RemoveEntity(entity));
+            if ( workspace == null )
+                return;
+
+            var assignableEntity = MakeAssignableEntities( new[] { entity }, selectedBackendType ).FirstOrDefault();
+            Exec(() => workspace.RemoveEntity(entity));
         }
 
         internal void ExpandEntity( object entity )
@@ -190,7 +196,7 @@ namespace RelationsInspector
 
             var genericWorkspaceType = typeof(Workspace<,>).MakeGenericType(backendArguments);
             var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
-            var assignableTargets = TypeUtil.MakeObjectsAssignable( targetObjects, entityType );
+            var assignableTargets = MakeAssignableEntities( targetObjects, selectedBackendType );
             object[] targetArray = assignableTargets.Any() ? assignableTargets.ToArray() : null; // make sure to pass null, NOT an empty array
             var ctorArguments = new object[]
             {
@@ -217,7 +223,10 @@ namespace RelationsInspector
             }
 
             targetObjects.UnionWith(targetsToAdd);
-            workspace.AddTargets( targetsToAdd, pos );
+
+
+            var entitiesToAdd = MakeAssignableEntities( targetsToAdd, selectedBackendType );
+            workspace.AddTargets( entitiesToAdd.ToArray(), pos );
         }
 
         internal void SetTargetObjects(object[] targets)
@@ -406,6 +415,15 @@ namespace RelationsInspector
                 return objs.ToArray();  // copy the array
 
             return new Object[0];
+        }
+
+        static IEnumerable<object> MakeAssignableEntities( IEnumerable<object> objs, Type selectedBackendType )
+        {
+            if ( objs == null )
+                return Enumerable.Empty<object>();
+
+            var entityType = BackendUtil.GetEntityType( selectedBackendType );
+            return objs.Select( o => TypeUtil.MakeAssignable( o, entityType) );
         }
     }
 }

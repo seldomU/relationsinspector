@@ -59,7 +59,7 @@ namespace RelationsInspector
         private static bool ShouldGraphOfTypeBeSerialized(Type backendType)
         {
             // get first generic type parameter
-            Type vertexType = BackendUtil.GetGenericArguments(backendType)[0];
+            Type vertexType = BackendUtil.GetEntityType( backendType );
 
             // fallback behaviour: return true iff it's a unity object type
             // all other types have no reliable object <-> id mapping
