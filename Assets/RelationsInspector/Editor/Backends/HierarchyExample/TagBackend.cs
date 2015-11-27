@@ -20,14 +20,15 @@ namespace RelationsInspector.Backend.Scene
 
         Object GetTagObj( string tag )
         {
+            string tagTitle = "Tag: " + tag;
             if ( tagObjects == null )
                 tagObjects = new List<Object>();
 
-            var obj = tagObjects.FirstOrDefault( o => o.name == tag );
+            var obj = tagObjects.FirstOrDefault( o => o.name == tagTitle );
             if ( obj == null )
             {
                 obj = Object.Instantiate( EditorGUIUtility.whiteTexture );  // any dummy object will do.
-                obj.name = "Tag: " + tag;
+                obj.name = tagTitle;
                 tagObjects.Add( obj );
             }
             return obj;
