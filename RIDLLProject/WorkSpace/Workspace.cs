@@ -269,9 +269,9 @@ namespace RelationsInspector
 
             seedEntities.UnionWith( asT );
 
-            // when no position is given, use the top-left corner of the graph bounds
+            // when no position is given, use screen center
             if ( pos == Vector2.zero )
-                pos = Util.GetBounds( graph.VerticesData.Values.Select( v => v.pos ) ).GetOrigin();
+                pos = (view == null ) ? Vector2.zero : view.GetGraphPosition( drawRect.center );
             else // transform pos to graph space
                 pos = (view == null) ? Vector2.zero : view.GetGraphPosition( pos );
 
@@ -306,6 +306,9 @@ namespace RelationsInspector
                 Log.Message( "Graph already contains entity: " + asT);
                 return;
             }
+
+            if(position == Vector2.zero)
+                position = view.GetGraphPosition( drawRect.center );
 
             graph.AddVertex( asT, position );
 		}
