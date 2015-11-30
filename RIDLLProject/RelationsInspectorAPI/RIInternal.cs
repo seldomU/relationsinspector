@@ -197,7 +197,12 @@ namespace RelationsInspector
             var genericWorkspaceType = typeof(Workspace<,>).MakeGenericType(backendArguments);
             var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
             var assignableTargets = MakeAssignableEntities( targetObjects, selectedBackendType );
-            object[] targetArray = assignableTargets.Any() ? assignableTargets.ToArray() : null; // make sure to pass null, NOT an empty array
+            object[] targetArray = assignableTargets.Any() ? 
+                assignableTargets.ToArray() : 
+                targetObjects != null ?
+                new object[] { } :
+                null; // make sure to pass null, NOT an empty array
+
             var ctorArguments = new object[]
             {
                 selectedBackendType,
@@ -216,25 +221,34 @@ namespace RelationsInspector
 
         internal void AddTargetObjects(object[] targetsToAdd, Vector2 pos)
         {
-            if ( targetObjects == null )
+            if ( targetsToAdd == null )
             {
-                SetTargetObjects( targetsToAdd );
+                Log.Error("No targets to add.");
                 return;
             }
 
-            targetObjects.UnionWith(targetsToAdd);
+            // filter null targets
+            var newTargets = targetsToAdd.Where( x => x != null );
+
+            if ( targetObjects == null )
+            {
+                SetTargetObjects( newTargets );
+                return;
+            }
+
+            targetObjects.UnionWith( newTargets );
 
 
-            var entitiesToAdd = MakeAssignableEntities( targetsToAdd, selectedBackendType );
+            var entitiesToAdd = MakeAssignableEntities( newTargets, selectedBackendType );
             workspace.AddTargets( entitiesToAdd.ToArray(), pos );
         }
 
-        internal void SetTargetObjects(object[] targets)
+        internal void SetTargetObjects(IEnumerable<object> targets)
         {
             if (targets == null)
                 targetObjects = null;
             else
-                targetObjects = new HashSet<object>(targets);
+                targetObjects = new HashSet<object>( targets.Where( o => o != null ) );
             OnTargetChange();
         }
 
