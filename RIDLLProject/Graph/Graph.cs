@@ -134,9 +134,13 @@ namespace RelationsInspector
 			VerticesData[relation.Target].InEdges.Remove(relation);
 		}
 
-		public bool IsRoot(T vertex)
+		public bool IsRoot(T vertex, bool ignoreSelfEdges = true)
 		{
-			return !VerticesData[vertex].InEdges.Get().Any();
+            var inEdges = VerticesData[ vertex ].InEdges.Get();
+
+            return ignoreSelfEdges ?
+                !inEdges.Where(edge => edge.Source == vertex).Any(): 
+                !inEdges.Any();
 		}
 
 		public bool ContainsVertex(T vertex)
