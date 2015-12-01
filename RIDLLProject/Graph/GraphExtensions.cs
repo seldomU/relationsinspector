@@ -1,7 +1,5 @@
-using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
@@ -49,57 +47,31 @@ namespace RelationsInspector
 			return graph.VerticesData[vertex].InEdges.Get();
 		}
 
-        /*
+        
         public static bool IsMultipleTrees<T, P>( this Graph<T, P> graph ) where T : class
         {
-            var roots = graph
-                .Vertices
-                .Where( v => graph.IsRoot( v ) );
+            var roots = graph.RootVertices;
 
-            return roots.All( r => graph.IsTree( r ) );
-        }
-
-
-        public static bool IsTree<T, P>( this Graph<T, P> graph, T root ) where T : class
-        {
-            HashSet
-        }*/
-
-        public static bool IsSingleTree<T, P>(this Graph<T, P> graph) where T : class
-        {
-            var roots = graph
-                .Vertices
-                .Where( v => graph.IsRoot( v ) );
-
-            if (roots.Count() != 1)
+            // no roots -> guaranteed cycle
+            if ( !roots.Any() )
                 return false;
 
-            T root = roots.Single();
-            return graph.IsConnectedTree( root );
-        }
+            var visited = new HashSet<T>();
+            var unexplored = new HashSet<T>( roots );
 
-        // returns tree if the graph forms a tree with root as root node and no disconnected nodes
-        public static bool IsConnectedTree<T,P>(this Graph<T, P> graph, T root) where T : class
-		{
-            // mark all root children as visited (recursively)
-            // if any are visited twice, there is a diamod or cycle
-            var visited = new HashSet<T>( new[] { root } );
-			var children = new HashSet<T>(graph.GetChildren(root));
-			while (children.Any())
-			{
-				var child = children.First();
-                children.Remove(child);
+            while ( unexplored.Any() )
+            {
+                var item = unexplored.First();
+                unexplored.Remove( item );
+                visited.Add( item );
 
-				if (visited.Contains(child))
-					return false;
-				visited.Add(child);
-                children.UnionWith(graph.GetChildren(child) );
-			}
+                var successors = graph.GetChildren( item ).Except( new[] { item } );    // ignore self edges
+                if ( successors.Any( vertex => visited.Contains( vertex ) ) )
+                    return false;
 
-			// any vertex not visited yet must be part of a cycle
-			var unvisited = graph.Vertices.Except(visited);
-			bool hasCycle = unvisited.Any();
-			return !hasCycle;
-		}
+                unexplored.UnionWith( successors );
+            }
+            return true;
+        }    
 	}
 }

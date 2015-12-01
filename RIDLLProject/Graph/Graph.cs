@@ -10,24 +10,38 @@ namespace RelationsInspector
 	{
 		public Dictionary<T, VertexData<T, P>> VerticesData { get; private set; }
 		public IEnumerable<T> Vertices { get { return VerticesData.Keys; } }
-		public HashSet<Relation<T, P>> Edges { get; private set; }
+        public HashSet<T> RootVertices { get; private set; }
+        public HashSet<Relation<T, P>> Edges { get; private set; }
 		public int VertexCount { get { return VerticesData.Count; } }
-        public bool genDownwards;
-        public bool genUpwards;
+        public bool genDownwards;   // if true, the graph was built by adding child vertices of members 
+        public bool genUpwards;     // if true, the graph was built by adding parent vertices of members
 
-		public Graph()
+        private bool isTree;
+        private bool recalcIsTree;
+
+        public Graph()
 		{
 			VerticesData = new Dictionary<T, VertexData<T, P>>();
 			Edges = new HashSet<Relation<T, P>>();
+            RootVertices = new HashSet<T>();
 		}
 
-		public Graph(Graph<T, P> source)
-		{
-			this.VerticesData = new Dictionary<T, VertexData<T, P>>(source.VerticesData);
-			this.Edges = new HashSet<Relation<T, P>>(source.Edges);
-		}
+        public bool IsRoot( T vertex )
+        {
+            return RootVertices.Contains( vertex );
+        }
 
-		public void CleanNullRefs()
+        public bool IsTree()
+        {
+            if ( recalcIsTree )
+            {
+                recalcIsTree = false;
+                isTree = this.IsMultipleTrees();
+            }
+            return isTree;
+        }
+
+        public void CleanNullRefs()
 		{
 			VerticesData.RemoveWhere(pair => Util.IsBadRef(pair.Key) );
 			Edges.RemoveWhere(edge => Util.IsBadRef(edge.Source) || Util.IsBadRef(edge.Target) );
@@ -48,7 +62,9 @@ namespace RelationsInspector
             }
 
 			VerticesData[vertex] = new VertexData<T, P>(vertex);
-		}
+            recalcIsTree = true;
+            RootVertices.Add( vertex );
+        }
 
         public bool CanRegenerate( T source, T target)
         {
@@ -68,6 +84,7 @@ namespace RelationsInspector
             }
 
 			var affectedEdges = Edges.Where(e => e.Source == vertex || e.Target == vertex).ToArray();
+            var neighbors = affectedEdges.Select( e => e.Opposite( vertex ) );
 			foreach (var edge in affectedEdges)
 				RemoveEdge(edge);
 
@@ -76,7 +93,13 @@ namespace RelationsInspector
                 Log.Error( "Vertex is not a member: " + vertex );
                 return;
             }
-		}
+
+            // maintain root data
+            recalcIsTree = true;
+            RootVertices.Remove( vertex );
+            // add the targets that have no more in-edges
+            RootVertices.UnionWith( neighbors.Where( v => !HasParents( v ) ) );
+        }
 
 		public virtual void AddVertex(T vertex, Vector2 position)
 		{
@@ -114,7 +137,14 @@ namespace RelationsInspector
 
 			VerticesData[relation.Source].OutEdges.Add(relation);
 			VerticesData[relation.Target].InEdges.Add(relation);
-		}
+
+            // maintain root data
+            if ( !relation.IsSelfRelation )
+            {
+                recalcIsTree = true;
+                RootVertices.Remove( relation.Target );
+            }
+        }
 
 		public virtual void RemoveEdge(Relation<T, P> relation)
 		{
@@ -132,15 +162,22 @@ namespace RelationsInspector
 
 			VerticesData[relation.Source].OutEdges.Remove(relation);
 			VerticesData[relation.Target].InEdges.Remove(relation);
+
+            if ( !relation.IsSelfRelation )
+            {
+                recalcIsTree = true;
+                if ( !HasParents( relation.Target ) )
+                    RootVertices.Add( relation.Target );
+            }
 		}
 
-		public bool IsRoot(T vertex, bool ignoreSelfEdges = true)
+		private bool HasParents(T vertex, bool ignoreSelfEdges = true)
 		{
             var inEdges = VerticesData[ vertex ].InEdges.Get();
 
             return ignoreSelfEdges ?
-                !inEdges.Where(edge => edge.Source == vertex).Any(): 
-                !inEdges.Any();
+                inEdges.Where(edge => edge.Source == vertex).Any(): 
+                inEdges.Any();
 		}
 
 		public bool ContainsVertex(T vertex)

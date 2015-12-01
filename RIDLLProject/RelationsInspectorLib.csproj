@@ -75,7 +75,6 @@
     <Compile Include="Graph\Relation.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\GraphExtensions.cs" />
-    <Compile Include="Graph\GraphWithRoots.cs" />
     <Compile Include="Graph\VertexData.cs" />
     <Compile Include="RelationsInspectorAPI\APIv1Implementation.cs" />
     <Compile Include="RelationsInspectorAPI\APIv2Implementation.cs" />

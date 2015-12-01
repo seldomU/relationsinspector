@@ -10,9 +10,9 @@ namespace RelationsInspector
 		public delegate IEnumerable<Relation<T,P>> GetRelations(T item);
         delegate void OnVertexAdded( T vertex, T related );
 
-		public static GraphWithRoots<T,P> Build(IEnumerable<T> seeds, GetRelations getRelations, RNG rng, int maxNodeCount)
+		public static Graph<T,P> Build(IEnumerable<T> seeds, GetRelations getRelations, RNG rng, int maxNodeCount)
 		{
-			var graph = new GraphWithRoots<T, P>();
+			var graph = new Graph<T, P>();
 			
 			// add the root element
 			if ( seeds == null || !seeds.Any() )

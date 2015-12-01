@@ -23,7 +23,7 @@ namespace RelationsInspector
 
 		public IEnumerator Compute()
 		{
-			var root = graph.Vertices.Where(v => graph.IsRoot(v)).SingleOrDefault();
+            var root = graph.RootVertices.SingleOrDefault();
 			
 			if (root == null)
 				yield break;

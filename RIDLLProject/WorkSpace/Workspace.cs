@@ -12,7 +12,7 @@ namespace RelationsInspector
 {
     internal class Workspace<T,P> : IWorkspace, IViewParent<T,P> where T : class
 	{
-		GraphWithRoots<T,P> graph;
+        Graph<T,P> graph;
 		IGraphView<T,P> view;
         IGraphBackendInternal<T,P> graphBackend;
 		Rect drawRect;

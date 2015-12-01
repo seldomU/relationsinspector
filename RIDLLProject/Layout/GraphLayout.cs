@@ -4,7 +4,7 @@ namespace RelationsInspector
 {
     internal class GraphLayout<T, P> where T : class
 	{
-		internal static IEnumerator Run(GraphWithRoots<T, P> graph, LayoutType layoutType, LayoutTweenParameters layoutParams)
+		internal static IEnumerator Run(Graph<T, P> graph, LayoutType layoutType, LayoutTweenParameters layoutParams)
 		{
 			switch(layoutType)
 			{

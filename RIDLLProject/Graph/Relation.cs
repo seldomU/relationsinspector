@@ -8,6 +8,7 @@ namespace RelationsInspector
 		public T Source {get; private set;}
 		public T Target { get; private set; }
 		public P Tag { get; private set; }
+        public bool IsSelfRelation { get { return Source == Target; } }
 
 		public Relation(T source, T target, P tag)
 		{
