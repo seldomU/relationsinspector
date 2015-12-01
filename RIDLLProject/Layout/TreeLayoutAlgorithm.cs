@@ -13,6 +13,7 @@ namespace RelationsInspector
 		Dictionary<T, float> treeWidth;	// width of the tree under the entity, with each entity being one unit wide
 		const float entityWidth = 1f;
 		const float entityHeight = 1f;
+        const float treeSpacing = 3 * entityWidth;
 		Vector2 RootPos = new Vector2(0, 0);
 
 		public TreeLayoutAlgorithm(Graph<T, P> graph)
@@ -23,22 +24,51 @@ namespace RelationsInspector
 
 		public IEnumerator Compute()
 		{
-            var root = graph.RootVertices.SingleOrDefault();
+            var roots = graph.RootVertices;
 			
-			if (root == null)
+			if (!roots.Any())
 				yield break;
 
-			var positions = new Dictionary<T, Vector2>();
-			positions[root] = RootPos;
-			PositionChildren(root, positions);
+            // let all subtrees calculate their node positions in local space
+            var treePositions = roots.Select( GetTreePositions );
+            yield return MergeTreePositions( treePositions );
+		}
+
+        static Dictionary<T, Vector2> MergeTreePositions( IEnumerable<Dictionary<T, Vector2>> treePositions )
+        {
+            if ( treePositions == null || !treePositions.Any() )
+                throw new System.ArgumentException( "treePositions" );
+
+            // move all the trees next to each other
+            var result = treePositions.First();
+            float parentEnd = Util.GetBounds( result.Values ).yMax;
+            foreach ( var treePos in treePositions.Skip( 1 ) )
+            {
+                var treeBounds = Util.GetBounds( treePos.Values );
+                float shift = parentEnd - treeBounds.yMin + treeSpacing;
+
+                var keys = treePos.Keys.ToArray();
+                foreach ( var vertex in keys )
+                    result[ vertex ] = treePos[ vertex ] + new Vector2( 0, shift );
+
+                parentEnd += treeBounds.height + treeSpacing;
+            }
+
+            return result;
+        }
+
+        Dictionary<T, Vector2> GetTreePositions( T root )
+        {
+            var positions = new Dictionary<T, Vector2>();
+            positions[ root ] = RootPos;
+            PositionChildren( root, positions );
 
             // "rotate" positions according to the desired root node location 
             var nodeTransform = GetNodePositionTransform( Settings.Instance.treeRootLocation );
-            foreach ( var node in graph.Vertices )
+            foreach ( var node in positions.Keys.ToArray() )
                 positions[ node ] = nodeTransform( positions[ node ] );
-
-			yield return positions;
-		}
+            return positions;
+        }
 
 		// set the positions of the entity's children (recursively), so that they are centered below entity
 		void PositionChildren(T entity, Dictionary<T,Vector2> positions)
