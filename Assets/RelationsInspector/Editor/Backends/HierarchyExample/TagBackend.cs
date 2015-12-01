@@ -15,7 +15,7 @@ namespace RelationsInspector.Backend.Scene
         {
             var asGO = entity as GameObject;
             if ( asGO != null )
-                yield return new Relation<Object, string>( asGO, GetTagObj( asGO.tag ), string.Empty );
+                yield return new Relation<Object, string>( GetTagObj( asGO.tag ), asGO, string.Empty );
         }
 
         Object GetTagObj( string tag )
