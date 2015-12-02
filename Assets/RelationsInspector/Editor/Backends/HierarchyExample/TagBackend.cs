@@ -34,15 +34,30 @@ namespace RelationsInspector.Backend.Scene
             return obj;
         }
 
+        bool ContainsUntaggedTargets()
+        {
+            // if there are, there must be a tag object for them
+            return tagObjects != null && tagObjects.Any( o => o.name == "Tag: Untagged" );
+        }
+
+        bool IsUntagged( object obj )
+        {
+            var asGameObject = obj as GameObject;
+            return asGameObject != null && asGameObject.tag != "Untagged";
+        }
+
         public override Rect OnGUI()
         {
             GUILayout.BeginHorizontal( EditorStyles.toolbar );
             {
+                // option: use all gameobjects of the active scene as targets
                 if ( GUILayout.Button( "Show active scene", EditorStyles.toolbarButton ) )
-                {
-                    var sceneGOs = Object.FindObjectsOfType<GameObject>();
-                    api.ResetTargets( sceneGOs.Cast<object>().ToArray() );
-                }
+                    api.ResetTargets( Object.FindObjectsOfType<GameObject>().Cast<object>().ToArray() );
+
+                // option: remove untagged objects
+                if( ContainsUntaggedTargets() &&
+                    GUILayout.Button( "Hide untagged", EditorStyles.toolbarButton ) )
+                    api.ResetTargets( api.GetTargets().Where( IsUntagged ).ToArray() );
 
                 GUILayout.FlexibleSpace();
 
