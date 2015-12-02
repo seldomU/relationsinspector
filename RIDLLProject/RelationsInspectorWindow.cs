@@ -93,6 +93,7 @@ namespace RelationsInspector
             internalAPI.Init();
 
 			initialized = true;
+            Repaint();
 		}
 
 		void Update()
