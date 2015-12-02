@@ -42,6 +42,11 @@ namespace RelationsInspector
             internalAPI.AddTargets(targets, Vector2.zero);
         }
 
+        public object[] GetTargets()
+        {
+            return internalAPI.GetTargets();
+        }
+
         // manipulate the graph directly
         public void AddEntity(object entity, Vector2 position)
         {

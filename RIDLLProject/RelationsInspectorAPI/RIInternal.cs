@@ -95,6 +95,14 @@ namespace RelationsInspector
             Exec(() => AddTargetObjects(targets, pos));
         }
 
+        public object[] GetTargets()
+        {
+            if ( targetObjects == null )
+                return new object[ 0 ];
+
+            return targetObjects.ToArray();
+        }
+
         // manipulate the graph directly
         public void AddEntity(object entity, Vector2 position)
         {
