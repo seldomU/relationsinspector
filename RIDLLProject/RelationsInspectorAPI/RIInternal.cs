@@ -134,10 +134,10 @@ namespace RelationsInspector
                 Exec( () => workspace.FoldEntity( entity ) );
         }
 
-        public void InitRelation(object[] sourceEntities, object tag)
+        public void InitRelation(object[] sourceEntities)
         {
             if (workspace != null)
-                Exec(() => workspace.CreateRelation(sourceEntities, tag));
+                Exec(() => workspace.CreateRelation(sourceEntities));
         }
 
         public void AddRelation(object sourceEntity, object targetEntity, object tag)

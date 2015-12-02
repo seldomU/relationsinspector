@@ -15,11 +15,12 @@ namespace RelationsInspector.Backend.SocialNetwork
 				yield return new Relation<Person, Feeling>(person, acq.person, acq.feeling);
 		}
 
-		public override void CreateRelation(Person source, Person target, Feeling tag)
+		public override void CreateRelation(Person source, Person target)
 		{
 			if (source.acquaintances == null)
 				source.acquaintances = new List<Acquaintance>();
 
+            var tag = Feeling.Indifference;
 			source.acquaintances.Add(new Acquaintance() { person = target, feeling = tag });
 			api.AddRelation(source, target, tag);
 		}

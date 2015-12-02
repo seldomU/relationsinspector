@@ -61,7 +61,6 @@ namespace RelationsInspector
 		T draggedEntity;
 		HashSet<T> entitySelection;
 		HashSet<T> dragEdgeSource;
-		P dragEdgeTag;
 		IViewParent<T, P> parent;
 		IMViewItem<T,P> hoverItem;
 
@@ -462,7 +461,7 @@ namespace RelationsInspector
 					if (clickEntity != null)
 					{
 						foreach (var source in dragEdgeSource)
-							parent.GetBackend().CreateRelation(source, clickEntity, dragEdgeTag);
+							parent.GetBackend().CreateRelation(source, clickEntity);
 						dragEdgeSource = new HashSet<T>();
 
 						if (ev.button == 0)	// left click
@@ -629,12 +628,6 @@ namespace RelationsInspector
                 menu.ShowAsContext();
         }
 
-        void DragEdge(IEnumerable<T> vertices, P tag)
-		{
-			dragEdgeSource = new HashSet<T>(vertices);
-			dragEdgeTag = tag;
-		}
-
 		void OnEntitySelectionChange()
 		{
 			parent.GetBackend().OnEntitySelectionChange( entitySelection.ToArray() );
@@ -705,10 +698,9 @@ namespace RelationsInspector
 			transform.translation -= offset;
 		}
 
-		public void CreateEdge(IEnumerable<T> sourceEntities, P tag)
+		public void CreateEdge(IEnumerable<T> sourceEntities)
 		{
 			dragEdgeSource = new HashSet<T>(sourceEntities);
-			dragEdgeTag = tag;
 		}
 
 		public void SelectEntityNodes(System.Predicate<object> doSelect)

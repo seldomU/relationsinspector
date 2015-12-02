@@ -30,7 +30,7 @@ namespace RelationsInspector
         void FoldEntity( object entity );
 
         // add relation that has yet to be connected to its target
-        void InitRelation(object[] sourceEntity, object tag);
+        void InitRelation(object[] sourceEntity);
 
 		// add relation
 		void AddRelation(object sourceEntity, object targetEntity, object tag);
@@ -71,7 +71,7 @@ namespace RelationsInspector
         void FoldEntity( object entity );
 
         // add relation that has yet to be connected to its target
-        void InitRelation(object[] sourceEntity, object tag);
+        void InitRelation(object[] sourceEntity);
 
         // add relation
         void AddRelation(object sourceEntity, object targetEntity, object tag);

@@ -68,9 +68,9 @@ namespace RelationsInspector
             internalAPI.FoldEntity( entity );
         }
 
-        public void InitRelation(object[] sourceEntities, object tag)
+        public void InitRelation(object[] sourceEntities)
         {
-            internalAPI.InitRelation(sourceEntities, tag);
+            internalAPI.InitRelation(sourceEntities);
         }
 
         public void AddRelation(object sourceEntity, object targetEntity, object tag)

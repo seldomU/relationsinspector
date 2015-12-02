@@ -25,7 +25,7 @@ namespace RelationsInspector.Backend.Scene
         // so don't perform any graph modification
         public void OnDestroy() { }
 		public void CreateEntity(Vector2 position) { }
-		public void CreateRelation(Object source, Object target, string tag) { }
+		public void CreateRelation(Object source, Object target) { }
 		public void OnEntityContextClick(IEnumerable<Object> entities, GenericMenu contextMenu ) { }
 		public void OnRelationContextClick(Relation<Object,string> relation, GenericMenu contextMenu ) { }
 

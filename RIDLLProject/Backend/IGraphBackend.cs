@@ -11,7 +11,7 @@ namespace RelationsInspector
         void OnDestroy();
         IEnumerable<Relation<T, P>> GetRelations( T entity );
         void CreateEntity( Vector2 position );
-        void CreateRelation( T source, T target, P tag );
+        void CreateRelation( T source, T target);
         void OnEntitySelectionChange( T[] selection );
         void OnUnitySelectionChange();
         Rect OnGUI();
@@ -33,7 +33,7 @@ namespace RelationsInspector
         void OnDestroy();
         IEnumerable<Relation<T, P>> GetRelations(T entity);
         void CreateEntity(Vector2 position);
-        void CreateRelation(T source, T target, P tag);
+        void CreateRelation(T source, T target);
         void OnEntitySelectionChange(T[] selection);
         void OnUnitySelectionChange();
         Rect OnGUI();

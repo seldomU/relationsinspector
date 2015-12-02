@@ -367,7 +367,7 @@ namespace RelationsInspector
                 FoldUtil.Fold( graph, entity, IsSeed );
         }
 
-		void IWorkspace.CreateRelation(object[] sourceEntities, object tagObj)
+		void IWorkspace.CreateRelation(object[] sourceEntities)
 		{
             // validate source entities
             if ( sourceEntities == null )
@@ -383,26 +383,8 @@ namespace RelationsInspector
                 return;
             }
 
-            // validate tag
-            if ( tagObj == null )
-            {
-                Log.Error( "Can't create relations: tag is null" );
-                return;
-            }
-
-            P tag;
-            try
-            {
-                tag = (P) tagObj;
-            }
-            catch ( InvalidCastException )
-            {
-                Log.Error( string.Format( "Can't create relations: tag is of type {0}, expected {1}", tagObj.GetType(), typeof( P ) ) );
-                return;
-            }
-
             if ( view != null )
-                view.CreateEdge(asT, tag);
+                view.CreateEdge(asT);
 		}
 
 		void IWorkspace.AddRelation(object sourceObj, object targetObj, object tagObj)

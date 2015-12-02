@@ -18,13 +18,13 @@ namespace RelationsInspector.Backend.SocialNetwork
 				yield return new Relation<Person, string>(person, partner, string.Empty);
 		}
 
-		public override void CreateRelation(Person source, Person target, string tag)
+		public override void CreateRelation(Person source, Person target)
 		{
 			if (source.studyPartners == null)
 				source.studyPartners = new List<Person>();
 
 			source.studyPartners.Add(target);
-			api.AddRelation(source, target, tag);
+			api.AddRelation(source, target, string.Empty);
 		}
 
 		public override void DeleteRelation(Person source, Person target, string tag)

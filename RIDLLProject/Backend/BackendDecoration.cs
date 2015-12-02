@@ -41,9 +41,9 @@ namespace RelationsInspector
             backend.CreateEntity( position );
         }
 
-        public void CreateRelation( T source, T target, P tag )
+        public void CreateRelation( T source, T target)
         {
-            backend.CreateRelation( source, target, tag );
+            backend.CreateRelation( source, target );
         }
 
         public void OnEntitySelectionChange( T[] selection )
@@ -130,9 +130,9 @@ namespace RelationsInspector
             backend.CreateEntity(position);
         }
 
-        public void CreateRelation(T source, T target, P tag)
+        public void CreateRelation(T source, T target)
         {
-            backend.CreateRelation(source, target, tag);
+            backend.CreateRelation(source, target);
         }
 
         public void OnEntitySelectionChange(T[] selection)

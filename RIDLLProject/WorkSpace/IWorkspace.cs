@@ -18,7 +18,7 @@ namespace RelationsInspector
         void ExpandEntity( object entity );
         void FoldEntity( object entity );
 
-        void CreateRelation(object[] sourceEntities, object tag);
+        void CreateRelation(object[] sourceEntities);
 		void AddRelation(object source, object target, object tag);
 		void RemoveRelation(object source, object target, object tag);
 

@@ -1,9 +1,5 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using RelationsInspector;
-using RelationsInspector.Backend;
 
 namespace RelationsInspector.Backend.SocialNetwork
 {

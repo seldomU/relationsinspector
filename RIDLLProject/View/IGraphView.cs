@@ -10,7 +10,7 @@ namespace RelationsInspector
 		void HandleEvent(Event ev);
 
 		Vector2 GetGraphPosition(Vector2 windowPos);
-		void CreateEdge(IEnumerable<T> sourceEntities, P tag);
+		void CreateEdge(IEnumerable<T> sourceEntities);
 
 		void OnRemovedEntity(T entity);
 
