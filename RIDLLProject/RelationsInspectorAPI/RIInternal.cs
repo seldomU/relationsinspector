@@ -82,11 +82,33 @@ namespace RelationsInspector
                 workspace.Relayout();
         }
 
-        // manipulate the graph through targets
-        public void ResetTargets(object[] targets)
+        public void ResetTargets( object[] targets )
         {
-            targetHistory.RegisterState(targets, selectedBackendType);
-            Exec(() => SetTargetObjects(targets));
+            if ( !UserAcceptsTargetCount( targets.Length ) )
+                return;
+
+            targetHistory.RegisterState( targets, selectedBackendType );
+            Exec( () => SetTargetObjects( targets ) );
+        }
+
+        // if numTargets exceeds the node limit, warn the user through a dialog
+        // returns true if user wants to proceed
+        public bool UserAcceptsTargetCount( int numTargets)
+        {
+            if ( numTargets <= Settings.Instance.maxGraphNodes )
+                return true;
+
+            int choice = EditorUtility.DisplayDialogComplex(
+                "Too many targets",
+                string.Format( "The number of target objects ({0}) exceeds the graph node limit({1}). Performance might suffer.", numTargets, Settings.Instance.maxGraphNodes ),
+                "Continue",
+                "Abort",
+                "Edit settings" );
+
+            if ( choice == 2 )
+                Selection.activeObject = Settings.Instance;
+
+            return ( choice == 0 );
         }
 
         // if a graph exists, add targets. else create a new one from the targets
@@ -244,9 +266,12 @@ namespace RelationsInspector
                 return;
             }
 
-            targetObjects.UnionWith( newTargets );
+            // allow user to abort if the node-count exceeds the limit
+            var combined = targetObjects.Union( newTargets ).ToHashSet();
+            if( !UserAcceptsTargetCount( combined.Count() ) )
+                return;
 
-
+            targetObjects = combined;
             var entitiesToAdd = MakeAssignableEntities( newTargets, selectedBackendType );
             workspace.AddTargets( entitiesToAdd.ToArray(), pos );
         }
