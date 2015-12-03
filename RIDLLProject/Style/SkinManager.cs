@@ -56,6 +56,7 @@ namespace RelationsInspector
 			skin.relationDrawer.highlightEdgeColor = new Color(0, 0.3f, 1, 1);
 			skin.relationDrawer.highlightEdgeWidth = 4;
 			skin.relationDrawer.markerImage = Util.LoadAsset<Texture2D>( Path.Combine(ProjectSettings.ResourcesPath, "ArrowHead.png"));
+            skin.relationDrawer.edgeGapSize = 0;
 		}
 
 		static void PopulateDarkSkinAsset(RelationInspectorSkin skin)
@@ -90,6 +91,7 @@ namespace RelationsInspector
 			skin.relationDrawer.highlightEdgeColor = new Color(1f, 0.92f, 0f, 1f);
 			skin.relationDrawer.highlightEdgeWidth = 4;
 			skin.relationDrawer.markerImage = Util.LoadAsset<Texture2D>(Path.Combine(ProjectSettings.ResourcesPath, "ArrowHead.png"));
-		}
-	}
+            skin.relationDrawer.edgeGapSize = 0;
+        }
+    }
 }

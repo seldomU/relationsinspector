@@ -56,7 +56,6 @@ namespace RelationsInspector
 
         IRelationDrawer<T,P> tagDrawer;
 		EdgePlacementProvider getEdgePlacement;
-		float edgeGapSize = 4;	// size of the gap between entity drawer bounds and edge
 
 		T draggedEntity;
 		HashSet<T> entitySelection;
@@ -253,7 +252,6 @@ namespace RelationsInspector
             // get draw styles
             var skin = SkinManager.GetSkin();
 			var relationDrawerStyle = skin.relationDrawer;
-			var entityWidgetStyle = skin.entityWidget;
 			
 			// draw edges
 			edgeMarkerBounds.Clear();
@@ -304,7 +302,7 @@ namespace RelationsInspector
 				bool isSelfEdge = sourceRect.Contains(Event.current.mousePosition);
 				var targetRect = isSelfEdge ? sourceRect : fakeTargetRect;
 
-				var placement = getEdgePlacement(sourceRect, targetRect, edgeGapSize);
+				var placement = getEdgePlacement(sourceRect, targetRect, relationDrawerStyle.edgeGapSize );
 				tagDrawer.DrawPseudoRelation(placement, isSelfEdge, relationDrawerStyle);
 			}
 
@@ -388,12 +386,12 @@ namespace RelationsInspector
 				throw new System.ArgumentNullException("edge");
 
 			if (!entityDrawerBounds.ContainsKey(edge.Source) || !entityDrawerBounds.ContainsKey(edge.Target))
-				throw new System.ArgumentException("missing bounds for edge vertices");
+				throw new System.Exception("missing bounds for edge vertices");
 
 
 			var sourceBounds = entityDrawerBounds[edge.Source];
 			var targetBounds = entityDrawerBounds[edge.Target];
-			return getEdgePlacement(sourceBounds, targetBounds, edgeGapSize);
+			return getEdgePlacement(sourceBounds, targetBounds, SkinManager.GetSkin().relationDrawer.edgeGapSize );
 		}
 
 		IMViewItem<T, P> GetItemAtPosition(Vector2 position)

@@ -12,5 +12,6 @@ namespace RelationsInspector
         public int highlightEdgeWidth;
         public Vector2 markerSize;
         public Texture2D markerImage;
+        public float edgeGapSize;
     }
 }
