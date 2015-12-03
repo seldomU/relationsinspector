@@ -57,9 +57,12 @@ namespace RelationsInspector
 			skin.relationDrawer.highlightEdgeWidth = 4;
 			skin.relationDrawer.markerImage = Util.LoadAsset<Texture2D>( Path.Combine(ProjectSettings.ResourcesPath, "ArrowHead.png"));
             skin.relationDrawer.edgeGapSize = 0;
-		}
 
-		static void PopulateDarkSkinAsset(RelationInspectorSkin skin)
+            skin.tooltipStyle = new GUIStyle();
+            skin.tooltipStyle.padding = new RectOffset( 3, 3, 3, 3 );
+        }
+
+        static void PopulateDarkSkinAsset(RelationInspectorSkin skin)
 		{
 			skin.windowColor = new Color(0.2f, 0.2f, 0.2f);
             skin.settingsIcon = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "settingsIconDark.png" ) );
@@ -92,6 +95,10 @@ namespace RelationsInspector
 			skin.relationDrawer.highlightEdgeWidth = 4;
 			skin.relationDrawer.markerImage = Util.LoadAsset<Texture2D>(Path.Combine(ProjectSettings.ResourcesPath, "ArrowHead.png"));
             skin.relationDrawer.edgeGapSize = 0;
+
+            skin.tooltipStyle = new GUIStyle();
+            skin.tooltipStyle.normal.textColor = Color.white;
+            skin.tooltipStyle.padding = new RectOffset( 3, 3, 3, 3 );
         }
     }
 }

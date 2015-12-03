@@ -20,29 +20,6 @@ namespace RelationsInspector
 		public EntityWidgetStyle style;
 	}
 
-	internal class IMViewItem<T, P> where T : class
-	{
-		enum Type { Entity, Tag };
-		Type type;
-		public T entity { get; private set; }
-		public P tag { get; private set; }
-
-		public bool IsTag { get { return type == Type.Tag; } }
-		public bool IsEntity { get { return type == Type.Entity; } }
-
-		internal IMViewItem(T entity)
-		{
-			this.entity = entity;
-			this.type = Type.Entity;
-		}
-
-		internal IMViewItem(P tag)
-		{
-			this.tag = tag;
-			this.type = Type.Tag;
-		}
-	}
-
 	// Stores its own version of the graph. Handles entity- and tag drawing and transformations.
 	internal class IMView<T, P> : IGraphView<T, P> where T : class
 	{
@@ -75,21 +52,6 @@ namespace RelationsInspector
 		Vector2 selectionRectOrigin;
 		bool selectionRectActive;
 
-        GUIStyle _toolTipStyle;
-        GUIStyle ToolTipStyle
-        {
-            get
-            {
-                if ( _toolTipStyle == null )
-                {
-                    _toolTipStyle = new GUIStyle( GUI.skin.label );
-                    _toolTipStyle.richText = true;
-                }
-                return _toolTipStyle;
-            }
-        }
-
-
 		public IMView(Graph<T,P> graph, IViewParent<T, P> parent )
 		{
 			this.graph = graph;
@@ -103,7 +65,7 @@ namespace RelationsInspector
             drawOrdered = new LinkedList<T>( graph.Vertices );
 
 			// initialize the drawers
-			tagDrawer = new BasicRelationDrawer<T, P>();	//(IRelationDrawer<P>) System.Activator.CreateInstance(tagDrawerType);
+			tagDrawer = new BasicRelationDrawer<T, P>();
 
 			entityWidgetType = (EntityWidgetType)GUIUtil.GetPrefsInt(PrefsKeyLayout, (int)defaultWidgetType);
 			InitEntityWidget();
@@ -220,7 +182,7 @@ namespace RelationsInspector
 				hoverEntity = null;
 		}
 
-        public void OnRemoveRelation( Relation<T, P> relation )
+        public void OnRemovedRelation( Relation<T, P> relation )
         {
             if ( hoverRelation == relation )
                 hoverRelation = null;
@@ -342,7 +304,8 @@ namespace RelationsInspector
         void DrawTooltip(string tooltip, Rect parentItemRect)
         {
             var content = new GUIContent( tooltip );
-            var contentSize = ToolTipStyle.CalcSize( content );
+            var style = SkinManager.GetSkin().tooltipStyle;
+            var contentSize = style.CalcSize( content );
 
             float toolTipSpacing = 5;
             var tooltipRectCenter = new Vector2( parentItemRect.center.x, parentItemRect.yMax + contentSize.y + toolTipSpacing );
@@ -353,7 +316,7 @@ namespace RelationsInspector
             EditorGUI.DrawRect( contentRect.AddBorder( 1f ), Color.black );
 
             EditorGUI.DrawRect( contentRect, SkinManager.GetSkin().windowColor );
-            ToolTipStyle.Draw( contentRect, content, 0 );
+            style.Draw( contentRect, content, 0 );
         }
 
         void DrawEntity(T entity)

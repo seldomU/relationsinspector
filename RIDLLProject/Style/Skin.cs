@@ -11,5 +11,6 @@ namespace RelationsInspector
         public Texture2D settingsIcon;
         public Texture2D prevIcon;
         public Texture2D nextIcon;
+        public GUIStyle tooltipStyle;
 	}
 }
