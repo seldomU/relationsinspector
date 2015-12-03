@@ -11,7 +11,8 @@ namespace RelationsInspector
         internal static void Create()
         {
             var menu = new GenericMenu();
-            menu.AddItem( new GUIContent( "Settings" ), false, () => { Selection.activeObject = Settings.Instance; } );
+            menu.AddItem( new GUIContent( "Settings" ), false, () => Selection.activeObject = Settings.Instance );
+            menu.AddItem( new GUIContent( "Skin" ), false, () => Selection.activeObject = SkinManager.GetSkin() );
             menu.AddItem( new GUIContent( "Documentation" ), false, () => Application.OpenURL( DocURL ) );
             menu.AddItem( new GUIContent( "Discussion" ), false, () => Application.OpenURL( DiscussionURL ) );
             menu.AddItem( new GUIContent( "About" ), false, () => AboutWindow.Spawn() );
