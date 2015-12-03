@@ -303,6 +303,9 @@ namespace RelationsInspector
 
         void DrawTooltip(string tooltip, Rect parentItemRect)
         {
+            if ( string.IsNullOrEmpty( tooltip ) )
+                return;
+
             var content = new GUIContent( tooltip );
             var style = SkinManager.GetSkin().tooltipStyle;
             var contentSize = style.CalcSize( content );
