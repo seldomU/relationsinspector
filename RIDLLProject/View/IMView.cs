@@ -61,6 +61,7 @@ namespace RelationsInspector
 		T draggedEntity;
 		HashSet<T> entitySelection;
 		HashSet<T> dragEdgeSource;
+        LinkedList<T> drawOrdered;
 		IViewParent<T, P> parent;
 		IMViewItem<T,P> hoverItem;
 
@@ -68,7 +69,7 @@ namespace RelationsInspector
 		const string PrefsKeyLayout = "IMViewLayout";
 		const EntityWidgetType defaultWidgetType = EntityWidgetType.Rect;
 
-		EntityDrawContext drawContext = new EntityDrawContext();
+		EntityDrawContext drawContext = new EntityDrawContext();    // local to Draw(). part of the state only to save allocs
 
 		// rect selection
 		Vector2 selectionRectOrigin;
@@ -99,6 +100,7 @@ namespace RelationsInspector
 
 			entitySelection = new HashSet<T>();
 			dragEdgeSource = new HashSet<T>();
+            drawOrdered = new LinkedList<T>( graph.Vertices );
 
 			// initialize the drawers
 			tagDrawer = new BasicRelationDrawer<T, P>();	//(IRelationDrawer<P>) System.Activator.CreateInstance(tagDrawerType);
@@ -225,9 +227,10 @@ namespace RelationsInspector
 			if (hoverItem != null && hoverItem.IsEntity && hoverItem.entity.Equals(null))
 				hoverItem = null;
 
-			entitySelection.RemoveWhere(entity => Util.IsBadRef(entity));
-			dragEdgeSource.RemoveWhere( entity => Util.IsBadRef(entity) );
-		}
+			entitySelection.RemoveWhere(entity => Util.IsBadRef(entity) || !graph.Vertices.Contains( entity ) );
+			dragEdgeSource.RemoveWhere( entity => Util.IsBadRef(entity) || !graph.Vertices.Contains( entity ) );
+            drawOrdered.RemoveWhere( entity => Util.IsBadRef( entity ) || !graph.Vertices.Contains( entity ) );
+        }
 
 		public void OnToolbarGUI()
 		{
@@ -285,37 +288,13 @@ namespace RelationsInspector
 
 			// draw entities
 			entityDrawerBounds.Clear();
-			foreach (var pair in graph.VerticesData)
-			{
-				T entity = pair.Key;
-				// selected entity gets drawn seperately (after this)
-				if (entitySelection.Contains(entity))
-					continue;
 
-				drawContext.position = transform.Apply(pair.Value.pos);
-				drawContext.isTarget = parent.IsSeed(entity);
-				drawContext.isSelected = false;
-                drawContext.isUnexlored = pair.Value.unexplored;
-				drawContext.widgetType = entityWidgetType;
-				drawContext.style = entityWidgetStyle;
+            // include newly added entities in drawOrdered
+            foreach ( var newEntity in graph.Vertices.Except( drawOrdered ) )
+                drawOrdered.AddLast( newEntity );
 
-				entityDrawerBounds[entity] = parent.GetBackend().DrawContent(entity, drawContext);
-			}
-
-			// draw selected entity
-			foreach(var entity in entitySelection)
-			{
-				if (Util.IsBadRef(entity))
-					continue;	// throw exception?
-
-				drawContext.position = transform.Apply(graph.GetPos(entity));
-				drawContext.isTarget = parent.IsSeed(entity);
-				drawContext.isSelected = true;
-				drawContext.widgetType = entityWidgetType;
-				drawContext.style = entityWidgetStyle;
-
-				entityDrawerBounds[entity] = parent.GetBackend().DrawContent(entity, drawContext);
-			}
+            foreach ( var entity in drawOrdered )
+                DrawEntity( entity );
 
 			// draw the edge that is being created
 			var fakeTargetRect = Util.CenterRect(Event.current.mousePosition, 1, 1);
@@ -360,6 +339,19 @@ namespace RelationsInspector
             if(Settings.Instance.showMinimap)
                 DrawMinimap();
 		}
+
+        void DrawEntity(T entity)
+        {
+            var vertexData = graph.VerticesData[ entity ];
+            drawContext.position = transform.Apply( vertexData.pos );
+            drawContext.isTarget = parent.IsSeed( entity );
+            drawContext.isSelected = entitySelection.Contains( entity );
+            drawContext.isUnexlored = vertexData.unexplored;
+            drawContext.widgetType = entityWidgetType;
+            drawContext.style = SkinManager.GetSkin().entityWidget;
+
+            entityDrawerBounds[ entity ] = parent.GetBackend().DrawContent( entity, drawContext );
+        }
 
         void DrawMinimap()
         {
@@ -419,11 +411,9 @@ namespace RelationsInspector
 
 		T GetEntityAtPosition(Vector2 position)
 		{
-			foreach(var pair in entityDrawerBounds)
-				if( pair.Value.Contains(position) )
-					return pair.Key;
-
-			return null;
+            return drawOrdered
+                .FastReverse()
+                .FirstOrDefault( ent => entityDrawerBounds[ ent ].Contains( position ) );
 		}
 
 		Relation<T, P> GetEdgeAtPosition(Vector2 position)
@@ -451,6 +441,7 @@ namespace RelationsInspector
 			{
 				case EventType.mouseDown:
 
+                    // clicked on minimap -> focos camera on click pos
                     if ( minimapRect.Contains( ev.mousePosition ))
                     {
                         SetCenter( minimapTransform.Revert( ev.mousePosition ) );
@@ -630,7 +621,13 @@ namespace RelationsInspector
 
 		void OnEntitySelectionChange()
 		{
-			parent.GetBackend().OnEntitySelectionChange( entitySelection.ToArray() );
+            foreach ( var entity in entitySelection )
+            {
+                drawOrdered.Remove( entity );
+                drawOrdered.AddLast( entity );
+            }
+
+            parent.GetBackend().OnEntitySelectionChange( entitySelection.ToArray() );
 		}
 
 		static Transform2d Zoom(Transform2d transform, bool zoomIn, bool affectX, bool affectY, Vector2 fixPosition)

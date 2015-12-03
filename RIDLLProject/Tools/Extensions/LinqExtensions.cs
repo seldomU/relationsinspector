@@ -74,5 +74,16 @@ namespace RelationsInspector.Extensions
 				collection.Remove(obj);
 			}
 		}
-	}
+
+        // avoid naming conflict with linq's IEnumerable.Reverse (which is slower)
+        public static IEnumerable<T> FastReverse<T>( this LinkedList<T> list )
+        {
+            var el = list.Last;
+            while ( el != null )
+            {
+                yield return el.Value;
+                el = el.Previous;
+            }
+        }
+    }
 }
