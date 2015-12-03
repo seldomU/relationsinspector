@@ -258,7 +258,7 @@ namespace RelationsInspector
             }
 
             // filter null targets
-            var newTargets = targetsToAdd.Where( x => x != null );
+            var newTargets = targetsToAdd.Where( x => !Util.IsBadRef( x ) );
 
             if ( targetObjects == null )
             {
@@ -281,7 +281,7 @@ namespace RelationsInspector
             if (targets == null)
                 targetObjects = null;
             else
-                targetObjects = new HashSet<object>( targets.Where( o => o != null ) );
+                targetObjects = new HashSet<object>( targets.Where( o => !Util.IsBadRef(o) ) );
             OnTargetChange();
         }
 
