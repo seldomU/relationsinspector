@@ -477,7 +477,10 @@ namespace RelationsInspector
 				return;
 
 			graph.RemoveEdge(edge);
-		}
+
+            if ( view != null )
+                view.OnRemovedRelation( edge );
+        }
 
 		void IWorkspace.SelectEntityNodes(System.Predicate<object> doSelect)
 		{

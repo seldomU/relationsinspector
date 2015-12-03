@@ -62,7 +62,8 @@ namespace RelationsInspector
 		HashSet<T> dragEdgeSource;
         LinkedList<T> drawOrdered;
 		IViewParent<T, P> parent;
-		IMViewItem<T,P> hoverItem;
+		T hoverEntity;
+        Relation<T, P> hoverRelation;
 
 		EntityWidgetType entityWidgetType;
 		const string PrefsKeyLayout = "IMViewLayout";
@@ -215,16 +216,25 @@ namespace RelationsInspector
 
 			dragEdgeSource.Remove(entity);
 
-			if ( hoverItem != null && hoverItem.IsEntity && hoverItem.entity == entity)
-				hoverItem = null;
+			if ( hoverEntity == entity )
+				hoverEntity = null;
 		}
+
+        public void OnRemoveRelation( Relation<T, P> relation )
+        {
+            if ( hoverRelation == relation )
+                hoverRelation = null;
+        }
 
 		public void ClearMissingRefs()
 		{
-			if (draggedEntity != null && draggedEntity.Equals(null))
+            // no need to re-write null, but it does no harm either
+            if (Util.IsBadRef(draggedEntity))   
 				draggedEntity = null;
-			if (hoverItem != null && hoverItem.IsEntity && hoverItem.entity.Equals(null))
-				hoverItem = null;
+
+            // no need to re-write null, but it does no harm either
+            if ( Util.IsBadRef(hoverEntity))
+				hoverEntity = null;
 
 			entitySelection.RemoveWhere(entity => Util.IsBadRef(entity) || !graph.Vertices.Contains( entity ) );
 			dragEdgeSource.RemoveWhere( entity => Util.IsBadRef(entity) || !graph.Vertices.Contains( entity ) );
@@ -314,29 +324,37 @@ namespace RelationsInspector
 					GUI.skin.GetStyle("SelectionRect").Draw(rect, GUIContent.none, false, false, false, false);
 			}
 
-			// draw the tooltip
-			if( hoverItem != null )
-			{
-				var tooltip = hoverItem.IsEntity ?
-					parent.GetBackend().GetEntityTooltip(hoverItem.entity) :
-					parent.GetBackend().GetTagTooltip(hoverItem.tag);
-				if ( !string.IsNullOrEmpty(tooltip) )
-				{
-					if(Event.current.type == EventType.Repaint)
-					{
-						var content = new GUIContent(tooltip);
-						var size = ToolTipStyle.CalcSize(content);           
-                        var contentRect = FindTooltipRect(Event.current.mousePosition, size);
-						var contentPadding = new[] { 3f, 1f, 2f, 0f };					
-						var bgColor = skin.windowColor;
-						DrawPaddedContent(content, ToolTipStyle, contentRect, contentPadding, bgColor);
-					}
-				}
-			}
+            if ( Event.current.type == EventType.Repaint )
+                DrawHoverItemTooltip();
 
             if(Settings.Instance.showMinimap)
                 DrawMinimap();
 		}
+
+        void DrawHoverItemTooltip()
+        {
+            if ( hoverEntity != null )
+                DrawTooltip( parent.GetBackend().GetEntityTooltip( hoverEntity ), entityDrawerBounds[ hoverEntity ] );
+            else if ( hoverRelation != null )
+                DrawTooltip( parent.GetBackend().GetTagTooltip( hoverRelation.Tag ), edgeMarkerBounds[ hoverRelation ] );
+        }
+
+        void DrawTooltip(string tooltip, Rect parentItemRect)
+        {
+            var content = new GUIContent( tooltip );
+            var contentSize = ToolTipStyle.CalcSize( content );
+
+            float toolTipSpacing = 5;
+            var tooltipRectCenter = new Vector2( parentItemRect.center.x, parentItemRect.yMax + contentSize.y + toolTipSpacing );
+
+            var contentRect = Util.CenterRect( tooltipRectCenter, contentSize );
+
+            // draw outline
+            EditorGUI.DrawRect( contentRect.AddBorder( 1f ), Color.black );
+
+            EditorGUI.DrawRect( contentRect, SkinManager.GetSkin().windowColor );
+            ToolTipStyle.Draw( contentRect, content, 0 );
+        }
 
         void DrawEntity(T entity)
         {
@@ -360,26 +378,6 @@ namespace RelationsInspector
             minimapTransform = Minimap.Draw( entityViewPositions, minimapRect,  drawRect, false, style );
         }
 
-		// draw label with padding around the content rect
-		static void DrawPaddedContent(GUIContent content, GUIStyle style, Rect contentRect, float[] padding, Color bgColor, bool outLined = true)
-		{
-            Rect paddedRect = contentRect.AddBorder(padding[0], padding[1], padding[2], padding[3]);
-			if (outLined)
-				EditorGUI.DrawRect(paddedRect.AddBorder(1f), Color.black);
-
-			EditorGUI.DrawRect(paddedRect, bgColor);
-			style.Draw(contentRect, content, 0);
-		}
-
-		Rect FindTooltipRect(Vector2 mousePos, Vector2 extents)
-		{
-            var mousePosToRectMargin = new Vector2(0, 20);
-			var rectCenter = mousePos + mousePosToRectMargin;
-			rectCenter.y += extents.y / 2;
-
-			return Util.CenterRect(rectCenter, extents );
-		}
-
 		EdgePlacement GetEdgePlacement(Relation<T, P> edge)
 		{
 			if (edge == null)
@@ -392,19 +390,6 @@ namespace RelationsInspector
 			var sourceBounds = entityDrawerBounds[edge.Source];
 			var targetBounds = entityDrawerBounds[edge.Target];
 			return getEdgePlacement(sourceBounds, targetBounds, SkinManager.GetSkin().relationDrawer.edgeGapSize );
-		}
-
-		IMViewItem<T, P> GetItemAtPosition(Vector2 position)
-		{
-			var entity = GetEntityAtPosition(position);
-			if (entity != null)
-				return new IMViewItem<T, P>(entity);
-
-			var edge = GetEdgeAtPosition(position);
-			if (edge != null)
-				return new IMViewItem<T, P>(edge.Tag);
-
-			return null;
 		}
 
 		T GetEntityAtPosition(Vector2 position)
@@ -523,10 +508,14 @@ namespace RelationsInspector
 
 				case EventType.MouseMove:
 
-					// update hover item and repaint if it changed
-					var newHoverItem = GetItemAtPosition(ev.mousePosition);
-					bool doRepaint = hoverItem!=null || hoverItem != newHoverItem;	// movement over the hover-item requires a repainted tooltip
-					hoverItem = newHoverItem;
+                    // update hover item and repaint if it changed
+                    var newHoverEntity = GetEntityAtPosition( ev.mousePosition );
+                    var newHoverRelation = (newHoverEntity != null) ? null : GetEdgeAtPosition( ev.mousePosition );
+                    bool hoverChange = newHoverEntity != hoverEntity || newHoverRelation != hoverRelation;
+                    hoverEntity = newHoverEntity;
+                    hoverRelation = newHoverRelation;
+
+                    bool doRepaint = hoverChange;	// movement over the hover-item requires a repainted tooltip
 
 					// also repaint if we are dragging an edge
 					doRepaint |= dragEdgeSource.Any();
