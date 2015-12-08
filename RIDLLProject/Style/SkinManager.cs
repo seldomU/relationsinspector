@@ -43,7 +43,7 @@ namespace RelationsInspector
 			skin.entityWidget.contentStyle.normal.textColor = Color.black;
             skin.entityWidget.contentStyle.padding = new RectOffset( 6, 6, 6, 6 );
             skin.entityWidget.highlightStrength = 2;
-			skin.entityWidget.widgetRadius = 13;
+			skin.entityWidget.widgetRadius = 9;
 			skin.entityWidget.backgroundColor = new Color(0.93f, 0.93f, 0.93f);
 			skin.entityWidget.highlightColor = new Color(0.35f, 0.55f, 1f);
             skin.entityWidget.shadowColor = new Color( 0, 0, 0, 0.5f );
@@ -83,7 +83,7 @@ namespace RelationsInspector
 			skin.entityWidget.contentStyle.normal.textColor = Color.white;
             skin.entityWidget.contentStyle.padding = new RectOffset( 6, 6, 6, 6 );
             skin.entityWidget.highlightStrength = 2;
-			skin.entityWidget.widgetRadius = 13;
+			skin.entityWidget.widgetRadius = 9;
 			skin.entityWidget.backgroundColor = new Color(0.2f, 0.2f, 0.2f, 1f);
 			skin.entityWidget.highlightColor = new Color(0.78f, 0.72f, 0.08f, 1f);
             skin.entityWidget.shadowColor = new Color( 0, 0, 0, 0.5f );
