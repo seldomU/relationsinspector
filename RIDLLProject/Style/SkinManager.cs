@@ -48,6 +48,7 @@ namespace RelationsInspector
 			skin.entityWidget.highlightColor = new Color(0.35f, 0.55f, 1f);
             skin.entityWidget.unexploredColor = Color.red;
 			skin.entityWidget.targetBackgroundColor = new Color( 0.55f, 0.55f, 0.55f );
+            skin.entityWidget.discImage = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "disc.png" ) );
 
             skin.relationDrawer = new RelationDrawerStyle();
 			skin.relationDrawer.markerSize = new Vector2(15, 15);
@@ -86,8 +87,9 @@ namespace RelationsInspector
 			skin.entityWidget.highlightColor = new Color(0.78f, 0.72f, 0.08f, 1f);
             skin.entityWidget.unexploredColor = Color.red;
             skin.entityWidget.targetBackgroundColor = new Color(.45f, .45f, .45f);
+            skin.entityWidget.discImage = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "disc.png" ) );
 
-			skin.relationDrawer = new RelationDrawerStyle();
+            skin.relationDrawer = new RelationDrawerStyle();
 			skin.relationDrawer.markerSize = new Vector2(15, 15);
 			skin.relationDrawer.regularEdgeColor = Color.white;
 			skin.relationDrawer.regularEdgeWidth = 2;

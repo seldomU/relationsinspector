@@ -13,5 +13,6 @@ namespace RelationsInspector
         public GUIStyle contentStyle;
         public float widgetRadius;  // for circle widget only
         public Color targetBackgroundColor;
+        public Texture2D discImage;
     }
 }
