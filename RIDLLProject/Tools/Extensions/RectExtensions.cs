@@ -42,8 +42,8 @@ namespace RelationsInspector.Extensions
 				(
 				rect.xMin + shift.x, 
 				rect.yMin + shift.y, 
-				rect.xMax + shift.x, 
-				rect.yMax + shift.y
+				rect.width, 
+				rect.height
 				);
 		}
 
