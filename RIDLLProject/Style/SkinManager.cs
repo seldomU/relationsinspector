@@ -46,6 +46,7 @@ namespace RelationsInspector
 			skin.entityWidget.widgetRadius = 13;
 			skin.entityWidget.backgroundColor = new Color(0.93f, 0.93f, 0.93f);
 			skin.entityWidget.highlightColor = new Color(0.35f, 0.55f, 1f);
+            skin.entityWidget.shadowColor = new Color( 0, 0, 0, 0.5f );
             skin.entityWidget.unexploredColor = Color.red;
 			skin.entityWidget.targetBackgroundColor = new Color( 0.55f, 0.55f, 0.55f );
             skin.entityWidget.discImage = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "disc.png" ) );
@@ -85,6 +86,7 @@ namespace RelationsInspector
 			skin.entityWidget.widgetRadius = 13;
 			skin.entityWidget.backgroundColor = new Color(0.2f, 0.2f, 0.2f, 1f);
 			skin.entityWidget.highlightColor = new Color(0.78f, 0.72f, 0.08f, 1f);
+            skin.entityWidget.shadowColor = new Color( 0, 0, 0, 0.5f );
             skin.entityWidget.unexploredColor = Color.red;
             skin.entityWidget.targetBackgroundColor = new Color(.45f, .45f, .45f);
             skin.entityWidget.discImage = Util.LoadAsset<Texture2D>( Path.Combine( ProjectSettings.ResourcesPath, "disc.png" ) );
