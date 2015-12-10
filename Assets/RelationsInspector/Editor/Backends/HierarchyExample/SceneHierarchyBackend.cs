@@ -7,7 +7,7 @@ namespace RelationsInspector.Backend.Scene
 {
     // don't save layouts. graphs will have identical seeds (scene obj), but different content
     [SaveLayout( false )]
-	public class MySceneHierarchyBackend : IGraphBackend<Object, string>
+	public class SceneHierarchyBackend : IGraphBackend<Object, string>
 	{
         RelationsInspectorAPI api;
         Object sceneObj;    // representing the scene, as a parent for all the top-level GameObjects in the hierarchy
