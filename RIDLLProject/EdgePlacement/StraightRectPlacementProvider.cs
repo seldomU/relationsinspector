@@ -19,13 +19,10 @@ namespace RelationsInspector
 
 		static Tuple<Vector2, Vector2> GetExitPoint(Rect rect, Vector2 direction, float gapSize)
 		{
-			float xScale = Mathf.Abs(rect.width / 2);
-			if (direction.x != 0)
-				xScale = Mathf.Abs(xScale / direction.x);
-
-			float yScale = Mathf.Abs(rect.height / 2);
-			if (direction.y != 0)
-				yScale = Mathf.Abs( yScale / direction.y);
+            // how many units do we have to go from rect center along direction until we hit x and y bounds
+            // if direction is horizontal/vertical, one of them is never reached. we use float.MaxValue there, which will always lose the comparison
+			float xScale = direction.x == 0 ? float.MaxValue : Mathf.Abs(rect.width / 2 / direction.x );
+            float yScale = direction.y == 0 ? float.MaxValue : Mathf.Abs( rect.height / 2 / direction.y );
 
 			bool useXscale = xScale < yScale;
 			Vector2 normal = useXscale ? Vector2.right : Vector2.up;
