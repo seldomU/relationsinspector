@@ -176,7 +176,7 @@ namespace RelationsInspector
             var inEdges = VerticesData[ vertex ].InEdges.Get();
 
             return ignoreSelfEdges ?
-                inEdges.Where(edge => edge.Source == vertex).Any(): 
+                inEdges.Where(edge => edge.Source != vertex).Any(): 
                 inEdges.Any();
 		}
 
