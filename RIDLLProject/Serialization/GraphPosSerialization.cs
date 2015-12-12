@@ -59,14 +59,14 @@ namespace RelationsInspector
         private static bool ShouldGraphOfTypeBeSerialized(Type backendType)
         {
             // get first generic type parameter
-            Type vertexType = BackendUtil.GetEntityType( backendType );
+            Type vertexType = BackendTypeUtil.GetEntityType( backendType );
 
             // fallback behaviour: return true iff it's a unity object type
             // all other types have no reliable object <-> id mapping
             bool defaultChoice = typeof(UnityEngine.Object).IsAssignableFrom(vertexType);
 
             // check for LayoutSaving attribute.
-            bool? userChoice = BackendUtil.GetLayoutSavingChoice(backendType);
+            bool? userChoice = BackendTypeUtil.GetLayoutSavingChoice(backendType);
 
             // respect the explicit attribute choice. fall back to default if there is none
             return userChoice ?? defaultChoice;

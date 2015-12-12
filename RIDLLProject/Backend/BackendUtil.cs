@@ -6,7 +6,7 @@ using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
-    internal static class BackendUtil
+    internal static class BackendTypeUtil
     {
         // the assemblies in which we search for backends
         static readonly Assembly[] backendSearchAssemblies = new[] 

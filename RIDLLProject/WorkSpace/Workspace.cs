@@ -47,7 +47,7 @@ namespace RelationsInspector
             this.Repaint = Repaint;
             this.Exec = Exec;
             this.API = API;
-            this.graphBackend = (IGraphBackendInternal<T, P>) BackendUtil.CreateBackendDecorator(backendType); 
+            this.graphBackend = (IGraphBackendInternal<T, P>) BackendTypeUtil.CreateBackendDecorator(backendType); 
 
             // create new layout params, they are not comming from the cfg yet
 			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);			

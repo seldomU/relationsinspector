@@ -33,7 +33,7 @@ namespace RelationsInspector
             this.window = window;
             
             // all closed backend types are eligible
-            validBackendTypes = allBackendTypes = BackendUtil.backendTypes.Where( t=>!t.IsOpen() ).ToList();
+            validBackendTypes = allBackendTypes = BackendTypeUtil.backendTypes.Where( t=>!t.IsOpen() ).ToList();
 
             targetHistory = new RIStateHistory();
 
@@ -177,7 +177,7 @@ namespace RelationsInspector
         // enforce backend selection
         public void SetBackend(Type backendType)
         {
-            if (!BackendUtil.IsBackendType(backendType))
+            if (!BackendTypeUtil.IsBackendType(backendType))
                 throw new ArgumentException(backendType + " is not a valid backend type.");
 
             targetHistory.RegisterBackendChange(backendType);
@@ -220,8 +220,8 @@ namespace RelationsInspector
 
         IWorkspace CreateWorkspace()
         {
-            var backendArguments = BackendUtil.GetGenericArguments(selectedBackendType);
-            Type entityType = BackendUtil.BackendAttrType(selectedBackendType) ?? backendArguments[0];
+            var backendArguments = BackendTypeUtil.GetGenericArguments(selectedBackendType);
+            Type entityType = BackendTypeUtil.BackendAttrType(selectedBackendType) ?? backendArguments[0];
             Type relationTagType = backendArguments[1];
 
             var genericWorkspaceType = typeof(Workspace<,>).MakeGenericType(backendArguments);
@@ -296,7 +296,7 @@ namespace RelationsInspector
             validBackendTypes = GetValidBackendTypes( targetObjects, allBackendTypes ).ToList();
 
             if (!validBackendTypes.Contains(selectedBackendType))
-                selectedBackendType = BackendUtil.GetMostSpecificBackendType(validBackendTypes);
+                selectedBackendType = BackendTypeUtil.GetMostSpecificBackendType(validBackendTypes);
         }
 
         static IEnumerable<Type> GetValidBackendTypes( IEnumerable<object> targetEntities, IEnumerable<Type> backendTypes )
@@ -306,13 +306,13 @@ namespace RelationsInspector
 
             var entityTypes = TypeUtil.GetValidEntityTypes( targetEntities );
 
-            var autoBackendTypes = BackendUtil.CreateAutoBackendTypes( entityTypes );
+            var autoBackendTypes = BackendTypeUtil.CreateAutoBackendTypes( entityTypes );
 
             var matchingBackendTypes = backendTypes
                 .Where( t => !t.IsGenericType )
                 .Where( backendType =>
-                        BackendUtil.IsEntityTypeAssignableFromAny( backendType, entityTypes ) ||
-                        BackendUtil.BackendAttributeFitsAny( backendType, entityTypes ) );
+                        BackendTypeUtil.IsEntityTypeAssignableFromAny( backendType, entityTypes ) ||
+                        BackendTypeUtil.BackendAttributeFitsAny( backendType, entityTypes ) );
 
             return autoBackendTypes.Concat( matchingBackendTypes );
         }
@@ -469,7 +469,7 @@ namespace RelationsInspector
             if ( objs == null )
                 return Enumerable.Empty<object>();
 
-            var entityType = BackendUtil.GetEntityType( selectedBackendType );
+            var entityType = BackendTypeUtil.GetEntityType( selectedBackendType );
             return objs.Select( o => TypeUtil.MakeAssignable( o, entityType) );
         }
     }

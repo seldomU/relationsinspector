@@ -63,7 +63,7 @@ namespace RelationsInspector
             if ( string.IsNullOrEmpty( typeName ) )
                 return null;
 
-            return BackendUtil.backendTypes.SingleOrDefault( t => t.ToString() == typeName );  //.Split( '`' )[ 0 ]
+            return BackendTypeUtil.backendTypes.SingleOrDefault( t => t.ToString() == typeName );  //.Split( '`' )[ 0 ]
 		}
 
 		/// Creates a toolbar that is filled from an Enum. (CC-BY-SA, from http://wiki.unity3d.com/index.php?title=EditorGUIExtension)
