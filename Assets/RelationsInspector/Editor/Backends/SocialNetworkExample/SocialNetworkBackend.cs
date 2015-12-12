@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +13,7 @@ namespace RelationsInspector.Backend.SocialNetwork
 				yield break;
 
 			foreach (var acq in person.acquaintances)
-				yield return new Relation<Person, Feeling>(person, acq.person, acq.feeling);
+				yield return new Relation<Person, Feeling>( person, acq.person, acq.feeling);
 		}
 
 		public override void CreateRelation(Person source, Person target)
@@ -22,6 +23,7 @@ namespace RelationsInspector.Backend.SocialNetwork
 
             var tag = Feeling.Indifference;
 			source.acquaintances.Add(new Acquaintance() { person = target, feeling = tag });
+            EditorUtility.SetDirty( source );
 			api.AddRelation(source, target, tag);
 		}
 
@@ -36,7 +38,8 @@ namespace RelationsInspector.Backend.SocialNetwork
 			}
 
 			source.acquaintances.Remove(targetEntries.First());
-			api.RemoveRelation(source, target, tag);
+            EditorUtility.SetDirty( source );
+            api.RemoveRelation(source, target, tag);
 		}
 
 		// map relation tag value to color

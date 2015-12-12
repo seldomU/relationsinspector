@@ -1,7 +1,5 @@
 using UnityEngine;
-using System.Collections;
-using RelationsInspector.Backend;
-using RelationsInspector;
+using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,6 +22,7 @@ namespace RelationsInspector.Backend.SocialNetwork
 				source.studyPartners = new List<Person>();
 
 			source.studyPartners.Add(target);
+            EditorUtility.SetDirty( source );
 			api.AddRelation(source, target, string.Empty);
 		}
 
@@ -38,7 +37,8 @@ namespace RelationsInspector.Backend.SocialNetwork
 			}
 
 			source.studyPartners.Remove(targetEntries.First());
-			api.RemoveRelation(source, target, tag);
+            EditorUtility.SetDirty( source );
+            api.RemoveRelation(source, target, tag);
 		}
 	}
 }
