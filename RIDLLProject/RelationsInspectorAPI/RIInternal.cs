@@ -220,13 +220,8 @@ namespace RelationsInspector
 
         IWorkspace CreateWorkspace()
         {
-            var backendArguments = BackendTypeUtil.GetGenericArguments(selectedBackendType);
-            Type entityType = BackendTypeUtil.BackendAttrType(selectedBackendType) ?? backendArguments[0];
-            Type relationTagType = backendArguments[1];
-
-            var genericWorkspaceType = typeof(Workspace<,>).MakeGenericType(backendArguments);
-            var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
             var assignableTargets = MakeAssignableEntities( targetObjects, selectedBackendType );
+
             object[] targetArray = assignableTargets.Any() ? 
                 assignableTargets.ToArray() : 
                 targetObjects != null ?
@@ -241,7 +236,17 @@ namespace RelationsInspector
                 (Action)window.Repaint,
                 (Action<Action>)window.ExecOnUpdate
             };
-            return (IWorkspace)Activator.CreateInstance(genericWorkspaceType, flags, null, ctorArguments, null);
+
+            var backendArguments = BackendTypeUtil.GetGenericArguments( selectedBackendType );
+
+            return (IWorkspace) Activator.CreateInstance
+                (
+                    typeof( Workspace<,> ).MakeGenericType( backendArguments ),
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, 
+                    null, 
+                    ctorArguments, 
+                    null
+                );
         }
 
         internal void AddTargetObjects( object[] targetsToAdd )
@@ -464,13 +469,24 @@ namespace RelationsInspector
             return new Object[0];
         }
 
-        static IEnumerable<object> MakeAssignableEntities( IEnumerable<object> objs, Type selectedBackendType )
+        static IEnumerable<object> MakeAssignableEntities( IEnumerable<object> objs, Type backendType )
         {
             if ( objs == null )
-                return Enumerable.Empty<object>();
+                yield break;
 
-            var entityType = BackendTypeUtil.GetEntityType( selectedBackendType );
-            return objs.Select( o => TypeUtil.MakeAssignable( o, entityType) );
+            Type acceptedType = BackendTypeUtil.BackendAttrType( backendType );
+            Type entityType = BackendTypeUtil.GetGenericArguments( backendType )[ 0 ];
+
+            foreach ( var obj in objs )
+            {
+                if ( acceptedType != null && acceptedType.IsAssignableFrom( obj.GetType() ) )
+                {
+                    yield return obj;
+                    break;
+                }
+
+                yield return TypeUtil.MakeAssignable( obj, entityType );
+            }
         }
     }
 }
