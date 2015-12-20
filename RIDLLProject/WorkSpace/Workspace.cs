@@ -271,7 +271,8 @@ namespace RelationsInspector
             if ( graph == null )
                 return;
 
-            seedEntities.UnionWith( asT );
+            var newSeeds = asT.SelectMany( graphBackend.Init );
+            seedEntities.UnionWith( newSeeds );
 
             // when no position is given, use screen center
             if ( pos == Vector2.zero )
@@ -279,7 +280,7 @@ namespace RelationsInspector
             else // transform pos to graph space
                 pos = (view == null) ? Vector2.zero : view.GetGraphPosition( pos );
 
-            GraphBuilder<T, P>.Append( graph, asT, pos, graphBackend.GetRelations, builderRNG, graph.VertexCount + Settings.Instance.maxGraphNodes );
+            GraphBuilder<T, P>.Append( graph, newSeeds, pos, graphBackend.GetRelations, builderRNG, graph.VertexCount + Settings.Instance.maxGraphNodes );
             adjustTransformMode = AdjustTransformMode.Not;  // don't mess with the user's transform settings
             Exec( DoAutoLayout );
         }
