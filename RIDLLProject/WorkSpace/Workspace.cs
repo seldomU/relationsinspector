@@ -17,7 +17,6 @@ namespace RelationsInspector
         IGraphBackendInternal<T,P> graphBackend;
 		Rect drawRect;
 		LayoutType layoutType;
-		LayoutType defaultLayoutType = LayoutType.Graph;
 		HashSet<T> seedEntities; 
 		TweenCollection graphPosTweens;
         bool hasGraphPosChanges;
@@ -52,7 +51,7 @@ namespace RelationsInspector
             graphBackend.Awake( API );
 
             // create new layout params, they are not comming from the cfg yet
-			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);			
+			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt( GetPrefsKeyLayout(), (int)LayoutType.Tree );			
 			this.graphPosTweens = new TweenCollection();
 
             this.builderRNG = new RNG( 4 ); // chosen by fair dice role. guaranteed to be random.
