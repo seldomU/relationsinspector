@@ -80,7 +80,6 @@
     <Compile Include="RelationsInspectorAPI\APIv2Implementation.cs" />
     <Compile Include="RelationsInspectorAPI\IRelationsInspectorAPI.cs" />
     <Compile Include="Layout\GraphLayoutAlgorithm.cs" />
-    <Compile Include="Layout\GraphLayout.cs" />
     <Compile Include="Layout\LayoutParams.cs" />
     <Compile Include="Layout\LayoutType.cs" />
     <Compile Include="Layout\TreeLayoutAlgorithm.cs" />

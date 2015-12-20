@@ -248,8 +248,21 @@ namespace RelationsInspector
 				return;
 
             layoutRunning = true;
-            layoutEnumerator = GraphLayout<T, P>.Run(graph, layoutType, Settings.Instance.layoutTweenParameters);
-		}
+
+            switch ( layoutType )
+            {
+                case LayoutType.Graph:
+                    layoutEnumerator = new GraphLayoutAlgorithm<T, P>( graph ).Compute( Settings.Instance.graphLayoutParameters );
+                    break;
+                case LayoutType.Tree:
+                default:
+                    if ( graph.IsTree() )
+                        layoutEnumerator = new TreeLayoutAlgorithm<T, P>( graph ).Compute();
+                    else
+                        layoutEnumerator = new GraphLayoutAlgorithm<T, P>( graph ).Compute( Settings.Instance.graphLayoutParameters );
+                    break;
+            }
+        }
 
         #region implementing IWorkspace
 
