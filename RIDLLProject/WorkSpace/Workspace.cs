@@ -47,19 +47,23 @@ namespace RelationsInspector
             this.Repaint = Repaint;
             this.Exec = Exec;
             this.API = API;
-            this.graphBackend = (IGraphBackendInternal<T, P>) BackendTypeUtil.CreateBackendDecorator(backendType); 
+
+            graphBackend = (IGraphBackendInternal<T, P>) BackendTypeUtil.CreateBackendDecorator(backendType);
+            graphBackend.Awake( API );
 
             // create new layout params, they are not comming from the cfg yet
 			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt(GetPrefsKeyLayout(), (int)defaultLayoutType);			
 			this.graphPosTweens = new TweenCollection();
 
-            this.seedEntities = graphBackend.Init( targets, API ).ToHashSet();
             this.builderRNG = new RNG( 4 ); // chosen by fair dice role. guaranteed to be random.
 
             // when targets is null, show the toolbar only. don't create a graph (and view)
             // when rootEntities is empty, create graph and view anyway, so the user can add entities
             if ( targets != null )
+            {
+                seedEntities = targets.SelectMany( graphBackend.Init ).ToHashSet();
                 InitGraph();
+            }
 		}
 
 		string GetPrefsKeyLayout()

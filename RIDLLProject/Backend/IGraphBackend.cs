@@ -6,8 +6,8 @@ namespace RelationsInspector
 {
     public interface IGraphBackend<T, P> where T : class
 	{
-        // initialize the backend object
-        IEnumerable<T> Init( IEnumerable<object> targets, RelationsInspectorAPI api );
+        void Awake( RelationsInspectorAPI api );
+        IEnumerable<T> Init( object target );
         void OnDestroy();
         IEnumerable<Relation<T, P>> GetRelations( T entity );
         void CreateEntity( Vector2 position );
@@ -29,7 +29,8 @@ namespace RelationsInspector
     internal interface IGraphBackend2<T, P> where T : class
     {
         // initialize the backend object
-        IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api);
+        void Awake( RelationsInspectorAPI api );
+        IEnumerable<T> Init( object target );
         void OnDestroy();
         IEnumerable<Relation<T, P>> GetRelations(T entity);
         void CreateEntity(Vector2 position);

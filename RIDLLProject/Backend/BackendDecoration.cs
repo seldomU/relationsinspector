@@ -21,9 +21,14 @@ namespace RelationsInspector
             return backend.GetType();
         }
 
-        public IEnumerable<T> Init( IEnumerable<object> targets, RelationsInspectorAPI api )
+        public void Awake( RelationsInspectorAPI api )
         {
-            return backend.Init( targets, api );
+            backend.Awake( api );
+        }
+
+        public IEnumerable<T> Init( object target )
+        {
+            return backend.Init( target );
         }
 
         public void OnDestroy()
@@ -110,9 +115,14 @@ namespace RelationsInspector
             return backend.GetType();
         }
 
-        public IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
+        public void Awake( RelationsInspectorAPI api )
         {
-            return backend.Init(targets, api);
+            backend.Awake( api );
+        }
+
+        public IEnumerable<T> Init( object target )
+        {
+            return backend.Init( target );
         }
 
         public void OnDestroy()

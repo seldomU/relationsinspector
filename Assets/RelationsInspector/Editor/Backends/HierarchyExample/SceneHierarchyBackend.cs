@@ -12,13 +12,16 @@ namespace RelationsInspector.Backend.Scene
         RelationsInspectorAPI api;
         Object sceneObj;    // representing the scene, as a parent for all the top-level GameObjects in the hierarchy
         static bool includeComponents;
-        
 
-		public IEnumerable<Object> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
-		{
+        public void Awake( RelationsInspectorAPI api )
+        {
             this.api = api;
-            sceneObj = EditorGUIUtility.whiteTexture;   // any Object will do
-            return (targets == null) ? Enumerable.Empty<Object>() : targets.OfType<Object>();
+            sceneObj = EditorGUIUtility.whiteTexture;   // any object will do
+        }
+
+		public IEnumerable<Object> Init(object target)
+		{
+            return ( target is Object ) ? new Object[] { target as Object } : new Object[0];
         }
 
         // this backend is only for display

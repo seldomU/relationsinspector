@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System;
-using UnityEditor;
-using RelationsInspector.Extensions;
 using UnityEngine;
 
 namespace RelationsInspector.Backend.AutoBackend
@@ -13,14 +10,13 @@ namespace RelationsInspector.Backend.AutoBackend
         IEnumerable<FieldInfo> relatedFields;
         IEnumerable<FieldInfo> relatingFields;
 
-        public override IEnumerable<T> Init( IEnumerable<object> targets, RelationsInspectorAPI api )
+        public override void Awake( RelationsInspectorAPI api )
         {
-            relatingFields = ReflectionUtil.GetAttributeFields<T, RelatingAttribute>( );
-            relatedFields = ReflectionUtil.GetAttributeFields<T, RelatedAttribute>( );
+            relatingFields = ReflectionUtil.GetAttributeFields<T, RelatingAttribute>();
+            relatedFields = ReflectionUtil.GetAttributeFields<T, RelatedAttribute>();
             if ( !relatingFields.Any() && !relatedFields.Any() )
-                Debug.LogError("Type has auto backend attribute, but no fields marked as related or relating: " + typeof( T ) );
-
-            return base.Init( targets, api );
+                Debug.LogError( "Type has auto backend attribute, but no fields marked as related or relating: " + typeof( T ) );
+            base.Awake( api );
         }
 
         public override IEnumerable<Relation<T, string>> GetRelations( T entity )
