@@ -482,10 +482,11 @@ namespace RelationsInspector
                 if ( acceptedType != null && acceptedType.IsAssignableFrom( obj.GetType() ) )
                 {
                     yield return obj;
-                    break;
                 }
-
-                yield return TypeUtil.MakeAssignable( obj, entityType );
+                else
+                {
+                    yield return TypeUtil.MakeAssignable( obj, entityType );
+                }
             }
         }
     }
