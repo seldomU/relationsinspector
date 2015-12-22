@@ -34,6 +34,7 @@ namespace RelationsInspector
 
         enum AdjustTransformMode { Not, Smooth, Instant }; // how to adjust the view transform to layout (vertex position) changes
         AdjustTransformMode adjustTransformMode = AdjustTransformMode.Instant;
+        Type expectedTargetType;
 
 		static Dictionary<LayoutType, GUIContent> layoutButtonContent = new Dictionary<LayoutType, GUIContent>()
 		{
@@ -55,6 +56,8 @@ namespace RelationsInspector
 			this.graphPosTweens = new TweenCollection();
 
             this.builderRNG = new RNG( 4 ); // chosen by fair dice role. guaranteed to be random.
+
+            expectedTargetType = BackendTypeUtil.BackendAttrType( backendType ) ?? typeof( T );
 
             // when targets is null, show the toolbar only. don't create a graph (and view)
             // when rootEntities is empty, create graph and view anyway, so the user can add entities
@@ -273,17 +276,17 @@ namespace RelationsInspector
                 return;
             }
 
-            var asT = targetsToAdd.OfType<T>().ToArray();
-            if ( asT.Count() != targetsToAdd.Count() )
+            if ( targetsToAdd.Any( obj => !expectedTargetType.IsAssignableFrom( obj.GetType() ) ) )
             {
-                Log.Error( "Not all targets are of type " + typeof( T ) );
+                Log.Error( "Not all targets are of type " + expectedTargetType );
                 return;
             }
-
+            
             if ( graph == null )
                 return;
 
-            var newSeeds = asT.SelectMany( graphBackend.Init );
+            var addedTargetSeeds = targetsToAdd.SelectMany( graphBackend.Init );
+            var newSeeds = addedTargetSeeds.Except( seedEntities ).ToHashSet();   // find the ones that are actually new
             seedEntities.UnionWith( newSeeds );
 
             // when no position is given, use screen center
