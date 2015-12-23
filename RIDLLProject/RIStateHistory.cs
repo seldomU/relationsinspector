@@ -7,20 +7,38 @@ using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
-    class RIState
+    struct RIState
     {
-        public object[] targets;
+        public HashSet<object> targets;
         public Type backendType;
 
-        public RIState(IEnumerable<object> targets, Type backendType)
+        public RIState( IEnumerable<object> targets, Type backendType )
         {
-            this.targets = targets.ToArray();
+            this.targets = targets.ToHashSet();
             this.backendType = backendType;
         }
 
         public override string ToString()
         {
             return targets.ToDelimitedString() + " " + backendType.Name;
+        }
+
+        public override bool Equals( object obj )
+        {
+            if ( !( obj is RIState ) )
+                return false;
+
+            var other = (RIState) obj;
+            return targets.SetEquals( other.targets ) && backendType == other.backendType;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 23;
+            hash = hash * 17 + backendType.GetHashCode();
+            foreach ( var t in targets )
+                hash = hash * 17 + t.GetHashCode();
+            return hash;
         }
     }
 
@@ -38,7 +56,9 @@ namespace RelationsInspector
             if( stateHistory.Count > pointer+1)
             stateHistory.RemoveRange(pointer + 1, stateHistory.Count - 1 - pointer);
 
-            stateHistory.Add( new RIState(targets, backendType) );
+            var state = new RIState( targets, backendType );
+            stateHistory.RemoveWhere( x => x.Equals( state ) );
+            stateHistory.Add( state );
             pointer = stateHistory.Count - 1;
         }
 
@@ -91,14 +111,14 @@ namespace RelationsInspector
             if (GUILayout.Button( new GUIContent( SkinManager.GetSkin().prevIcon, "Back to previous graph" ), EditorStyles.toolbarButton))
             {
                 var state = GetPreviousState();
-                setTargets(state.targets, state.backendType);
+                setTargets(state.targets.ToArray(), state.backendType);
             }
 
             GUI.enabled = nextButtonEnabled;
             if (GUILayout.Button( new GUIContent( SkinManager.GetSkin().nextIcon, "Forward to next graph" ), EditorStyles.toolbarButton))
             {
                 var state = GetNextState();
-                setTargets(state.targets, state.backendType);
+                setTargets(state.targets.ToArray(), state.backendType);
             }
 
             GUI.enabled = contextEnabaled;
