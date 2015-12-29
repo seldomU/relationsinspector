@@ -81,6 +81,10 @@ namespace RelationsInspector.Backend.TypeHierarchy
 				}
                 if ( EditorGUI.EndChangeCheck() )
                     api.Rebuild();
+
+                GUILayout.FlexibleSpace();
+                if ( !api.GetTargets().Any() && GUILayout.Button( "inspect Unity Object" ) )
+                    api.ResetTargets( new[] { typeof( UnityEngine.Object ) } );
                 
                 // search field            
                 GUILayout.FlexibleSpace();
@@ -93,7 +97,9 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
 		public override void OnEntityContextClick(IEnumerable<Type> entities, GenericMenu menu)
 		{
-			menu.AddItem(new GUIContent("make new target"), false, () => api.ResetTargets(entities.ToArray() ));
+            var single = entities.SingleOrDefault();
+            if ( single != null )
+                menu.AddItem( new GUIContent( "inspect type " + single.GetType().Name ), false, () => api.ResetTargets( new[] { single.GetType() } ) );
 		}
 
 		// map relation tag value to color

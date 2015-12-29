@@ -29,11 +29,21 @@ namespace RelationsInspector.Backend.Scene
         public void OnDestroy() { }
 		public void CreateEntity(Vector2 position) { }
 		public void CreateRelation(Object source, Object target) { }
-		public void OnEntityContextClick(IEnumerable<Object> entities, GenericMenu contextMenu ) { }
 		public void OnRelationContextClick(Relation<Object,string> relation, GenericMenu contextMenu ) { }
 
-		// no need for toolbar or controls
-		public Rect OnGUI()
+        public void OnEntityContextClick( IEnumerable<Object> entities, GenericMenu contextMenu )
+        {
+            var single = entities.SingleOrDefault();
+            if ( single != null )
+            {
+                var type = single.GetType();
+                contextMenu.AddItem( new GUIContent( "inspect type " + type.Name ), false, () => api.ResetTargets( new[] { type } ) );
+            }
+        }
+
+
+        // no need for toolbar or controls
+        public Rect OnGUI()
 		{
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
             {
