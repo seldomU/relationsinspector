@@ -13,30 +13,13 @@ namespace RelationsInspector.Backend.TypeHierarchy
     [SaveLayout]
 	public class TypeInheritanceBackend : MinimalBackend<Type, TypeRelation>
 	{	
-		static bool includeInterfaces = true;
+		static bool includeInterfaces = false;
 		string searchstring;
 
 		static Assembly[] allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-		HashSet<Type> touchedSubTypes;
-		HashSet<Type> touchedSuperTypes;
-
-        public override void Awake( RelationsInspectorAPI api )
-        {
-            touchedSubTypes = new HashSet<Type>();
-            touchedSuperTypes = new HashSet<Type>();
-
-            base.Awake( api );
-        }
-
-        public override IEnumerable<Type> Init(object target)
-		{
-            var targetType = target as Type;
-            touchedSubTypes.Add( targetType );
-            touchedSuperTypes.Add( targetType );
-            return new Type[] { targetType };
-		}
-
+        HashSet<Type> parentTypes = new HashSet<Type>();
+        
         public override IEnumerable<Relation<Type, TypeRelation>> GetRelations( Type entity )
         {
             return GetRelated( entity ).Concat( GetRelating( entity ) );
@@ -44,30 +27,31 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
         IEnumerable<Relation<Type, TypeRelation>> GetRelated(Type entity)
 		{
-            if ( touchedSubTypes.Contains( entity ) )
-            {
-                var subTypes = TypeUtility.GetSubtypes( entity, allAssemblies );
-                touchedSubTypes.UnionWith( subTypes );
-                foreach ( var t in subTypes )
-                    yield return new Relation<Type, TypeRelation>(entity, t, TypeRelation.Extension );
-            }
-        }
-
-        IEnumerable<Relation<Type, TypeRelation>> GetRelating(Type entity)
-        {
-            if ( !touchedSuperTypes.Contains( entity ) )
+            if ( parentTypes.Contains( entity ) )
                 yield break;
 
-            var superTypes = new List<Type>();
+            var subTypes = TypeUtility.GetSubtypes( entity, allAssemblies );
+            foreach ( var t in subTypes )
+                yield return new Relation<Type, TypeRelation>(entity, t, TypeRelation.Extension );
+        }
+
+        IEnumerable<Relation<Type, TypeRelation>> GetRelating( Type entity )
+        {
             if ( entity.BaseType != null )
-                superTypes.Add( entity.BaseType );
+            {
+                parentTypes.Add( entity.BaseType );
+                yield return new Relation<Type, TypeRelation>( entity.BaseType, entity, TypeRelation.Extension );
+            }
 
             if ( includeInterfaces )
-                superTypes.AddRange( entity.GetInterfaces() );
+            {
+                foreach ( var t in entity.GetInterfaces() )
+                {
+                    parentTypes.Add( t );
+                    yield return new Relation<Type, TypeRelation>( t, entity, TypeRelation.Implementation );
 
-            touchedSuperTypes.UnionWith( superTypes );
-            foreach ( var t in superTypes )
-                yield return new Relation<Type, TypeRelation>( t, entity, TypeRelation.Extension );
+                }
+            }
         }
 
 		public override Rect OnGUI()
@@ -99,7 +83,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
 		{
             var single = entities.SingleOrDefault();
             if ( single != null )
-                menu.AddItem( new GUIContent( "inspect type " + single.GetType().Name ), false, () => api.ResetTargets( new[] { single.GetType() } ) );
+                menu.AddItem( new GUIContent( "inspect type " + single.Name ), false, () => api.ResetTargets( new[] { single } ) );
 		}
 
 		// map relation tag value to color
