@@ -101,6 +101,8 @@ namespace RelationsInspector
             if (storage == null || storage.vertexPositions == null)
                 return false;
 
+            bool allPositionsLoaded = true;
+
             // get a dictionary: id -> pos
             var idToPosition = storage.vertexPositions.ToDictionary(pair => pair.vertexId);
 
@@ -108,13 +110,19 @@ namespace RelationsInspector
             {
                 int id = GetVertexId(vertex);
 
-                if ( idToPosition.ContainsKey(id) )
-                    graph.SetPos(vertex, idToPosition[id].vertexPosition);
+                if ( idToPosition.ContainsKey( id ) )
+                {
+                    graph.SetPos( vertex, idToPosition[ id ].vertexPosition );
+                }
+                else
+                {
+                    allPositionsLoaded = false;
+                }
             }
 
             // todo: apply storage.widgetType storage.transform to view
 
-            return true;
+            return allPositionsLoaded;
         }
     }
 }
