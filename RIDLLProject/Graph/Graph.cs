@@ -83,9 +83,15 @@ namespace RelationsInspector
                 return;
             }
 
-			var affectedEdges = Edges.Where(e => e.Source == vertex || e.Target == vertex).ToArray();
-            var neighbors = affectedEdges.Select( e => e.Opposite( vertex ) );
-			foreach (var edge in affectedEdges)
+			var affectedEdges = Edges
+                .Where(e => e.Source == vertex || e.Target == vertex)
+                .ToArray();
+
+            var neighbors = affectedEdges
+                .Select( e => e.Opposite( vertex ) )
+                .Except( new[] { vertex } );    // a self edge would make the vertex its own neighbor
+
+            foreach (var edge in affectedEdges)
 				RemoveEdge(edge);
 
             if ( !VerticesData.Remove( vertex ) )
