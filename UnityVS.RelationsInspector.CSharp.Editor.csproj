@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>4.3.0f4</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -97,7 +95,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\RelationsInspector\Editor\Backends\HierarchyExample\TagBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\BackendUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\DrawUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\BackendUtils\MinimalBackend.cs" />
@@ -106,9 +103,12 @@
     <Compile Include="Assets\RelationsInspector\Editor\Backends\AutoBackend\RIAutoBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\Backends\AutoBackend\ReflectionUtil.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\Backends\HierarchyExample\SceneHierarchyBackend.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\Backends\HierarchyExample\TagBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\Backends\SocialNetworkExample\Person.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\Backends\SocialNetworkExample\SocialNetworkBackend.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\Backends\SocialNetworkExample\StudyNetworkBackend.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\Backends\TypeGraphExample\TypeInheritanceBackend.cs" />
+    <Compile Include="Assets\RelationsInspector\Editor\Backends\TypeGraphExample\TypeUtility.cs" />
     <Compile Include="Assets\RelationsInspector\Editor\RelationsInspectorMenuItem.cs" />
     <Compile Include="Assets\Stuff\Editor\BuildPackage.cs" />
   </ItemGroup>
