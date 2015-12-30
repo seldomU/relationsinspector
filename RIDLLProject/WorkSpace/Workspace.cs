@@ -369,6 +369,12 @@ namespace RelationsInspector
             if ( graph == null )
                 return;
 
+            if ( !graph.ContainsVertex( entity ) )
+            {
+                Log.Error("Can't expand entity that is not in the graph: " + entity );
+                return;
+            }
+
             GraphBuilder<T, P>.Expand( graph, entity, graphBackend.GetRelations, builderRNG, graph.VertexCount + Settings.Instance.maxGraphNodes );
             adjustTransformMode = AdjustTransformMode.Not;  // don't mess with the user's transform settings
             Exec( DoAutoLayout );
@@ -379,7 +385,7 @@ namespace RelationsInspector
             var entity = entityObj as T;
             if ( entity == null )
             {
-                Log.Error( "Can't fold entity: it is not part of the graph." );
+                Log.Error( "Can't fold null entity" );
                 return;
             }
 
