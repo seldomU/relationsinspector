@@ -38,7 +38,7 @@ namespace RelationsInspector
                 riWindow.GetAPI().Repaint();
 
             settings.logToConsole = EditorGUILayout.Toggle( "Log to console", settings.logToConsole );
-
+            settings.invertZoom = EditorGUILayout.Toggle( "Invert zoom", settings.invertZoom );
 #if DEBUG
             ShowGraphLayoutParams( settings.graphLayoutParameters );
             ShowLayoutTweenParams( settings.layoutTweenParameters );

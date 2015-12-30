@@ -14,5 +14,6 @@ namespace RelationsInspector
         [HideInInspector]
         public GraphLayoutParameters graphLayoutParameters;
         public bool logToConsole;
+        public bool invertZoom;
     }
 }

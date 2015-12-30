@@ -1,6 +1,4 @@
-using System.IO;
 using UnityEngine;
-using UnityEditor;
 
 namespace RelationsInspector
 {
@@ -25,6 +23,7 @@ namespace RelationsInspector
             storage.layoutTweenParameters = new LayoutTweenParameters();
             storage.graphLayoutParameters = new GraphLayoutParameters();
             storage.logToConsole = true;
+            storage.invertZoom = false;
             return storage;
         }
     }
