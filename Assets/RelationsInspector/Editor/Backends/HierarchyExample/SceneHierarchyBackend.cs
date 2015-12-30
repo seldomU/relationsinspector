@@ -56,20 +56,7 @@ namespace RelationsInspector.Backend.Scene
                 includeComponents = GUILayout.Toggle( includeComponents, "Include components" );
                 if ( EditorGUI.EndChangeCheck() )
                 {
-                    var GOs = Object.FindObjectsOfType<GameObject>();
-                    foreach ( var go in GOs )
-                    {
-                        if ( includeComponents )
-                        {
-                            api.ExpandEntity( go );
-                        }
-                        else
-                        {
-                            foreach ( var c in go.GetComponents<Component>() )
-                                api.RemoveEntity( c );
-                        }
-                    }
-                    //api.Rebuild();
+                    api.Rebuild();
                 }
 
                 GUILayout.FlexibleSpace();
