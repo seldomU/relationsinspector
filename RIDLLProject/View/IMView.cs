@@ -62,7 +62,14 @@ namespace RelationsInspector
 
 			entitySelection = new HashSet<T>();
 			dragEdgeSource = new HashSet<T>();
+
+            // draw the targets last
             drawOrdered = new LinkedList<T>( graph.Vertices );
+            foreach ( var target in graph.Vertices.Where( parent.IsSeed ) )
+            {
+                drawOrdered.Remove( target );
+                drawOrdered.AddLast( target );
+            }
 
 			// initialize the drawers
 			tagDrawer = new BasicRelationDrawer<T, P>();
