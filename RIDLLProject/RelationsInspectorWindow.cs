@@ -45,7 +45,7 @@ namespace RelationsInspector
 				return;
 
 #if RIDEMO
-			if (DemoRestriction.IsActive( ShowNotification ))
+			if (DemoRestriction.IsActive( content => { ShowNotification(content); Repaint();} ))
 				return;
 #endif// RIDEMO
 
