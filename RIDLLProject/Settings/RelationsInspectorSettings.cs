@@ -15,5 +15,6 @@ namespace RelationsInspector
         public GraphLayoutParameters graphLayoutParameters;
         public bool logToConsole;
         public bool invertZoom;
+        public bool repaintEachFrame;
     }
 }

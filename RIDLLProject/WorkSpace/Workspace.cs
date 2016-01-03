@@ -101,8 +101,9 @@ namespace RelationsInspector
 			UpdateLayout();
 			graphPosTweens.Update();
 
-			bool doRepaint = false;
             hasGraphPosChanges = graphPosTweens.HasChanges;
+
+            bool doRepaint = Settings.Instance.repaintEachFrame;
             doRepaint |= hasGraphPosChanges;
             doRepaint |= Tweener.gen.HasChanges;
 

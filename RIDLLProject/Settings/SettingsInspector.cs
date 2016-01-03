@@ -40,6 +40,7 @@ namespace RelationsInspector
             settings.logToConsole = EditorGUILayout.Toggle( "Log to console", settings.logToConsole );
             settings.invertZoom = EditorGUILayout.Toggle( "Invert zoom", settings.invertZoom );
 #if DEBUG
+            settings.repaintEachFrame = EditorGUILayout.Toggle( "Repaint each frame", settings.repaintEachFrame );
             ShowGraphLayoutParams( settings.graphLayoutParameters );
             ShowLayoutTweenParams( settings.layoutTweenParameters );
 #endif           
