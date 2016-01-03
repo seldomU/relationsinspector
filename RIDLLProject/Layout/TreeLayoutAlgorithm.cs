@@ -73,7 +73,7 @@ namespace RelationsInspector
 		// set the positions of the entity's children (recursively), so that they are centered below entity
 		void PositionChildren(T entity, Dictionary<T,Vector2> positions)
 		{
-			var children = graph.GetChildren(entity);
+            var children = graph.GetChildrenExceptSelf( entity );
 			var totalWidth = children.Sum( c => GetTreeWidth(c) );
 			Vector2 entityPos = positions[entity];
 			float xpos = entityPos.x - totalWidth / 2f;
@@ -92,7 +92,7 @@ namespace RelationsInspector
 		{
 			if (!treeWidth.ContainsKey(root))
 			{
-				var children = graph.GetChildren(root);
+				var children = graph.GetChildrenExceptSelf( root);
 				float width = children.Any() ? children.Select(v => GetTreeWidth(v)).Sum() : entityWidth;
 				treeWidth[root] = width;
 			}

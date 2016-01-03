@@ -18,7 +18,12 @@ namespace RelationsInspector
 			return graph.VerticesData[vertex].OutEdges.Get().Select(e => e.Target);
 		}
 
-		public static IEnumerable<T> GetParents<T, P>(this Graph<T, P> graph, T vertex) where T : class
+        public static IEnumerable<T> GetChildrenExceptSelf<T, P>( this Graph<T, P> graph, T vertex ) where T : class
+        {
+            return graph.GetChildren( vertex ).Where( c => c != vertex );
+        }
+        
+        public static IEnumerable<T> GetParents<T, P>(this Graph<T, P> graph, T vertex) where T : class
 		{
 			if (!graph.Vertices.Contains(vertex))
 				return Enumerable.Empty<T>();
@@ -26,7 +31,12 @@ namespace RelationsInspector
 			return graph.VerticesData[vertex].InEdges.Get().Select(e => e.Source);
 		}
 
-		public static IEnumerable<Relation<T, P>> GetEdges<T, P>(this Graph<T, P> graph, T vertex) where T : class
+        public static IEnumerable<T> GetParentsExceptSelf<T, P>( this Graph<T, P> graph, T vertex ) where T : class
+        {
+            return graph.GetParents( vertex ).Where( p => p != vertex );
+        }
+
+        public static IEnumerable<Relation<T, P>> GetEdges<T, P>(this Graph<T, P> graph, T vertex) where T : class
 		{
 			return graph.GetInEdges(vertex).Concat( graph.GetOutEdges(vertex) );
 		}
