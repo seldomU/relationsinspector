@@ -23,81 +23,203 @@ namespace RelationsInspector
 
         public void Awake( RelationsInspectorAPI api )
         {
-            backend.Awake( api );
+            try
+            {
+                backend.Awake( api );
+            }
+            catch (Exception e)
+            {
+                Debug.LogException( e );
+            }
         }
 
         public IEnumerable<T> Init( object target )
         {
-            return backend.Init( target );
+            try
+            {
+                return backend.Init( target );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return Enumerable.Empty<T>();
+            }
         }
 
         public void OnDestroy()
         {
-            backend.OnDestroy();
+            try
+            {
+                backend.OnDestroy();
+            }
+            catch (Exception e)
+            {
+                Debug.LogException( e );
+            }
         }
 
         public IEnumerable<Relation<T, P>> GetRelations( T entity )
         {
-            return backend.GetRelations( entity ).Select( rel => rel.Copy() );
+            try
+            {
+                return backend.GetRelations( entity ).Select( rel => rel.Copy() );
+            }
+            catch (Exception e)
+            {
+                Debug.LogException( e );
+                return Enumerable.Empty<Relation<T, P>>();
+            }
         }
 
         public void CreateEntity( Vector2 position )
         {
-            backend.CreateEntity( position );
+            try
+            {
+                backend.CreateEntity( position );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
         public void CreateRelation( T source, T target)
         {
-            backend.CreateRelation( source, target );
+            try
+            {
+                backend.CreateRelation( source, target );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
         public void OnEntitySelectionChange( T[] selection )
         {
-            backend.OnEntitySelectionChange( selection );
+            try
+            {
+                backend.OnEntitySelectionChange( selection );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
         public void OnUnitySelectionChange()
         {
-            backend.OnUnitySelectionChange();
+            try
+            {
+                backend.OnUnitySelectionChange();
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
         public Rect OnGUI()
         {
-            return backend.OnGUI();
+            try
+            {
+                return backend.OnGUI();
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return GUILayoutUtility.GetRect( 0, 0, new[] { GUILayout.ExpandWidth( true ), GUILayout.ExpandHeight( true ) } );
+            }
         }
 
         public string GetEntityTooltip( T entity )
         {
-            return backend.GetEntityTooltip( entity );
+            try
+            {
+                return backend.GetEntityTooltip( entity );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return string.Empty;
+            }
         }
 
         public string GetTagTooltip( P tag )
         {
-            return backend.GetTagTooltip( tag );
+            try
+            {
+                return backend.GetTagTooltip( tag );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return string.Empty;
+            }
         }
 
         public Rect DrawContent( T entity, EntityDrawContext drawContext )
         {
-            return backend.DrawContent( entity, drawContext );
+            try
+            {
+                return backend.DrawContent( entity, drawContext );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return Util.rectZero;
+            }
         }
 
         public void OnEntityContextClick( IEnumerable<T> entities, GenericMenu menu )
         {
-            backend.OnEntityContextClick( entities, menu );
+            try
+            {
+                backend.OnEntityContextClick( entities, menu );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
         public void OnRelationContextClick( Relation<T, P> relation, GenericMenu menu )
         {
-            backend.OnRelationContextClick( relation, menu );
+            try
+            {
+                backend.OnRelationContextClick( relation, menu );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
         public Color GetRelationColor( P relationTagValue )
         {
-            return backend.GetRelationColor( relationTagValue );
+            try
+            {
+                return backend.GetRelationColor( relationTagValue );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return Color.white;
+            }
         }
 
         // V1 has no OnEvent handler
-        public void OnCommand(string command){ }
+        public void OnCommand(string command)
+        {
+            try
+            {
+                backend.OnCommand( command );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
+        }
     }
 
     // decorator class for IGraphBackend version 2
@@ -117,82 +239,202 @@ namespace RelationsInspector
 
         public void Awake( RelationsInspectorAPI api )
         {
-            backend.Awake( api );
+            try
+            {
+                backend.Awake( api );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
         public IEnumerable<T> Init( object target )
         {
-            return backend.Init( target );
+            try
+            {
+                return backend.Init( target );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return Enumerable.Empty<T>();
+            }
         }
 
         public void OnDestroy()
         {
-            backend.OnDestroy();
+            try
+            {
+                backend.OnDestroy();
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
-        public IEnumerable<Relation<T, P>> GetRelations(T entity)
+        public IEnumerable<Relation<T, P>> GetRelations( T entity )
         {
-            return backend.GetRelations( entity ).Select( rel => rel.Copy() );
+            try
+            {
+                return backend.GetRelations( entity ).Select( rel => rel.Copy() );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return Enumerable.Empty<Relation<T, P>>();
+            }
         }
 
-        public void CreateEntity(Vector2 position)
+        public void CreateEntity( Vector2 position )
         {
-            backend.CreateEntity(position);
+            try
+            {
+                backend.CreateEntity( position );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
-        public void CreateRelation(T source, T target)
+        public void CreateRelation( T source, T target )
         {
-            backend.CreateRelation(source, target);
+            try
+            {
+                backend.CreateRelation( source, target );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
-        public void OnEntitySelectionChange(T[] selection)
+        public void OnEntitySelectionChange( T[] selection )
         {
-            backend.OnEntitySelectionChange(selection);
+            try
+            {
+                backend.OnEntitySelectionChange( selection );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
         public void OnUnitySelectionChange()
         {
-            backend.OnUnitySelectionChange();
+            try
+            {
+                backend.OnUnitySelectionChange();
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
         public Rect OnGUI()
         {
-            return backend.OnGUI();
+            try
+            {
+                return backend.OnGUI();
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return GUILayoutUtility.GetRect( 0, 0, new[] { GUILayout.ExpandWidth( true ), GUILayout.ExpandHeight( true ) } );
+            }
         }
 
-        public string GetEntityTooltip(T entity)
+        public string GetEntityTooltip( T entity )
         {
-            return backend.GetEntityTooltip(entity);
+            try
+            {
+                return backend.GetEntityTooltip( entity );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return string.Empty;
+            }
         }
 
-        public string GetTagTooltip(P tag)
+        public string GetTagTooltip( P tag )
         {
-            return backend.GetTagTooltip(tag);
+            try
+            {
+                return backend.GetTagTooltip( tag );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return string.Empty;
+            }
         }
 
-        public Rect DrawContent(T entity, EntityDrawContext drawContext)
+        public Rect DrawContent( T entity, EntityDrawContext drawContext )
         {
-            return backend.DrawContent(entity, drawContext);
+            try
+            {
+                return backend.DrawContent( entity, drawContext );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return Util.rectZero;
+            }
         }
 
-        public void OnEntityContextClick(IEnumerable<T> entities, GenericMenu menu)
+        public void OnEntityContextClick( IEnumerable<T> entities, GenericMenu menu )
         {
-            backend.OnEntityContextClick( entities, menu );
+            try
+            {
+                backend.OnEntityContextClick( entities, menu );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
-        public void OnRelationContextClick(Relation<T,P> relation, GenericMenu menu)
+        public void OnRelationContextClick( Relation<T, P> relation, GenericMenu menu )
         {
-            backend.OnRelationContextClick(relation, menu);
+            try
+            {
+                backend.OnRelationContextClick( relation, menu );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
 
-        public Color GetRelationColor(P relationTagValue)
+        public Color GetRelationColor( P relationTagValue )
         {
-            return backend.GetRelationColor(relationTagValue);
+            try
+            {
+                return backend.GetRelationColor( relationTagValue );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+                return Color.white;
+            }
         }
 
-        public void OnCommand(string command)
+        // V1 has no OnEvent handler
+        public void OnCommand( string command )
         {
-            backend.OnCommand( command );
+            try
+            {
+                backend.OnCommand( command );
+            }
+            catch ( Exception e )
+            {
+                Debug.LogException( e );
+            }
         }
     }
 }
