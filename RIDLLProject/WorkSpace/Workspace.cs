@@ -164,22 +164,18 @@ namespace RelationsInspector
 		{					
 			this.drawRect = drawRect;
 
-			if (view != null)
+            if(graph != null )
+                graph.CleanNullRefs();
+
+            if (view != null)
 			{
                 if ( hasGraphPosChanges && adjustTransformMode != AdjustTransformMode.Not )
                 {
                     bool instant = adjustTransformMode == AdjustTransformMode.Instant;
                     view.FitViewRectToGraph( instant );
                 }
-				
-				try
-				{
-					view.Draw();
-				}
-				catch (MissingReferenceException)
-				{
-					graph.CleanNullRefs();
-				}
+
+                view.Draw();
 
 				view.HandleEvent(Event.current);
 			}

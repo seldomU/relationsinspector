@@ -195,19 +195,49 @@ namespace RelationsInspector
                 hoverRelation = null;
         }
 
-		public void ClearMissingRefs()
+		public bool ClearMissingRefs()
 		{
-            // no need to re-write null, but it does no harm either
-            if (Util.IsBadRef(draggedEntity))   
-				draggedEntity = null;
+            bool hasMissingRef = false;
 
             // no need to re-write null, but it does no harm either
-            if ( Util.IsBadRef(hoverEntity))
-				hoverEntity = null;
+            if ( draggedEntity != null && ( Util.IsBadRef( draggedEntity ) || !graph.Vertices.Contains( draggedEntity ) ) )
+            {
+                draggedEntity = null;
+                hasMissingRef = true;
+            }
 
-			entitySelection.RemoveWhere(entity => Util.IsBadRef(entity) || !graph.Vertices.Contains( entity ) );
-			dragEdgeSource.RemoveWhere( entity => Util.IsBadRef(entity) || !graph.Vertices.Contains( entity ) );
-            drawOrdered.RemoveWhere( entity => Util.IsBadRef( entity ) || !graph.Vertices.Contains( entity ) );
+            // no need to re-write null, but it does no harm either
+            if ( hoverEntity != null && ( Util.IsBadRef( hoverEntity ) || !graph.Vertices.Contains( hoverEntity ) ) )
+            {
+                hoverEntity = null;
+                hasMissingRef = true;
+            }
+
+            var badSelection = entitySelection.Where( entity => Util.IsBadRef( entity ) || !graph.Vertices.Contains( entity ) ).ToArray();
+            if ( badSelection.Any() )
+            {
+                entitySelection.ExceptWith( badSelection );
+                hasMissingRef = true;
+            }
+
+            var badEntities = drawOrdered.Where( entity => Util.IsBadRef( entity ) || !graph.Vertices.Contains( entity ) ).ToArray();
+            if ( badEntities.Any() )
+            {
+                foreach ( var x in badEntities )
+                    drawOrdered.Remove( x );
+
+                hasMissingRef = true;
+            }
+
+            var badEdgeSources = dragEdgeSource.Where( entity => Util.IsBadRef( entity ) || !graph.Vertices.Contains( entity ) ).ToArray();
+            if ( badEdgeSources.Any() )
+            {
+                foreach(var x in badEdgeSources)
+                    dragEdgeSource.Remove( x );
+                hasMissingRef = true;
+            }
+
+            return hasMissingRef;
         }
 
 		public void OnToolbarGUI()
@@ -225,8 +255,12 @@ namespace RelationsInspector
 
 		public void Draw( )
 		{
-			// entities might have been destroyed externally
-			ClearMissingRefs();
+            // entities might have been destroyed externally
+            if ( ClearMissingRefs() )
+            {
+                parent.RepaintView();
+                return;
+            }
 
             // get draw styles
             var skin = SkinManager.GetSkin();
