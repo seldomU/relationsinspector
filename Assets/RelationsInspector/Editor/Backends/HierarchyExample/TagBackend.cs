@@ -8,8 +8,18 @@ namespace RelationsInspector.Backend.Scene
 {
     public class TagBackend : MinimalBackend<Object,string>
     {
-        List<Object> tagObjects;
+        List<Object> tagObjects = new List<Object>();
         string searchstring;
+
+        public override IEnumerable<Object> Init( object target )
+        {
+            var asGo = target as GameObject;
+            if ( asGo == null )
+                yield break;
+
+            yield return asGo;
+            yield return GetTagObj( asGo.tag );
+        }
 
         public override IEnumerable<Relation<Object, string>> GetRelations( Object entity )
         {
@@ -21,13 +31,11 @@ namespace RelationsInspector.Backend.Scene
         Object GetTagObj( string tag )
         {
             string tagTitle = "Tag: " + tag;
-            if ( tagObjects == null )
-                tagObjects = new List<Object>();
 
             var obj = tagObjects.FirstOrDefault( o => o.name == tagTitle );
             if ( obj == null )
             {
-                obj = Object.Instantiate( EditorGUIUtility.whiteTexture );  // any dummy object will do.
+                obj = Object.Instantiate( EditorGUIUtility.whiteTexture );
                 obj.name = tagTitle;
                 tagObjects.Add( obj );
             }
