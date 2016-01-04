@@ -6,12 +6,17 @@ using System.Linq;
 
 namespace RelationsInspector.Backend.Scene
 {
-    public class TagBackend : MinimalBackend<Object,string>
+    public class Tag
     {
-        List<Object> tagObjects = new List<Object>();
+        public string value;
+    }
+
+    public class TagBackend : MinimalBackend<object,string>
+    {
+        List<Tag> tagObjects = new List<Tag>();
         string searchstring;
 
-        public override IEnumerable<Object> Init( object target )
+        public override IEnumerable<object> Init( object target )
         {
             var asGo = target as GameObject;
             if ( asGo == null )
@@ -21,22 +26,21 @@ namespace RelationsInspector.Backend.Scene
             yield return GetTagObj( asGo.tag );
         }
 
-        public override IEnumerable<Relation<Object, string>> GetRelations( Object entity )
+        public override IEnumerable<Relation<object, string>> GetRelations( object entity )
         {
             var asGO = entity as GameObject;
             if ( asGO != null )
-                yield return new Relation<Object, string>( GetTagObj( asGO.tag ), asGO, string.Empty );
+                yield return new Relation<object, string>( GetTagObj( asGO.tag ), asGO, string.Empty );
         }
 
-        Object GetTagObj( string tag )
+        Tag GetTagObj( string tag )
         {
             string tagTitle = "Tag: " + tag;
 
-            var obj = tagObjects.FirstOrDefault( o => o.name == tagTitle );
+            var obj = tagObjects.FirstOrDefault( o => o.value == tagTitle );
             if ( obj == null )
             {
-                obj = Object.Instantiate( EditorGUIUtility.whiteTexture );
-                obj.name = tagTitle;
+                obj = new Tag() { value = tagTitle };//Object.Instantiate( EditorGUIUtility.whiteTexture );
                 tagObjects.Add( obj );
             }
             return obj;
@@ -45,7 +49,7 @@ namespace RelationsInspector.Backend.Scene
         bool ContainsUntaggedTargets()
         {
             // if there are, there must be a tag object for them
-            return tagObjects != null && tagObjects.Any( o => o.name == "Tag: Untagged" );
+            return tagObjects != null && tagObjects.Any( o => o.value == "Tag: Untagged" );
         }
 
         bool IsUntagged( object obj )
@@ -75,14 +79,22 @@ namespace RelationsInspector.Backend.Scene
             return base.OnGUI();
         }
 
-        public override GUIContent GetContent( Object entity )
+        public override GUIContent GetContent( object entity )
         {
-            return new GUIContent( entity.name, null, entity.name );
+            var asGo = entity as GameObject;
+            if(asGo != null )
+                return new GUIContent( asGo.name, null, asGo.name );
+
+            var asTag = entity as Tag;
+            if ( asTag != null )
+                return new GUIContent(asTag.value, null, asTag.value );
+
+            return new GUIContent("unknown object " + entity.ToString(), null, string.Empty);
         }
 
-        public override void OnEntitySelectionChange( Object[] selection )
+        public override void OnEntitySelectionChange( object[] selection )
         {
-            base.OnEntitySelectionChange( selection.Except( tagObjects ).ToArray() );
+            base.OnEntitySelectionChange( selection.OfType<GameObject>().ToArray() );
         }
     }
 }
