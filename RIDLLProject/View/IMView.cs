@@ -200,44 +200,31 @@ namespace RelationsInspector
             bool hasMissingRef = false;
 
             // no need to re-write null, but it does no harm either
-            if ( draggedEntity != null && ( Util.IsBadRef( draggedEntity ) || !graph.Vertices.Contains( draggedEntity ) ) )
+            if ( draggedEntity != null && !graph.Vertices.Contains( draggedEntity ) )
             {
                 draggedEntity = null;
                 hasMissingRef = true;
             }
 
             // no need to re-write null, but it does no harm either
-            if ( hoverEntity != null && ( Util.IsBadRef( hoverEntity ) || !graph.Vertices.Contains( hoverEntity ) ) )
+            if ( hoverEntity != null && !graph.Vertices.Contains( hoverEntity ) )
             {
                 hoverEntity = null;
                 hasMissingRef = true;
             }
 
-            var badSelection = entitySelection.Where( entity => Util.IsBadRef( entity ) || !graph.Vertices.Contains( entity ) ).ToArray();
-            if ( badSelection.Any() )
-            {
-                entitySelection.ExceptWith( badSelection );
-                hasMissingRef = true;
-            }
-
-            var badEntities = drawOrdered.Where( entity => Util.IsBadRef( entity ) || !graph.Vertices.Contains( entity ) ).ToArray();
-            if ( badEntities.Any() )
-            {
-                foreach ( var x in badEntities )
-                    drawOrdered.Remove( x );
-
-                hasMissingRef = true;
-            }
-
-            var badEdgeSources = dragEdgeSource.Where( entity => Util.IsBadRef( entity ) || !graph.Vertices.Contains( entity ) ).ToArray();
-            if ( badEdgeSources.Any() )
-            {
-                foreach(var x in badEdgeSources)
-                    dragEdgeSource.Remove( x );
-                hasMissingRef = true;
-            }
+            hasMissingRef |= RemoveNoneVertices( entitySelection );
+            hasMissingRef |= RemoveNoneVertices( drawOrdered );
+            hasMissingRef |= RemoveNoneVertices( dragEdgeSource );
 
             return hasMissingRef;
+        }
+
+        bool RemoveNoneVertices( ICollection<T> collection )
+        {
+            bool hasBadEntries = collection.Any( x => !graph.ContainsVertex( x ) );
+            collection.RemoveWhere( x => !graph.ContainsVertex( x ) );
+            return hasBadEntries;
         }
 
 		public void OnToolbarGUI()
