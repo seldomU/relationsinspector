@@ -36,4 +36,4 @@ namespace RelationsInspector
 		}
 	}
 }
-#endif	//RIDEMO
+#endif  //RIDEMO

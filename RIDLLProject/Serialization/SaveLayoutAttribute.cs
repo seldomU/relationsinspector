@@ -2,19 +2,19 @@ using System;
 
 namespace RelationsInspector
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class SaveLayoutAttribute : Attribute
-    {
-        public bool doSave;
+	[AttributeUsage( AttributeTargets.Class )]
+	public class SaveLayoutAttribute : Attribute
+	{
+		public bool doSave;
 
-        public SaveLayoutAttribute()
-        {
-            this.doSave = true;
-        }
+		public SaveLayoutAttribute()
+		{
+			this.doSave = true;
+		}
 
-        public SaveLayoutAttribute(bool doSave)
-        {
-            this.doSave = doSave;
-        }
-    }
+		public SaveLayoutAttribute( bool doSave )
+		{
+			this.doSave = doSave;
+		}
+	}
 }

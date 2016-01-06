@@ -6,214 +6,214 @@ using System;
 
 namespace RelationsInspector
 {
-    public class Graph<T, P> where T : class
+	public class Graph<T, P> where T : class
 	{
 		public Dictionary<T, VertexData<T, P>> VerticesData { get; private set; }
 		public IEnumerable<T> Vertices { get { return VerticesData.Keys; } }
-        public HashSet<T> RootVertices { get; private set; }
-        public HashSet<Relation<T, P>> Edges { get; private set; }
+		public HashSet<T> RootVertices { get; private set; }
+		public HashSet<Relation<T, P>> Edges { get; private set; }
 		public int VertexCount { get { return VerticesData.Count; } }
-        public bool genDownwards;   // if true, the graph was built by adding child vertices of members 
-        public bool genUpwards;     // if true, the graph was built by adding parent vertices of members
+		public bool genDownwards;   // if true, the graph was built by adding child vertices of members 
+		public bool genUpwards;     // if true, the graph was built by adding parent vertices of members
 
-        private bool isTree;
-        private bool recalcIsTree;
+		private bool isTree;
+		private bool recalcIsTree;
 
-        public Graph()
+		public Graph()
 		{
 			VerticesData = new Dictionary<T, VertexData<T, P>>();
 			Edges = new HashSet<Relation<T, P>>();
-            RootVertices = new HashSet<T>();
+			RootVertices = new HashSet<T>();
 		}
 
-        public bool IsRoot( T vertex )
-        {
-            return RootVertices.Contains( vertex );
-        }
-
-        public bool IsTree()
-        {
-            if ( recalcIsTree )
-            {
-                recalcIsTree = false;
-                isTree = this.IsMultipleTrees();
-            }
-            return isTree;
-        }
-
-        public void CleanNullRefs()
+		public bool IsRoot( T vertex )
 		{
-			VerticesData.RemoveWhere(pair => Util.IsBadRef(pair.Key) );
-			Edges.RemoveWhere(edge => Util.IsBadRef(edge.Source) || Util.IsBadRef(edge.Target) );
+			return RootVertices.Contains( vertex );
 		}
 
-		public virtual void AddVertex(T vertex)
+		public bool IsTree()
 		{
-            if ( vertex == null )
-            {
-                Log.Error( "Vertex is null." );
-                return;
-            }
+			if ( recalcIsTree )
+			{
+				recalcIsTree = false;
+				isTree = this.IsMultipleTrees();
+			}
+			return isTree;
+		}
 
-            if ( VerticesData.ContainsKey( vertex ) )
-            {
-                Log.Error( "Vertex is already part of the graph: " + vertex );
-                return;
-            }
-
-			VerticesData[vertex] = new VertexData<T, P>(vertex);
-            recalcIsTree = true;
-            RootVertices.Add( vertex );
-        }
-
-        public bool CanRegenerate( T source, T target)
-        {
-            if ( this.GetChildrenExceptSelf( source ).Contains( target ) )
-                return genDownwards;
-            if ( this.GetParentsExceptSelf( source ).Contains( target ) )
-                return genUpwards;
-            throw new Exception( "source and target are not related" );
-        }
-
-        public virtual void RemoveVertex(T vertex)
+		public void CleanNullRefs()
 		{
-            if ( vertex == null )
-            {
-                Log.Error("Vertex is null.");
-                return;
-            }
+			VerticesData.RemoveWhere( pair => Util.IsBadRef( pair.Key ) );
+			Edges.RemoveWhere( edge => Util.IsBadRef( edge.Source ) || Util.IsBadRef( edge.Target ) );
+		}
+
+		public virtual void AddVertex( T vertex )
+		{
+			if ( vertex == null )
+			{
+				Log.Error( "Vertex is null." );
+				return;
+			}
+
+			if ( VerticesData.ContainsKey( vertex ) )
+			{
+				Log.Error( "Vertex is already part of the graph: " + vertex );
+				return;
+			}
+
+			VerticesData[ vertex ] = new VertexData<T, P>( vertex );
+			recalcIsTree = true;
+			RootVertices.Add( vertex );
+		}
+
+		public bool CanRegenerate( T source, T target )
+		{
+			if ( this.GetChildrenExceptSelf( source ).Contains( target ) )
+				return genDownwards;
+			if ( this.GetParentsExceptSelf( source ).Contains( target ) )
+				return genUpwards;
+			throw new Exception( "source and target are not related" );
+		}
+
+		public virtual void RemoveVertex( T vertex )
+		{
+			if ( vertex == null )
+			{
+				Log.Error( "Vertex is null." );
+				return;
+			}
 
 			var affectedEdges = Edges
-                .Where(e => e.Source == vertex || e.Target == vertex)
-                .ToArray();
+				.Where( e => e.Source == vertex || e.Target == vertex )
+				.ToArray();
 
-            var neighbors = affectedEdges
-                .Select( e => e.Opposite( vertex ) )
-                .Except( new[] { vertex } );    // a self edge would make the vertex its own neighbor
+			var neighbors = affectedEdges
+				.Select( e => e.Opposite( vertex ) )
+				.Except( new[] { vertex } );    // a self edge would make the vertex its own neighbor
 
-            foreach (var edge in affectedEdges)
-				RemoveEdge(edge);
+			foreach ( var edge in affectedEdges )
+				RemoveEdge( edge );
 
-            if ( !VerticesData.Remove( vertex ) )
-            {
-                Log.Error( "Vertex is not a member: " + vertex );
-                return;
-            }
+			if ( !VerticesData.Remove( vertex ) )
+			{
+				Log.Error( "Vertex is not a member: " + vertex );
+				return;
+			}
 
-            // maintain root data
-            recalcIsTree = true;
-            RootVertices.Remove( vertex );
-            // add the targets that have no more in-edges
-            RootVertices.UnionWith( neighbors.Where( v => !HasParents( v ) ) );
-        }
+			// maintain root data
+			recalcIsTree = true;
+			RootVertices.Remove( vertex );
+			// add the targets that have no more in-edges
+			RootVertices.UnionWith( neighbors.Where( v => !HasParents( v ) ) );
+		}
 
-		public virtual void AddVertex(T vertex, Vector2 position)
+		public virtual void AddVertex( T vertex, Vector2 position )
 		{
-			AddVertex(vertex);
-            // only set position if vertex was added
+			AddVertex( vertex );
+			// only set position if vertex was added
 			if ( ContainsVertex( vertex ) )
-				SetPos(vertex, position);
+				SetPos( vertex, position );
 		}
 
-		public virtual void AddEdge(Relation<T, P> relation)
+		public virtual void AddEdge( Relation<T, P> relation )
 		{
-            if ( relation == null || relation.Source == null || relation.Target == null )
-            {
-                Log.Error( "Relation or vertex is null." );
-                return;
-            }
+			if ( relation == null || relation.Source == null || relation.Target == null )
+			{
+				Log.Error( "Relation or vertex is null." );
+				return;
+			}
 
-            if ( !VerticesData.ContainsKey( relation.Source ) )
-            {
-                Log.Error( "Relation source is missing from the graph: " + relation.Source );
-                return;
-            }
+			if ( !VerticesData.ContainsKey( relation.Source ) )
+			{
+				Log.Error( "Relation source is missing from the graph: " + relation.Source );
+				return;
+			}
 
-            if ( !VerticesData.ContainsKey( relation.Target ) )
-            {
-                Log.Error( "Relation target is missing from the graph: " + relation.Target );
-                return;
-            }
+			if ( !VerticesData.ContainsKey( relation.Target ) )
+			{
+				Log.Error( "Relation target is missing from the graph: " + relation.Target );
+				return;
+			}
 
-            if ( !Edges.Add( relation ) )
-            {
-                Log.Error( "Relation is already part of the graph: " + relation );
-                return;
-            }
+			if ( !Edges.Add( relation ) )
+			{
+				Log.Error( "Relation is already part of the graph: " + relation );
+				return;
+			}
 
-			VerticesData[relation.Source].OutEdges.Add(relation);
-			VerticesData[relation.Target].InEdges.Add(relation);
+			VerticesData[ relation.Source ].OutEdges.Add( relation );
+			VerticesData[ relation.Target ].InEdges.Add( relation );
 
-            // maintain root data
-            if ( !relation.IsSelfRelation )
-            {
-                recalcIsTree = true;
-                RootVertices.Remove( relation.Target );
-            }
-        }
-
-		public virtual void RemoveEdge(Relation<T, P> relation)
-		{
-            if ( relation == null )
-            {
-                Log.Error( "Relation is null." );
-                return;
-            }
-
-            if ( !Edges.Remove( relation ) )
-            {
-                Log.Error( "Relation is not part of the graph: " + relation );
-                return;
-            }
-
-			VerticesData[relation.Source].OutEdges.Remove(relation);
-			VerticesData[relation.Target].InEdges.Remove(relation);
-
-            if ( !relation.IsSelfRelation )
-            {
-                recalcIsTree = true;
-                if ( !HasParents( relation.Target ) )
-                    RootVertices.Add( relation.Target );
-            }
+			// maintain root data
+			if ( !relation.IsSelfRelation )
+			{
+				recalcIsTree = true;
+				RootVertices.Remove( relation.Target );
+			}
 		}
 
-		private bool HasParents(T vertex, bool ignoreSelfEdges = true)
+		public virtual void RemoveEdge( Relation<T, P> relation )
 		{
-            var inEdges = VerticesData[ vertex ].InEdges.Get();
+			if ( relation == null )
+			{
+				Log.Error( "Relation is null." );
+				return;
+			}
 
-            return ignoreSelfEdges ?
-                inEdges.Where(edge => edge.Source != vertex).Any(): 
-                inEdges.Any();
+			if ( !Edges.Remove( relation ) )
+			{
+				Log.Error( "Relation is not part of the graph: " + relation );
+				return;
+			}
+
+			VerticesData[ relation.Source ].OutEdges.Remove( relation );
+			VerticesData[ relation.Target ].InEdges.Remove( relation );
+
+			if ( !relation.IsSelfRelation )
+			{
+				recalcIsTree = true;
+				if ( !HasParents( relation.Target ) )
+					RootVertices.Add( relation.Target );
+			}
 		}
 
-		public bool ContainsVertex(T vertex)
+		private bool HasParents( T vertex, bool ignoreSelfEdges = true )
 		{
-			return VerticesData.ContainsKey(vertex);
+			var inEdges = VerticesData[ vertex ].InEdges.Get();
+
+			return ignoreSelfEdges ?
+				inEdges.Where( edge => edge.Source != vertex ).Any() :
+				inEdges.Any();
 		}
 
-        public bool ContainsEdge( Relation<T, P> relation )
-        {
-            return Edges.Contains( relation );
-        }
+		public bool ContainsVertex( T vertex )
+		{
+			return VerticesData.ContainsKey( vertex );
+		}
 
-		public Vector2 GetPos(T vertex)
+		public bool ContainsEdge( Relation<T, P> relation )
+		{
+			return Edges.Contains( relation );
+		}
+
+		public Vector2 GetPos( T vertex )
 		{
 			VertexData<T, P> data;
-			if (!VerticesData.TryGetValue(vertex, out data))
+			if ( !VerticesData.TryGetValue( vertex, out data ) )
 			{
-				Log.Error("Graph.GetPos: unknown vertex " + vertex);
+				Log.Error( "Graph.GetPos: unknown vertex " + vertex );
 				return Vector2.zero;
 			}
 
 			return data.pos;
 		}
 
-		public void SetPos(T vertex, Vector2 pos)
+		public void SetPos( T vertex, Vector2 pos )
 		{
 			VertexData<T, P> data;
-			if (!VerticesData.TryGetValue(vertex, out data))
+			if ( !VerticesData.TryGetValue( vertex, out data ) )
 			{
-				Log.Error("Graph.SetPos: unknown vertex " + vertex);
+				Log.Error( "Graph.SetPos: unknown vertex " + vertex );
 				return;
 			}
 

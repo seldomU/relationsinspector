@@ -2,94 +2,94 @@ using UnityEngine;
 
 namespace RelationsInspector
 {
-    public interface RelationsInspectorAPI
+	public interface RelationsInspectorAPI
 	{
 		// draw a fresh view of the graph
 		void Repaint();
 
-        // rebuild the graph from its current target objects
-        void Rebuild();
+		// rebuild the graph from its current target objects
+		void Rebuild();
 
-        // redo the layout on the current graph
-        void Relayout();
+		// redo the layout on the current graph
+		void Relayout();
 
 		// enforce backend selection
-		void SetBackend(System.Type backendType);
+		void SetBackend( System.Type backendType );
 
 		// manipulate the graph through targets
-		void ResetTargets(object[] targets);
-		void AddTargets(object[] targets);
-        object[] GetTargets();
+		void ResetTargets( object[] targets );
+		void AddTargets( object[] targets );
+		object[] GetTargets();
 
 		#region direct graph manipulation
 
 		// manipulate the graph directly
-		void AddEntity(object entity, Vector2 position);
-		void RemoveEntity(object entity);
-        void ExpandEntity( object entity );
-        void FoldEntity( object entity );
+		void AddEntity( object entity, Vector2 position );
+		void RemoveEntity( object entity );
+		void ExpandEntity( object entity );
+		void FoldEntity( object entity );
 
-        // add relation that has yet to be connected to its target
-        void InitRelation(object[] sourceEntity);
+		// add relation that has yet to be connected to its target
+		void InitRelation( object[] sourceEntity );
 
-        // get all relations involving the given entity
-        object[] FindRelations( object entity );
+		// get all relations involving the given entity
+		object[] FindRelations( object entity );
 
 		// add relation
-		void AddRelation(object sourceEntity, object targetEntity, object tag);
+		void AddRelation( object sourceEntity, object targetEntity, object tag );
 
 		// remove relation
-		void RemoveRelation(object sourceEntity, object targetEntity, object tag);
+		void RemoveRelation( object sourceEntity, object targetEntity, object tag );
 
 		#endregion
 
 		// set node selection
-		void SelectEntityNodes(System.Predicate<object> doSelect);
+		void SelectEntityNodes( System.Predicate<object> doSelect );
 	}
 
-    internal interface RelationsInspectorAPI2
-    {
-        // draw a fresh view of the graph
-        void Repaint();
+	internal interface RelationsInspectorAPI2
+	{
+		// draw a fresh view of the graph
+		void Repaint();
 
-        // rebuild the graph from its current target objects
-        void Rebuild();
+		// rebuild the graph from its current target objects
+		void Rebuild();
 
-        // redo the layout on the current graph
-        void Relayout();
+		// redo the layout on the current graph
+		void Relayout();
 
-        // enforce backend selection
-        void SetBackend(System.Type backendType);
+		// enforce backend selection
+		void SetBackend( System.Type backendType );
 
-        // manipulate the graph through targets
-        void ResetTargets(object[] targets);
-        void AddTargets(object[] targets);
+		// manipulate the graph through targets
+		void ResetTargets( object[] targets );
+		void AddTargets( object[] targets );
 
-        #region direct graph manipulation
+		#region direct graph manipulation
 
-        // manipulate the graph directly
-        void AddEntity(object entity, Vector2 position);
-        void RemoveEntity(object entity);
-        void ExpandEntity( object entity );
-        void FoldEntity( object entity );
+		// manipulate the graph directly
+		void AddEntity( object entity, Vector2 position );
+		void RemoveEntity( object entity );
+		void ExpandEntity( object entity );
+		void FoldEntity( object entity );
 
-        // add relation that has yet to be connected to its target
-        void InitRelation(object[] sourceEntity);
+		// add relation that has yet to be connected to its target
+		void InitRelation( object[] sourceEntity );
 
-        // get all relations involving the given entity
-        object[] FindRelations( object entity );
+		// get all relations involving the given entity
+		object[] FindRelations( object entity );
 
-        // add relation
-        void AddRelation(object sourceEntity, object targetEntity, object tag);
+		// add relation
+		void AddRelation( object sourceEntity, object targetEntity, object tag );
 
-        // remove relation
-        void RemoveRelation(object sourceEntity, object targetEntity, object tag);
+		// remove relation
+		void RemoveRelation( object sourceEntity, object targetEntity, object tag );
 
-        #endregion
+		#endregion
 
-        // set node selection
-        void SelectEntityNodes(System.Predicate<object> doSelect);
+		// set node selection
+		void SelectEntityNodes( System.Predicate<object> doSelect );
 
-        void SendEvent(Event e);
-    }
+		void SendEvent( Event e );
+	}
 }

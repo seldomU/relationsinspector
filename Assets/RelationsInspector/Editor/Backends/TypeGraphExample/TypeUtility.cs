@@ -8,24 +8,24 @@ namespace RelationsInspector.Backend.TypeHierarchy
 {
 	public static class TypeUtility
 	{
-		public static Assembly GetAssemblyByName(string name)
+		public static Assembly GetAssemblyByName( string name )
 		{
-			return System.AppDomain.CurrentDomain.GetAssemblies().Single(assembly => assembly.GetName().Name == name);
+			return System.AppDomain.CurrentDomain.GetAssemblies().Single( assembly => assembly.GetName().Name == name );
 		}
 
-		public static IEnumerable<Type> GetSubtypes(Type inspectedType, IEnumerable<Assembly> assemblies)
+		public static IEnumerable<Type> GetSubtypes( Type inspectedType, IEnumerable<Assembly> assemblies )
 		{
-			var assemblyTypes = assemblies.SelectMany(asm => asm.GetExportedTypes()).Where(t => t!=null);
+			var assemblyTypes = assemblies.SelectMany( asm => asm.GetExportedTypes() ).Where( t => t != null );
 
-			if (inspectedType.IsInterface)
+			if ( inspectedType.IsInterface )
 			{
 				// todo: generic interfaces
-				var implementers = assemblyTypes.Where(t => inspectedType.IsAssignableFrom(t));
-				foreach (var implementer in implementers)
+				var implementers = assemblyTypes.Where( t => inspectedType.IsAssignableFrom( t ) );
+				foreach ( var implementer in implementers )
 				{
-					if (implementer.BaseType == null)
+					if ( implementer.BaseType == null )
 						yield return implementer;
-					else if (!implementer.BaseType.IsAssignableFrom(inspectedType))
+					else if ( !implementer.BaseType.IsAssignableFrom( inspectedType ) )
 						yield return implementer;
 
 					// base type implements the interface, so this type is not directly related
@@ -33,8 +33,8 @@ namespace RelationsInspector.Backend.TypeHierarchy
 			}
 			else
 			{
-				var subTypes = assemblyTypes.Where(asmType => asmType.BaseType == inspectedType);
-				foreach (var type in subTypes)
+				var subTypes = assemblyTypes.Where( asmType => asmType.BaseType == inspectedType );
+				foreach ( var type in subTypes )
 					yield return type;
 			}
 		}
