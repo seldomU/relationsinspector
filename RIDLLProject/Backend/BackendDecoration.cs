@@ -71,18 +71,6 @@ namespace RelationsInspector
             }
         }
 
-        public void CreateEntity( Vector2 position )
-        {
-            try
-            {
-                backend.CreateEntity( position );
-            }
-            catch ( Exception e )
-            {
-                Debug.LogException( e );
-            }
-        }
-
         public void CreateRelation( T source, T target)
         {
             try
@@ -284,18 +272,6 @@ namespace RelationsInspector
             {
                 Debug.LogException( e );
                 return Enumerable.Empty<Relation<T, P>>();
-            }
-        }
-
-        public void CreateEntity( Vector2 position )
-        {
-            try
-            {
-                backend.CreateEntity( position );
-            }
-            catch ( Exception e )
-            {
-                Debug.LogException( e );
             }
         }
 

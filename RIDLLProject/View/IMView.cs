@@ -474,12 +474,7 @@ namespace RelationsInspector
 						{
 							if (ev.button == 1)	// right click
 							{
-								bool controlHeld = (ev.modifiers & EventModifiers.Control) != 0;
-								if (controlHeld)
-								{
-									var entityPos = transform.Revert(ev.mousePosition);
-									parent.GetBackend().CreateEntity(entityPos);
-								}
+                                // nothing
 							}
 							else
 							{

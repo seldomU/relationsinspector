@@ -11,7 +11,6 @@ namespace RelationsInspector
         IEnumerable<T> Init( object target );
         void OnDestroy();
         IEnumerable<Relation<T, P>> GetRelations(T entity);
-        void CreateEntity(Vector2 position);
         void CreateRelation(T source, T target);
         void OnEntitySelectionChange(T[] selection);
         void OnUnitySelectionChange();
