@@ -505,7 +505,7 @@ namespace RelationsInspector
                 view.OnRemovedRelation( edge );
         }
 
-        object[] IWorkspace.GetRelations( object entity )
+        object[] IWorkspace.FindRelations( object entity )
         {
             var asT = entity as T;
             if ( asT == null || graph == null || !graph.ContainsVertex( asT ) )

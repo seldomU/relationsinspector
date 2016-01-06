@@ -33,7 +33,7 @@ namespace RelationsInspector
         void InitRelation(object[] sourceEntity);
 
         // get all relations involving the given entity
-        object[] GetRelations( object entity );
+        object[] FindRelations( object entity );
 
 		// add relation
 		void AddRelation(object sourceEntity, object targetEntity, object tag);
@@ -77,7 +77,7 @@ namespace RelationsInspector
         void InitRelation(object[] sourceEntity);
 
         // get all relations involving the given entity
-        object[] GetRelations( object entity );
+        object[] FindRelations( object entity );
 
         // add relation
         void AddRelation(object sourceEntity, object targetEntity, object tag);
