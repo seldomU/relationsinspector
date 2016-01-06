@@ -20,7 +20,7 @@ namespace RelationsInspector
 		public EntityWidgetStyle style;
 	}
 
-	// Stores its own version of the graph. Handles entity- and tag drawing and transformations.
+	// Handles graph drawing and graph-related event handling
 	internal class IMView<T, P> : IGraphView<T, P> where T : class
 	{
 		Transform2d transform;
