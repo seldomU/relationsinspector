@@ -32,6 +32,9 @@ namespace RelationsInspector
         // add relation that has yet to be connected to its target
         void InitRelation(object[] sourceEntity);
 
+        // get all relations involving the given entity
+        object[] GetRelations( object entity );
+
 		// add relation
 		void AddRelation(object sourceEntity, object targetEntity, object tag);
 
@@ -72,6 +75,9 @@ namespace RelationsInspector
 
         // add relation that has yet to be connected to its target
         void InitRelation(object[] sourceEntity);
+
+        // get all relations involving the given entity
+        object[] GetRelations( object entity );
 
         // add relation
         void AddRelation(object sourceEntity, object targetEntity, object tag);

@@ -21,6 +21,7 @@ namespace RelationsInspector
         void CreateRelation(object[] sourceEntities);
 		void AddRelation(object source, object target, object tag);
 		void RemoveRelation(object source, object target, object tag);
+        object[] GetRelations( object entity );
 
 		void SelectEntityNodes(System.Predicate<object> doSelect);
         void Relayout();

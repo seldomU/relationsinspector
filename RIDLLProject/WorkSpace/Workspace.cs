@@ -505,6 +505,17 @@ namespace RelationsInspector
                 view.OnRemovedRelation( edge );
         }
 
+        object[] IWorkspace.GetRelations( object entity )
+        {
+            var asT = entity as T;
+            if ( asT == null || graph == null || !graph.ContainsVertex( asT ) )
+                return new object[ 0 ];
+
+            var outgoing = graph.VerticesData[ asT ].OutEdges.Get();
+            var entering = graph.VerticesData[ asT ].InEdges.Get();
+            return outgoing.Concat( entering ).ToArray();
+        }
+
 		void IWorkspace.SelectEntityNodes(System.Predicate<object> doSelect)
 		{
             if(view != null )

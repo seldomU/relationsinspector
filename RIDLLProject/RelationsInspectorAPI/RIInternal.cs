@@ -162,6 +162,14 @@ namespace RelationsInspector
                 Exec(() => workspace.CreateRelation(sourceEntities));
         }
 
+        public object[] GetRelations( object entity )
+        {
+            if ( workspace == null )
+                return new object[ 0 ];
+
+            return workspace.GetRelations( entity );
+        }
+
         public void AddRelation(object sourceEntity, object targetEntity, object tag)
         {
             if (workspace != null)

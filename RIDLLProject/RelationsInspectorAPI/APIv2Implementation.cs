@@ -73,6 +73,11 @@ namespace RelationsInspector
             internalAPI.InitRelation(sourceEntities);
         }
 
+        public object[] GetRelations( object entity )
+        {
+            return internalAPI.GetRelations( entity );
+        }
+
         public void AddRelation(object sourceEntity, object targetEntity, object tag)
         {
             internalAPI.AddRelation(sourceEntity, targetEntity, tag);
