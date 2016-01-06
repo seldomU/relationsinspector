@@ -68,9 +68,9 @@ namespace RelationsInspector
 
         public bool CanRegenerate( T source, T target)
         {
-            if ( this.GetChildren( source ).Contains( target ) )
+            if ( this.GetChildrenExceptSelf( source ).Contains( target ) )
                 return genDownwards;
-            if ( this.GetParents( source ).Contains( target ) )
+            if ( this.GetParentsExceptSelf( source ).Contains( target ) )
                 return genUpwards;
             throw new Exception( "source and target are not related" );
         }

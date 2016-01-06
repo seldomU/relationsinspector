@@ -9,8 +9,13 @@ namespace RelationsInspector
 		{
 			return graph.GetParents(vertex).Concat( graph.GetChildren(vertex) );
 		}
-		
-		public static IEnumerable<T> GetChildren<T,P>(this Graph<T, P> graph, T vertex) where T : class
+
+        public static IEnumerable<T> GetNeighborsExceptSelf<T, P>( this Graph<T, P> graph, T vertex ) where T : class
+        {
+            return graph.GetParentsExceptSelf( vertex ).Concat( graph.GetChildrenExceptSelf( vertex ) );
+        }
+
+        public static IEnumerable<T> GetChildren<T,P>(this Graph<T, P> graph, T vertex) where T : class
 		{
             if ( !graph.Vertices.Contains( vertex ) )
                 return Enumerable.Empty<T>();
@@ -75,7 +80,7 @@ namespace RelationsInspector
                 unexplored.Remove( item );
                 visited.Add( item );
 
-                var successors = graph.GetChildren( item ).Except( new[] { item } );    // ignore self edges
+                var successors = graph.GetChildrenExceptSelf( item );    // ignore self edges
                 if ( successors.Any( vertex => visited.Contains( vertex ) ) )
                     return false;
 

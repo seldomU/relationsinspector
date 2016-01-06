@@ -17,7 +17,7 @@ namespace RelationsInspector
     {
         public static List<SubGraph<T>> Split<T, P>( Graph<T, P> graph, T root, Func<T,bool> isGraphSeed ) where T : class
         {
-            var rootNeighbors = graph.GetNeighbors( root ).Except( new[] { root } );
+            var rootNeighbors = graph.GetNeighborsExceptSelf( root );
             var subGraphs = new List<SubGraph<T>>();
             foreach ( var seed in rootNeighbors )
             {
@@ -55,7 +55,7 @@ namespace RelationsInspector
 
                 subGraph.elements.Add( item );
                 subGraph.numSeeds += isGraphSeed( item ) ? 1 : 0;
-                neighbors.UnionWith( graph.GetNeighbors( item ).Except( new[] { root } ) );
+                neighbors.UnionWith( graph.GetNeighborsExceptSelf( item ) );
             }
             return subGraph;
         }
