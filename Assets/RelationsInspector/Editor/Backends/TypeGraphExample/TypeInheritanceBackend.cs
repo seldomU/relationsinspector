@@ -18,13 +18,23 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
 		static Assembly[] allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
+		// maintain the target types and their parents, so we can hide the other types derived from the parents
+		HashSet<Type> targetTypes = new HashSet<Type>();
 		HashSet<Type> parentTypes = new HashSet<Type>();
+
+		public override IEnumerable<Type> Init( object target )
+		{
+			var type = target as Type;
+			targetTypes.Add( type );
+			return new[] { type };
+		}
 
 		public override IEnumerable<Relation<Type, TypeRelation>> GetRelations( Type entity )
 		{
 			return GetRelated( entity ).Concat( GetRelating( entity ) );
 		}
 
+		// returns relations entity->subtype, unless entity is the parent of a target
 		IEnumerable<Relation<Type, TypeRelation>> GetRelated( Type entity )
 		{
 			if ( parentTypes.Contains( entity ) )
@@ -35,21 +45,27 @@ namespace RelationsInspector.Backend.TypeHierarchy
 				yield return new Relation<Type, TypeRelation>( entity, t, TypeRelation.Extension );
 		}
 
+		// returns relations baseType->entity and interface->entity
 		IEnumerable<Relation<Type, TypeRelation>> GetRelating( Type entity )
 		{
+			bool isParentOrTarget = parentTypes.Contains( entity ) || targetTypes.Contains( entity );
+
 			if ( entity.BaseType != null )
 			{
-				parentTypes.Add( entity.BaseType );
 				yield return new Relation<Type, TypeRelation>( entity.BaseType, entity, TypeRelation.Extension );
+
+				if ( isParentOrTarget )
+					parentTypes.Add( entity.BaseType );
 			}
 
 			if ( includeInterfaces )
 			{
 				foreach ( var t in entity.GetInterfaces() )
 				{
-					parentTypes.Add( t );
 					yield return new Relation<Type, TypeRelation>( t, entity, TypeRelation.Implementation );
 
+					if( isParentOrTarget )
+						parentTypes.Add( t );
 				}
 			}
 		}
@@ -70,7 +86,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
 				if ( !api.GetTargets().Any() && GUILayout.Button( "inspect Unity Object" ) )
 					api.ResetTargets( new[] { typeof( UnityEngine.Object ) } );
 
-				// search field            
+				// search field
 				GUILayout.FlexibleSpace();
 				searchstring = BackendUtil.DrawEntitySelectSearchField( searchstring, api );
 			}
