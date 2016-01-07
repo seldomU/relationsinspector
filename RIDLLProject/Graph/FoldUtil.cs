@@ -44,7 +44,7 @@ namespace RelationsInspector
 			var subGraph = new SubGraph<T>();
 			subGraph.entryPoints.Add( seed );
 
-			var neighbors = new HashSet<T>() { seed }; //graph.GetNeighbors(seed
+			var neighbors = new HashSet<T>() { seed };
 
 			while ( neighbors.Any() )
 			{
@@ -55,7 +55,7 @@ namespace RelationsInspector
 
 				subGraph.elements.Add( item );
 				subGraph.numSeeds += isGraphSeed( item ) ? 1 : 0;
-				neighbors.UnionWith( graph.GetNeighborsExceptSelf( item ) );
+				neighbors.UnionWith( graph.GetNeighbors( item ).Except( new[] { root } ) );
 			}
 			return subGraph;
 		}
