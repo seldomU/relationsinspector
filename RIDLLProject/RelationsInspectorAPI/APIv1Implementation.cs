@@ -31,15 +31,15 @@ namespace RelationsInspector
 		}
 
 		// manipulate the graph through targets
-		public void ResetTargets( object[] targets )
+		public void ResetTargets( object[] targets, bool delayed = true )
 		{
-			internalAPI.ResetTargets( targets );
+			internalAPI.ResetTargets( targets, delayed );
 		}
 
 		// if a graph exists, add targets. else create a new one from the targets
-		public void AddTargets( object[] targets )
+		public void AddTargets( object[] targets, bool delayed = true )
 		{
-			internalAPI.AddTargets( targets, Vector2.zero );
+			internalAPI.AddTargets( targets, Vector2.zero, delayed );
 		}
 
 		public object[] GetTargets()
@@ -48,29 +48,29 @@ namespace RelationsInspector
 		}
 
 		// manipulate the graph directly
-		public void AddEntity( object entity, Vector2 position )
+		public void AddEntity( object entity, Vector2 position, bool delayed = true )
 		{
-			internalAPI.AddEntity( entity, position );
+			internalAPI.AddEntity( entity, position, delayed );
 		}
 
-		public void RemoveEntity( object entity )
+		public void RemoveEntity( object entity, bool delayed = true )
 		{
-			internalAPI.RemoveEntity( entity );
+			internalAPI.RemoveEntity( entity, delayed );
 		}
 
-		public void ExpandEntity( object entity )
+		public void ExpandEntity( object entity, bool delayed = true )
 		{
-			internalAPI.ExpandEntity( entity );
+			internalAPI.ExpandEntity( entity, delayed );
 		}
 
-		public void FoldEntity( object entity )
+		public void FoldEntity( object entity, bool delayed = true )
 		{
-			internalAPI.FoldEntity( entity );
+			internalAPI.FoldEntity( entity, delayed );
 		}
 
-		public void InitRelation( object[] sourceEntities )
+		public void InitRelation( object[] sourceEntities, bool delayed = true )
 		{
-			internalAPI.InitRelation( sourceEntities );
+			internalAPI.InitRelation( sourceEntities, delayed );
 		}
 
 		public object[] FindRelations( object entity )
@@ -78,25 +78,25 @@ namespace RelationsInspector
 			return internalAPI.FindRelations( entity );
 		}
 
-		public void AddRelation( object sourceEntity, object targetEntity, object tag )
+		public void AddRelation( object sourceEntity, object targetEntity, object tag, bool delayed = true )
 		{
-			internalAPI.AddRelation( sourceEntity, targetEntity, tag );
+			internalAPI.AddRelation( sourceEntity, targetEntity, tag, delayed );
 		}
 
-		public void RemoveRelation( object sourceEntity, object targetEntity, object tag )
+		public void RemoveRelation( object sourceEntity, object targetEntity, object tag, bool delayed = true )
 		{
-			internalAPI.RemoveRelation( sourceEntity, targetEntity, tag );
+			internalAPI.RemoveRelation( sourceEntity, targetEntity, tag, delayed );
 		}
 
 		// enforce backend selection
-		public void SetBackend( Type backendType )
+		public void SetBackend( Type backendType, bool delayed = true )
 		{
-			internalAPI.SetBackend( backendType );
+			internalAPI.SetBackend( backendType, delayed );
 		}
 
-		public void SelectEntityNodes( Predicate<object> doSelect )
+		public void SelectEntityNodes( Predicate<object> doSelect, bool delayed = true )
 		{
-			internalAPI.SelectEntityNodes( doSelect );
+			internalAPI.SelectEntityNodes( doSelect, delayed );
 		}
 	}
 }

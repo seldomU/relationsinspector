@@ -14,37 +14,37 @@ namespace RelationsInspector
 		void Relayout();
 
 		// enforce backend selection
-		void SetBackend( System.Type backendType );
+		void SetBackend( System.Type backendType, bool delayed = true );
 
 		// manipulate the graph through targets
-		void ResetTargets( object[] targets );
-		void AddTargets( object[] targets );
+		void ResetTargets( object[] targets, bool delayed = true );
+		void AddTargets( object[] targets, bool delayed = true );
 		object[] GetTargets();
 
 		#region direct graph manipulation
 
 		// manipulate the graph directly
-		void AddEntity( object entity, Vector2 position );
-		void RemoveEntity( object entity );
-		void ExpandEntity( object entity );
-		void FoldEntity( object entity );
+		void AddEntity( object entity, Vector2 position, bool delayed = true );
+		void RemoveEntity( object entity, bool delayed = true );
+		void ExpandEntity( object entity, bool delayed = true );
+		void FoldEntity( object entity, bool delayed = true );
 
 		// add relation that has yet to be connected to its target
-		void InitRelation( object[] sourceEntity );
+		void InitRelation( object[] sourceEntity, bool delayed = true );
 
 		// get all relations involving the given entity
 		object[] FindRelations( object entity );
 
 		// add relation
-		void AddRelation( object sourceEntity, object targetEntity, object tag );
+		void AddRelation( object sourceEntity, object targetEntity, object tag, bool delayed = true );
 
 		// remove relation
-		void RemoveRelation( object sourceEntity, object targetEntity, object tag );
+		void RemoveRelation( object sourceEntity, object targetEntity, object tag, bool delayed = true );
 
 		#endregion
 
 		// set node selection
-		void SelectEntityNodes( System.Predicate<object> doSelect );
+		void SelectEntityNodes( System.Predicate<object> doSelect, bool delayed = true );
 	}
 
 	internal interface RelationsInspectorAPI2
@@ -59,37 +59,36 @@ namespace RelationsInspector
 		void Relayout();
 
 		// enforce backend selection
-		void SetBackend( System.Type backendType );
+		void SetBackend( System.Type backendType, bool delayed = true );
 
 		// manipulate the graph through targets
-		void ResetTargets( object[] targets );
-		void AddTargets( object[] targets );
+		void ResetTargets( object[] targets, bool delayed = true );
+		void AddTargets( object[] targets, bool delayed = true );
+		object[] GetTargets();
 
 		#region direct graph manipulation
 
 		// manipulate the graph directly
-		void AddEntity( object entity, Vector2 position );
-		void RemoveEntity( object entity );
-		void ExpandEntity( object entity );
-		void FoldEntity( object entity );
+		void AddEntity( object entity, Vector2 position, bool delayed = true );
+		void RemoveEntity( object entity, bool delayed = true );
+		void ExpandEntity( object entity, bool delayed = true );
+		void FoldEntity( object entity, bool delayed = true );
 
 		// add relation that has yet to be connected to its target
-		void InitRelation( object[] sourceEntity );
+		void InitRelation( object[] sourceEntity, bool delayed = true );
 
 		// get all relations involving the given entity
 		object[] FindRelations( object entity );
 
 		// add relation
-		void AddRelation( object sourceEntity, object targetEntity, object tag );
+		void AddRelation( object sourceEntity, object targetEntity, object tag, bool delayed = true );
 
 		// remove relation
-		void RemoveRelation( object sourceEntity, object targetEntity, object tag );
+		void RemoveRelation( object sourceEntity, object targetEntity, object tag, bool delayed = true );
 
 		#endregion
 
 		// set node selection
-		void SelectEntityNodes( System.Predicate<object> doSelect );
-
-		void SendEvent( Event e );
+		void SelectEntityNodes( System.Predicate<object> doSelect, bool delayed = true );
 	}
 }

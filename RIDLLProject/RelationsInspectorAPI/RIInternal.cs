@@ -12,7 +12,7 @@ namespace RelationsInspector
 	{
 		HashSet<object> targetObjects;
 		IWorkspace workspace;
-		Action<Action> Exec;
+		Action<Action> ExecDelayed;
 		Action<GUIContent> ShowNotification;
 
 		List<Type> allBackendTypes;
@@ -26,9 +26,9 @@ namespace RelationsInspector
 		static readonly GUIContent clearButtonContent = new GUIContent( "Clear", "Removes all window content" );
 		static readonly GUIContent rebuildButtonContent = new GUIContent( "Rebuild", "Rebuilds the graph from the target objects" );
 
-		internal RIInternal( Action<Action> Exec, Action<GUIContent> ShowNotification, RelationsInspectorWindow window )
+		internal RIInternal( Action<Action> ExecDelayed, Action<GUIContent> ShowNotification, RelationsInspectorWindow window )
 		{
-			this.Exec = Exec;
+			this.ExecDelayed = ExecDelayed;
 			this.ShowNotification = ShowNotification;
 			this.window = window;
 
@@ -66,7 +66,7 @@ namespace RelationsInspector
 		// draw a fresh view of the graph
 		public void Repaint()
 		{
-			Exec( Util.IdleAction );  // Update repaints after any action, so idle is enough to cause a repaint
+			Exec( Util.IdleAction, false );  // Update repaints after any action, so idle is enough to cause a repaint
 		}
 
 		// rebuild the graph from the current targets
@@ -82,13 +82,13 @@ namespace RelationsInspector
 				workspace.Relayout();
 		}
 
-		public void ResetTargets( object[] targets )
+		public void ResetTargets( object[] targets, bool delayed = true )
 		{
 			if ( !UserAcceptsTargetCount( targets.Length ) )
 				return;
 
 			targetHistory.RegisterState( targets, selectedBackendType );
-			Exec( () => SetTargetObjects( targets ) );
+			Exec( () => SetTargetObjects( targets ), delayed );
 		}
 
 		// if numTargets exceeds the node limit, warn the user through a dialog
@@ -112,9 +112,9 @@ namespace RelationsInspector
 		}
 
 		// if a graph exists, add targets. else create a new one from the targets
-		public void AddTargets( object[] targets, Vector2 pos )
+		public void AddTargets( object[] targets, Vector2 pos, bool delayed = true )
 		{
-			Exec( () => AddTargetObjects( targets, pos ) );
+			Exec( () => AddTargetObjects( targets, pos ), delayed );
 		}
 
 		public object[] GetTargets()
@@ -126,40 +126,40 @@ namespace RelationsInspector
 		}
 
 		// manipulate the graph directly
-		public void AddEntity( object entity, Vector2 position )
+		public void AddEntity( object entity, Vector2 position, bool delayed = true )
 		{
 			if ( workspace == null )
 				return;
 
 			var assignableEntity = MakeAssignableEntities( new[] { entity }, selectedBackendType ).FirstOrDefault();
-			Exec( () => workspace.AddEntity( assignableEntity, position ) );
+			Exec( () => workspace.AddEntity( assignableEntity, position ), delayed );
 		}
 
-		public void RemoveEntity( object entity )
+		public void RemoveEntity( object entity, bool delayed = true )
 		{
 			if ( workspace == null )
 				return;
 
 			var assignableEntity = MakeAssignableEntities( new[] { entity }, selectedBackendType ).FirstOrDefault();
-			Exec( () => workspace.RemoveEntity( entity ) );
+			Exec( () => workspace.RemoveEntity( entity ), delayed );
 		}
 
-		internal void ExpandEntity( object entity )
+		internal void ExpandEntity( object entity, bool delayed = true )
 		{
 			if ( workspace != null )
-				Exec( () => workspace.ExpandEntity( entity ) );
+				Exec( () => workspace.ExpandEntity( entity ), delayed );
 		}
 
-		internal void FoldEntity( object entity )
+		internal void FoldEntity( object entity, bool delayed = true )
 		{
 			if ( workspace != null )
-				Exec( () => workspace.FoldEntity( entity ) );
+				Exec( () => workspace.FoldEntity( entity ), delayed );
 		}
 
-		public void InitRelation( object[] sourceEntities )
+		public void InitRelation( object[] sourceEntities, bool delayed = true )
 		{
 			if ( workspace != null )
-				Exec( () => workspace.CreateRelation( sourceEntities ) );
+				Exec( () => workspace.CreateRelation( sourceEntities ), delayed );
 		}
 
 		public object[] FindRelations( object entity )
@@ -170,32 +170,32 @@ namespace RelationsInspector
 			return workspace.FindRelations( entity );
 		}
 
-		public void AddRelation( object sourceEntity, object targetEntity, object tag )
+		public void AddRelation( object sourceEntity, object targetEntity, object tag, bool delayed = true )
 		{
 			if ( workspace != null )
-				Exec( () => workspace.AddRelation( sourceEntity, targetEntity, tag ) );
+				Exec( () => workspace.AddRelation( sourceEntity, targetEntity, tag ), delayed );
 		}
 
-		public void RemoveRelation( object sourceEntity, object targetEntity, object tag )
+		public void RemoveRelation( object sourceEntity, object targetEntity, object tag, bool delayed = false )
 		{
 			if ( workspace != null )
-				Exec( () => workspace.RemoveRelation( sourceEntity, targetEntity, tag ) );
+				Exec( () => workspace.RemoveRelation( sourceEntity, targetEntity, tag ), delayed );
 		}
 
 		// enforce backend selection
-		public void SetBackend( Type backendType )
+		public void SetBackend( Type backendType, bool delayed = true )
 		{
 			if ( !BackendTypeUtil.IsBackendType( backendType ) )
 				throw new ArgumentException( backendType + " is not a valid backend type." );
 
 			targetHistory.RegisterBackendChange( backendType );
-			Exec( () => OnSelectBackend( backendType ) );
+			Exec( () => OnSelectBackend( backendType ), delayed );
 		}
 
-		public void SelectEntityNodes( System.Predicate<object> doSelect )
+		public void SelectEntityNodes( System.Predicate<object> doSelect, bool delayed = true )
 		{
 			if ( workspace != null )
-				Exec( () => workspace.SelectEntityNodes( doSelect ) );
+				Exec( () => workspace.SelectEntityNodes( doSelect ), delayed );
 		}
 
 		public void SendEvent( Event e )
@@ -204,6 +204,13 @@ namespace RelationsInspector
 				workspace.OnEvent( e );
 		}
 
+		void Exec( Action action, bool delayed = true )
+		{
+			if ( delayed )
+				ExecDelayed( action );
+			else
+				action.Invoke();
+		}
 
 		void OnSelectBackend( Type backendType )
 		{
