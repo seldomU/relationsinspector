@@ -81,7 +81,8 @@ namespace RelationsInspector
 				visited.Add( item );
 
 				var successors = graph.GetChildrenExceptSelf( item );    // ignore self edges
-				if ( successors.Any( vertex => visited.Contains( vertex ) ) )
+
+				if ( successors.Any( v => visited.Contains( v ) || unexplored.Contains( v ) ) )
 					return false;
 
 				unexplored.UnionWith( successors );
