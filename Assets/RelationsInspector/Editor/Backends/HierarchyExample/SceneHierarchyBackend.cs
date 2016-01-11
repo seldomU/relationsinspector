@@ -33,9 +33,9 @@ namespace RelationsInspector.Backend.Scene
 
 		public void OnEntityContextClick( IEnumerable<Object> entities, GenericMenu contextMenu )
 		{
-			var single = entities.SingleOrDefault();
-			if ( single != null )
+			if(entities.Count() == 1)
 			{
+				var single = entities.First();
 				var type = single.GetType();
 				contextMenu.AddItem( new GUIContent( "inspect type " + type.Name ), false, () => api.ResetTargets( new[] { type } ) );
 			}

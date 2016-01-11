@@ -97,9 +97,12 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
 		public override void OnEntityContextClick( IEnumerable<Type> entities, GenericMenu menu )
 		{
-			var single = entities.SingleOrDefault();
-			if ( single != null && !api.GetTargets().Contains( single ) )
-				menu.AddItem( new GUIContent( "inspect type " + single.Name ), false, () => api.ResetTargets( new[] { single } ) );
+			if ( entities.Count() == 1 )
+			{
+				var single = entities.First();
+				if( !api.GetTargets().Contains( single ) )
+					menu.AddItem( new GUIContent( "inspect type " + single.Name ), false, () => api.ResetTargets( new[] { single } ) );
+			}
 		}
 
 		// map relation tag value to color
