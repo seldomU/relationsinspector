@@ -560,7 +560,7 @@ namespace RelationsInspector
 			var menu = new GenericMenu();
 
 			// a vertex can be folded when it produces fold-vertices
-			if ( entities.All( e => FoldUtil.GetFoldVertices( graph, e, parent.IsSeed ).Any() ) )
+			if ( entities.Any( e => FoldUtil.GetFoldVertices( graph, e, parent.IsSeed ).Any() ) )
 			{
 				menu.AddItem( new GUIContent( "Fold" ), false, () =>
 				{
@@ -572,7 +572,7 @@ namespace RelationsInspector
 			};
 
 			// a vertex can be expanded when it is marked as unexplored 
-			if ( entities.All( e => graph.VerticesData[ e ].unexplored ) )
+			if ( entities.Any( e => graph.VerticesData[ e ].unexplored ) )
 			{
 				menu.AddItem( new GUIContent( "Expand" ), false, () =>
 				{
