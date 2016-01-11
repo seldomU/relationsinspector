@@ -294,6 +294,7 @@ namespace RelationsInspector
 			targetObjects = combined;
 			var entitiesToAdd = MakeAssignableEntities( newTargets, selectedBackendType );
 			workspace.AddTargets( entitiesToAdd.ToArray(), pos );
+			UpdateBackend();
 		}
 
 		internal void SetTargetObjects( IEnumerable<object> targets )
@@ -302,11 +303,6 @@ namespace RelationsInspector
 				targetObjects = null;
 			else
 				targetObjects = new HashSet<object>( targets.Where( o => !Util.IsBadRef( o ) ) );
-			OnTargetChange();
-		}
-
-		void OnTargetChange()
-		{
 			UpdateBackend();
 			InitWorkspace();
 		}
