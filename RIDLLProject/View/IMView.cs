@@ -338,8 +338,8 @@ namespace RelationsInspector
 			var style = SkinManager.GetSkin().tooltipStyle;
 			var contentSize = style.CalcSize( content );
 
-			float toolTipSpacing = 5;
-			var tooltipRectCenter = new Vector2( parentItemRect.center.x, parentItemRect.yMax + contentSize.y + toolTipSpacing );
+			float toolTipSpacing = 20;
+			var tooltipRectCenter = new Vector2( parentItemRect.center.x, parentItemRect.yMax + contentSize.y/2 + toolTipSpacing );
 
 			var contentRect = Util.CenterRect( tooltipRectCenter, contentSize );
 
