@@ -451,32 +451,13 @@ namespace RelationsInspector
 							OnEntitySelectionChange();
 							parent.RepaintView();
 						}
-						else if ( ev.button == 1 )  // right click
-						{
-							if ( !entitySelection.Contains( clickEntity ) )
-								entitySelection = new HashSet<T>() { clickEntity };
-
-							HandleEntityContextClick( entitySelection );
-						}
 					}
 					else // clickEntity == null
 					{
 						var clickEdge = GetEdgeAtPosition( ev.mousePosition );
-						if ( clickEdge != null )
+						if ( clickEdge == null ) // clickEdge == null && clickEntity == null
 						{
-							if ( ev.button == 1 )   // right click
-							{
-								HandleRelationContextClick( clickEdge );
-								ev.Use();   // eat event, or else a new entity is created here
-							}
-						}
-						else // clickEdge == null && clickEntity == null
-						{
-							if ( ev.button == 1 )   // right click
-							{
-								// nothing
-							}
-							else
+							if ( ev.button != 1 )   // not a right click
 							{
 								bool controlHeld = ( ev.modifiers & EventModifiers.Control ) != 0;
 								if ( !controlHeld )
@@ -492,6 +473,27 @@ namespace RelationsInspector
 								parent.RepaintView();
 							}
 						}
+					}
+					break;
+
+				case EventType.ContextClick:
+					var ccEntity = GetEntityAtPosition( ev.mousePosition );
+					if ( ccEntity != null )
+					{
+						if ( !entitySelection.Contains( ccEntity ) )
+							entitySelection = new HashSet<T>() { ccEntity };
+
+						HandleEntityContextClick( entitySelection );
+						Event.current.Use();
+						break;
+					}
+
+					var ccEdge = GetEdgeAtPosition( ev.mousePosition );
+					if ( ccEdge != null )
+					{
+						HandleRelationContextClick( ccEdge );
+						Event.current.Use();
+						break;
 					}
 					break;
 
