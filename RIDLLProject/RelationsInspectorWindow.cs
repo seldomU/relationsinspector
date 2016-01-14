@@ -11,6 +11,8 @@ using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
+	public delegate object GetAPI( int version );
+
 	public class RelationsInspectorWindow : EditorWindow
 	{
 		RIInternal internalAPI;
@@ -29,14 +31,14 @@ namespace RelationsInspector
 			OnUpdate += action;
 		}
 
-		public RelationsInspectorAPI GetAPI()
+		public object GetAPI(int version)
 		{
-			return api1impl;
-		}
-
-		internal RelationsInspectorAPI2 GetAPI2()
-		{
-			return api2impl;
+			switch ( version )
+			{
+				case 1:
+				default:
+					return api1impl;
+			}
 		}
 
 		void OnGUI()

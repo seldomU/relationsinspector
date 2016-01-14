@@ -13,9 +13,9 @@ namespace RelationsInspector.Backend.Scene
 		Object sceneObj;    // representing the scene, as a parent for all the top-level GameObjects in the hierarchy
 		static bool includeComponents;
 
-		public void Awake( RelationsInspectorAPI api )
+		public void Awake( GetAPI getAPI )
 		{
-			this.api = api;
+			api = getAPI(1) as RelationsInspectorAPI;
 			sceneObj = EditorGUIUtility.whiteTexture;   // any object will do
 		}
 

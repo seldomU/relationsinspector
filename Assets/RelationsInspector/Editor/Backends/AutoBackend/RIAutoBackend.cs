@@ -10,13 +10,13 @@ namespace RelationsInspector.Backend.AutoBackend
 		IEnumerable<FieldInfo> relatedFields;
 		IEnumerable<FieldInfo> relatingFields;
 
-		public override void Awake( RelationsInspectorAPI api )
+		public override void Awake( GetAPI getAPI )
 		{
 			relatingFields = ReflectionUtil.GetAttributeFields<T, RelatingAttribute>();
 			relatedFields = ReflectionUtil.GetAttributeFields<T, RelatedAttribute>();
 			if ( !relatingFields.Any() && !relatedFields.Any() )
 				Debug.LogError( "Type has auto backend attribute, but no fields marked as related or relating: " + typeof( T ) );
-			base.Awake( api );
+			base.Awake( getAPI );
 		}
 
 		public override IEnumerable<Relation<T, string>> GetRelations( T entity )

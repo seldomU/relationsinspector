@@ -21,11 +21,11 @@ namespace RelationsInspector
 			return backend.GetType();
 		}
 
-		public void Awake( RelationsInspectorAPI api )
+		public void Awake( GetAPI getAPI )
 		{
 			try
 			{
-				backend.Awake( api );
+				backend.Awake( getAPI );
 			}
 			catch ( Exception e )
 			{
@@ -225,11 +225,11 @@ namespace RelationsInspector
 			return backend.GetType();
 		}
 
-		public void Awake( RelationsInspectorAPI api )
+		public void Awake( GetAPI getAPI )
 		{
 			try
 			{
-				backend.Awake( api );
+				backend.Awake( getAPI );
 			}
 			catch ( Exception e )
 			{

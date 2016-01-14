@@ -7,7 +7,7 @@ namespace RelationsInspector
 	internal interface IGraphBackendInternal<T, P> where T : class
 	{
 		System.Type GetDecoratedType();
-		void Awake( RelationsInspectorAPI api );
+		void Awake( GetAPI getAPI );
 		IEnumerable<T> Init( object target );
 		void OnDestroy();
 		IEnumerable<Relation<T, P>> GetRelations( T entity );

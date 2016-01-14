@@ -29,7 +29,7 @@ namespace RelationsInspector
 
 		Action Repaint;
 		Action<Action> Exec;
-		RelationsInspectorAPI API;
+		RelationsInspectorAPI api;
 		RNG builderRNG;
 
 		enum AdjustTransformMode { Not, Smooth, Instant }; // how to adjust the view transform to layout (vertex position) changes
@@ -42,14 +42,14 @@ namespace RelationsInspector
 			{ LayoutType.Tree, new GUIContent("Tree", "Use tree layout") }
 		};
 
-		internal Workspace( Type backendType, object[] targets, RelationsInspectorAPI API, Action Repaint, Action<Action> Exec )
+		internal Workspace( Type backendType, object[] targets, GetAPI getAPI, Action Repaint, Action<Action> Exec )
 		{
 			this.Repaint = Repaint;
 			this.Exec = Exec;
-			this.API = API;
+			this.api = getAPI( 1 ) as RelationsInspectorAPI;
 
 			graphBackend = (IGraphBackendInternal<T, P>) BackendTypeUtil.CreateBackendDecorator( backendType );
-			graphBackend.Awake( API );
+			graphBackend.Awake( getAPI );
 
 			// create new layout params, they are not comming from the cfg yet
 			this.layoutType = (LayoutType) GUIUtil.GetPrefsInt( GetPrefsKeyLayout(), (int) LayoutType.Tree );
@@ -186,7 +186,7 @@ namespace RelationsInspector
 			EditorGUI.BeginChangeCheck();
 
 			if ( graph != null && GUILayout.Button( "Relayout", EditorStyles.miniButton, GUILayout.ExpandWidth( false ) ) )
-				Exec( () => API.Relayout() );
+				Exec( () => api.Relayout() );
 
 			// let user pick a layout type (iff tree layout is an option)
 			if ( graph != null && graph.IsTree() )
@@ -559,7 +559,7 @@ namespace RelationsInspector
 
 		public RelationsInspectorAPI GetAPI()
 		{
-			return API;
+			return api;
 		}
 
 		#endregion
