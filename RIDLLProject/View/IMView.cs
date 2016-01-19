@@ -419,7 +419,7 @@ namespace RelationsInspector
 				case EventType.mouseDown:
 
 					// clicked on minimap -> focos camera on click pos
-					if ( minimapRect.Contains( ev.mousePosition ) )
+					if ( Settings.Instance.showMinimap && minimapRect.Contains( ev.mousePosition ) )
 					{
 						SetCenter( minimapTransform.Revert( ev.mousePosition ) );
 						break;
