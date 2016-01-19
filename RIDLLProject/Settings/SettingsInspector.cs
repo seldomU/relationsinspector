@@ -7,14 +7,15 @@ namespace RelationsInspector
 	[CustomEditor( typeof( RelationsInspectorSettings ) )]
 	class SettingsInspector : Editor
 	{
-		RelationsInspectorWindow riWindow;
+		RelationsInspectorAPI  api;
 		RelationsInspectorSettings settings;
 		bool foldLayoutTweenSettings;
 		bool foldLayoutSettings;
 
 		void OnEnable()
 		{
-			riWindow = Resources.FindObjectsOfTypeAll<RelationsInspectorWindow>().FirstOrDefault();
+			var riWindow = Resources.FindObjectsOfTypeAll<RelationsInspectorWindow>().FirstOrDefault();
+			api = riWindow == null ? null : riWindow.GetAPI( 1 ) as RelationsInspectorAPI;
 			settings = target as RelationsInspectorSettings;
 		}
 
@@ -28,14 +29,14 @@ namespace RelationsInspector
 
 			EditorGUI.BeginChangeCheck();
 			settings.treeRootLocation = (TreeRootLocation) EditorGUILayout.EnumPopup( "Tree root location", settings.treeRootLocation );
-			if ( EditorGUI.EndChangeCheck() && riWindow != null )
-				riWindow.GetAPI().Relayout();
+			if ( EditorGUI.EndChangeCheck() && api != null )
+				api.Relayout();
 
 			EditorGUI.BeginChangeCheck();
 			settings.showMinimap = EditorGUILayout.Toggle( "Show minimap", settings.showMinimap );
 			settings.minimapLocation = (MinimapLocation) EditorGUILayout.EnumPopup( "Minimap location", settings.minimapLocation );
-			if ( EditorGUI.EndChangeCheck() && riWindow != null )
-				riWindow.GetAPI().Repaint();
+			if ( EditorGUI.EndChangeCheck() && api != null )
+				api.Repaint();
 
 			settings.logToConsole = EditorGUILayout.Toggle( "Log to console", settings.logToConsole );
 			settings.invertZoom = EditorGUILayout.Toggle( "Invert zoom", settings.invertZoom );
