@@ -15,7 +15,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
 		public static IEnumerable<Type> GetSubtypes( Type inspectedType, IEnumerable<Assembly> assemblies )
 		{
-			var assemblyTypes = assemblies.SelectMany( asm => asm.GetExportedTypes() ).Where( t => t != null );
+			var assemblyTypes = assemblies.SelectMany( asm => asm.GetExportedTypes() ).Where( t => t != null && t != inspectedType );
 
 			if ( inspectedType.IsInterface )
 			{

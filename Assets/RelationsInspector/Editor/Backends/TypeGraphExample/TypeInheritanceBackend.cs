@@ -42,7 +42,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
 
 			var subTypes = TypeUtility.GetSubtypes( entity, allAssemblies );
 			foreach ( var t in subTypes )
-				yield return new Relation<Type, TypeRelation>( entity, t, TypeRelation.Extension );
+				yield return GetRelation( entity, t );
 		}
 
 		// returns relations baseType->entity and interface->entity
@@ -50,9 +50,9 @@ namespace RelationsInspector.Backend.TypeHierarchy
 		{
 			bool isParentOrTarget = parentTypes.Contains( entity ) || targetTypes.Contains( entity );
 
-			if ( entity.BaseType != null )
+			if ( entity.BaseType != null && !entity.BaseType.IsInterface )
 			{
-				yield return new Relation<Type, TypeRelation>( entity.BaseType, entity, TypeRelation.Extension );
+				yield return GetRelation( entity.BaseType, entity );
 
 				if ( isParentOrTarget )
 					parentTypes.Add( entity.BaseType );
@@ -62,12 +62,20 @@ namespace RelationsInspector.Backend.TypeHierarchy
 			{
 				foreach ( var t in entity.GetInterfaces() )
 				{
-					yield return new Relation<Type, TypeRelation>( t, entity, TypeRelation.Implementation );
+					yield return GetRelation( t, entity );
 
-					if( isParentOrTarget )
+					if ( isParentOrTarget )
 						parentTypes.Add( t );
 				}
 			}
+		}
+
+		static Relation<Type, TypeRelation> GetRelation( Type sourceType, Type targetType )
+		{
+			var relationType = sourceType.IsInterface ? 
+				(targetType.IsInterface ? TypeRelation.Extension : TypeRelation.Implementation) : 
+				TypeRelation.Extension;
+			return new Relation<Type, TypeRelation>( sourceType, targetType, relationType );
 		}
 
 		public override Rect OnGUI()
