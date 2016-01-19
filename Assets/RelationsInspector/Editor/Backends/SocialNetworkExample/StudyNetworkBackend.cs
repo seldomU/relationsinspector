@@ -21,6 +21,7 @@ namespace RelationsInspector.Backend.SocialNetwork
 			if ( source.studyPartners == null )
 				source.studyPartners = new List<Person>();
 
+			Undo.RecordObject( source, "adding study partner" );
 			source.studyPartners.Add( target );
 			EditorUtility.SetDirty( source );
 			api.AddRelation( source, target, string.Empty );
@@ -36,6 +37,7 @@ namespace RelationsInspector.Backend.SocialNetwork
 				return;
 			}
 
+			Undo.RecordObject( source, "removing study partner" );
 			source.studyPartners.Remove( targetEntries.First() );
 			EditorUtility.SetDirty( source );
 			api.RemoveRelation( source, target, tag );

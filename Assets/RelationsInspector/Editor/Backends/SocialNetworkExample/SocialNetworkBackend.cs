@@ -22,6 +22,7 @@ namespace RelationsInspector.Backend.SocialNetwork
 				source.acquaintances = new List<Acquaintance>();
 
 			var tag = Feeling.Indifference;
+			Undo.RecordObject( source, "adding acquaintance" );
 			source.acquaintances.Add( new Acquaintance() { person = target, feeling = tag } );
 			EditorUtility.SetDirty( source );
 			api.AddRelation( source, target, tag );
@@ -37,6 +38,7 @@ namespace RelationsInspector.Backend.SocialNetwork
 				return;
 			}
 
+			Undo.RecordObject( source, "removing acquaintance" );
 			source.acquaintances.Remove( targetEntries.First() );
 			EditorUtility.SetDirty( source );
 			api.RemoveRelation( source, target, tag );
