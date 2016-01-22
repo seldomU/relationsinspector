@@ -47,8 +47,7 @@ namespace RelationsInspector
 				return;
 
 #if RIDEMO
-			if (DemoRestriction.IsActive( content => { ShowNotification(content); Repaint();} ))
-				return;
+			DemoRestriction.Run();
 #endif// RIDEMO
 
 			internalAPI.DrawToolbar();

@@ -1,4 +1,4 @@
-﻿#if RIDEMO
+#if RIDEMO
 using UnityEngine;
 using UnityEditor;
 
@@ -8,15 +8,10 @@ namespace RelationsInspector
 	{
 		static int inputEventCount = 0;
 		const int inputEventCountThreshold = 75;
-
-		static float demoMessageTime;
-		const float demoGUIBlockDuration = 5;	// in seconds
 		
-		public static bool IsActive( System.Action<GUIContent> showMessage )
+		public static void Run()
 		{
-			if (demoMessageTime > Time.realtimeSinceStartup)
-				return true;
-			
+
 			switch (Event.current.type)
 			{
 				case EventType.MouseUp:
@@ -28,11 +23,10 @@ namespace RelationsInspector
 			if (inputEventCount >= inputEventCountThreshold)
 			{
 				inputEventCount = 0;
-				demoMessageTime = Time.realtimeSinceStartup + demoGUIBlockDuration;
-				showMessage.Invoke(new GUIContent("Demo naptime. Check back shortly."));
+				bool openStore = EditorUtility.DisplayDialog("Demo", "Thanks for trying the RelationsInspector demo. It is not restricted, but to use the tool permanently, you have to buy the full version.", "To the store", "Not now" ); 
+				if(openStore)
+					Application.OpenURL( @"https://www.assetstore.unity3d.com/en/#!/content/158589" );
 			}
-
-			return false;
 		}
 	}
 }
