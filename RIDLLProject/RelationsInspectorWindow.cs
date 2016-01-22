@@ -74,6 +74,9 @@ namespace RelationsInspector
 		void OnDestroy()
 		{
 			internalAPI.OnDestroy();
+#if RIDEMO
+			DemoRestriction.OnDestroy();
+#endif// RIDEMO
 			AssetDatabase.SaveAssets();
 		}
 
@@ -121,6 +124,9 @@ namespace RelationsInspector
 		void OnEnable()
 		{
 			InitWindow();
+#if RIDEMO
+			DemoRestriction.OnEnable();
+#endif// RIDEMO
 		}
 	}
 }

@@ -7,7 +7,7 @@ namespace RelationsInspector
 	static class DemoRestriction
 	{
 		static int inputEventCount = 0;
-		const int inputEventCountThreshold = 75;
+		const int inputEventCountThreshold = 300;
 		
 		public static void Run()
 		{
@@ -27,6 +27,16 @@ namespace RelationsInspector
 				if(openStore)
 					Application.OpenURL( @"https://www.assetstore.unity3d.com/en/#!/content/158589" );
 			}
+		}
+
+		public static void OnEnable()
+		{
+			inputEventCount = GUIUtil.GetPrefsInt( "DemoActions", 0 );
+		}
+
+		public static void OnDestroy()
+		{
+			GUIUtil.SetPrefsInt( "DemoActions", inputEventCount );
 		}
 	}
 }
