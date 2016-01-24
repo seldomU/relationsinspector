@@ -25,7 +25,7 @@ namespace RelationsInspector
 				inputEventCount = 0;
 				bool openStore = EditorUtility.DisplayDialog("Demo", "Thanks for trying the RelationsInspector demo. It is not restricted, but to use the tool permanently, you have to buy the full version.", "To the store", "Not now" ); 
 				if(openStore)
-					Application.OpenURL( @"https://www.assetstore.unity3d.com/en/#!/content/158589" );
+					UnityEditorInternal.AssetStore.Open("content/158589");
 			}
 		}
 
