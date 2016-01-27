@@ -53,7 +53,7 @@ The RelationsInspector comes with a set of attributes that allow you to inspect 
 
 Here is a simple example of an item upgrade type, where each object unlocks a number of dependent items.
 
-``` csharp
+``` cs
 using UnityEngine;
 using System.Collections.Generic;
 using RelationsInspector.Backend.AutoBackend;
@@ -85,7 +85,7 @@ First, you need to decide on the type of your entities, relations and how to def
 
 With that, we can implement our backend's first version.
 
-``` csharp
+``` cs
 using UnityEngine;
 using System.Collections.Generic;
 using RelationsInspector.Backend.AutoBackend;
@@ -99,7 +99,7 @@ public class Upgrade : MonoBehaviour
 }
 ```
 
-``` csharp
+``` cs
 using UnityEngine;
 using System.Collections.Generic;
 using RelationsInspector;
@@ -132,7 +132,7 @@ In the following sections, we'll add more features to the backend.
 
 Lets allow the user to modify the hierarchy by adding and removing relations. We'll do that with context menus for the entity and relation widgets. Add the following code:
 
-``` csharp
+``` cs
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
@@ -183,7 +183,7 @@ As an example control, we'll add a searchbar. We'll update the node selection ba
 
 Add a variable ```string searchstring;``` to the class, also add this function:
 
-``` csharp
+``` cs
     public override Rect OnGUI()
     {
         GUILayout.BeginHorizontal( EditorStyles.toolbar );
@@ -202,7 +202,7 @@ Here we use the searchfield utility, which update the entity selecting through t
 
 #### Adding/Removing entites
 You can add existing objects by dragging them into the RI window while holding down the CTRL key or passing them to the AddTargets or AddEntity API calls. The window toolbar is a good place for entity creation controls. Add this to your OnGUI method body:
-``` csharp
+``` cs
     if ( GUILayout.Button("Add GameObject", EditorStyles.toolbarButton, GUILayout.ExpandWidth( false )) )
     {                    
        api.AddEntity( new GameObject(), Vector2.zero );
@@ -210,11 +210,11 @@ You can add existing objects by dragging them into the RI window while holding d
 ```
 
 Entity deletion is best done as a  *OnEntityContextClick* handler:
-``` csharp
+``` cs
 menu.AddItem(new GUIContent("Delete entity"), false, () => { foreach (var e in entities) DeleteEntity(e); });
 ```
 Add this function:
-```csharp
+```cs
 	void DeleteEntity( GameObject entity )
 	{
 		api.RemoveEntity( entity );
@@ -230,7 +230,7 @@ Unity cleans up the broken transform references that result from removing a Game
 The Backend is responsible for drawing the node widgets, it gets a DrawContent call for each node on the screen. That call comes with the node's entity, position and number of other parameters. It expects a Rect in return, which is used as the widget's bounding box when handling mouse events.
 
 The default implementation of MinimalBackend looks like this:
-``` csharp
+``` cs
 	public virtual Rect DrawContent( T entity, EntityDrawContext drawContext )
 	{
 		return DrawUtil.DrawContent( GetContent( entity ), drawContext );
@@ -238,7 +238,7 @@ The default implementation of MinimalBackend looks like this:
 ```
 
 It maps the node's entity to a GUIContent and passes it to DrawContent, which will create a rect or circle widget from it. if you only need to customize the widget's icon, label or tooltip, simply overwrite GetContent:
-``` csharp
+``` cs
 	public override GUIContent GetContent( T entity )
 	{
 		return new GUIContent(YourLabel, YourIcon, YourTooltip);
@@ -247,7 +247,7 @@ It maps the node's entity to a GUIContent and passes it to DrawContent, which wi
 
 If you want to draw anything other than GUIContent, you can draw your controls on top of the default rect and cicle containers by using the `DrawCircleAndOutline` and `DrawBoxAndBackground` utility methods. For example, this widget shows a slider control for the selected GameObject's layer value:
 
-``` csharp
+``` cs
 	public override Rect DrawContent( GameObject entity, EntityDrawContext drawContext )
 	{
 		// for unselected rects and all circle widgets, draw them the default way
@@ -281,83 +281,83 @@ RI can restore the layout of graphs you had opened before. By default, it will d
 
 This API makes Relations inspector functionality accessible to your code. Backend classes get an API object by calling getAPI(1) in their `Awake` method, external tools can use the `GetAPI` method of `RelationsInspectorWindow`. In both cases the returned object is of type RelationsInspectorAPI.
 
-``` csharp
+``` cs
 void ResetTargets(object[] targets, bool delayed = true );
 ```
 > Clears the current graph and creates a new one for the given targets. If `delayed` is true, execution happens during the next update.
 
-``` csharp
+``` cs
 void AddTargets(object[] targets, bool delayed = true );
 ```
 > Clears the current graph and creates a new one for the union of existing and added targets. If `delayed` is true, execution happens during the next update.
 
-``` csharp
+``` cs
 object[] GetTargets()
 ```
 > Returns the current target objects.
 
-``` csharp
+``` cs
 void SetBackend(Type backendType, bool delayed = true );
 ```
 > Enforces selection of the given backend type. If `delayed` is true, execution happens during the next update.
 
-``` csharp
+``` cs
 void Repaint();
 ```
 > Draws a fresh view of the graph.
 
-``` csharp
+``` cs
 void Rebuild();
 ```
 > rebuild the graph from its current target objects
 
-``` csharp
+``` cs
 void Relayout();
 ```
 > redo the layout of the current graph
 
-``` csharp
+``` cs
 void SelectEntityNodes(System.Predicate<object> doSelect, bool delayed = true );
 ```
 > Makes the window select graph nodes according to the predicate. If `delayed` is true, execution happens during the next update.
 
 #### Graph manipulation
-``` csharp
+``` cs
 void AddEntity(object entity, Vector2 position, bool delayed = true );
 ```
 > Adds the entity to the graph. The position is in graph coordinates, not window coordinates. If unsure, pass Vector2.zero. If `delayed` is true, execution happens during the next update.
 
-``` csharp
+``` cs
 void RemoveEntity(object entity, bool delayed = true );
 ```
 > Removes entity and all its relations from the graph. If `delayed` is true, execution happens during the next update.
 
-``` csharp
+``` cs
 void ExpandEntity(object entity, bool delayed = true );
 ```
 > Add relations of the given entity that have been hidden before, either due to the graph size limit or folding. If `delayed` is true, execution happens during the next update.
 
-``` csharp
+``` cs
 void FoldEntity(object entity, bool delayed = true );
 ```
 > Remove relations of the given entity. This will not affect relations that connect the entity to one of the target entities. If `delayed` is true, execution happens during the next update.
 
-``` csharp
+``` cs
 void AddRelation(object sourceEntity, object targetEntity, object tag, bool delayed = true );
 ```
 > Adds relation between the given entities to the graph. If `delayed` is true, execution happens during the next update.
 
-``` csharp
+``` cs
 void RemoveRelation(object sourceEntity, object targetEntity, object tag, bool delayed = true );
 ```
 > Removes the specified relation from the graph. If multiple matching relations exist, only the first one found will be removed. If `delayed` is true, execution happens during the next update.
 
-``` csharp
+``` cs
 void InitRelation(object[] sourceEntity, object tag, bool delayed = true );
 ```
 > Makes the UI initiate the creation of a new relation. The user then gets to pick the target entity, which will result in call to the backend's `CreateEntity`. If `delayed` is true, execution happens during the next update.
 
-``` csharp
+``` cs
 object[] FindRelations(object entity);
 ```
 > Returns all relations the entity is involved in.
@@ -366,17 +366,17 @@ object[] FindRelations(object entity);
 
 To create a backend type, add a class to your project that implements this interface. Its two generic parameters are the graph entity type T and relation type P.
 
-``` csharp
+``` cs
 void Awake( GetAPI getAPI )
 ```
 > Called by the backend constructor. Calling getAPI(1) returns a [RelationsInspectorAPI](https://github.com/seldomU/RIBackendUtil/wiki/RelationsInspectorAPI-members) object which allows the backend to make graph manipulations, like adding/removing entities or relations, changing the inspection targets or the active backend.
 
-``` csharp
+``` cs
 IEnumerable<T> Init(object target);
 ```
 > This method generates graph entities from a target object, typically by just casting it. It is called after Awake, for each target object. 
 
-``` csharp
+``` cs
 IEnumerable<Relation<T, P>> GetRelations(T entity);
 ```
 > Returns the relations which the given **entity** is a part of. It is used to grow the graph from the seed entities.
@@ -384,66 +384,66 @@ Any relation can be returned by either its source or target entity or both.
 
 #### Graph modification
 
-``` csharp
+``` cs
 void CreateRelation(T source, T target, P tag);
 ```
 > UI wants to create a new relation with the given properties.
 
 #### Content drawing
 
-``` csharp
+``` cs
 Rect DrawContent(T entity, EntityDrawContext drawContext);
 ```
 > UI needs a rect, visually representing the given entity.
 
-``` csharp
+``` cs
 Color GetRelationColor(P relationTagValue);
 ```
 > UI needs the color in which to paint the relation marker.
 
-``` csharp
+``` cs
 string GetEntityTooltip(T entity);
 ```
 > UI needs a string to use as entity widget tooltip.
 
-``` csharp
+``` cs
 string GetTagTooltip(P tag);
 ```
 > UI needs a string to use as relation widget tooltip.
 
-``` csharp
+``` cs
 Rect OnGUI();
 ```
 > UI is being drawn. Backend gets a chance to draw its own controls. Returns the remaining space as rect. The graph is then drawn in that rect.
 
 #### Other events
 
-``` csharp
+``` cs
 void OnEntityContextClick(IEnumerable<T> entities, GenericMenu contextMenu);
 ```
 > UI got a context click on the given entities. Items can be added to the given context menu.
 
-``` csharp
+``` cs
 void OnRelationContextClick(Relation<T,P> relation, GenericMenu contextMenu);
 ```
 > UI got a context click on the given relation's marker. Items can be added to the given context menu.
 
-``` csharp
+``` cs
 void OnEntitySelectionChange(T[] selection);
 ```
 > UI selection changed.
 
-``` csharp
+``` cs
 void OnUnitySelectionChange();
 ```
 > Unity selected objects changed.
 
-``` csharp
+``` cs
 void OnDestroy();
 ```
 > Backend object is about to be destroyed.
 
-``` csharp
+``` cs
 void OnCommand(string command)
 ```
 > A command event has been sent to the Relations inspector window. Use this to allow your own tool code to talk to your backend.
