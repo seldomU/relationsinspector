@@ -4,12 +4,12 @@ The RelationsInspector is a Unity editor extension that lets the user visualize 
 
 ![screenshots](http://i.imgur.com/1OgxgAF.gif "some screenshots")
 
-Each kind of relation graph is driven by a [backend](https://github.com/seldomU/RIBackendUtil/wiki/Backend-development) class. A backend defines what relations to show for a specific object type.
+Each kind of relation graph is driven by a [backend](#backend-development) class. A backend defines what relations to show for a specific object type.
 
 ## Using the RI
 
 Typically, you drag and drop some assets (the target objects) into the RI window. The RI will pick a backend that fits their types and show a graph made by the backend from your target objects. If the auto-selected backend is not the one you want, you'll find a dropdown in the toolbar where you can choose between all backends that fit your target types.
-Alternatively, you can use the [API](https://github.com/seldomU/RIBackendUtil/wiki/RelationsInspectorAPI-members) to set target objects and pick the backend type from within your tool code. 
+Alternatively, you can use the [API](#relationsinspectorapi-reference) to set target objects and pick the backend type from within your tool code. 
 
 The toolbar also contains these controls:
 
@@ -45,7 +45,7 @@ The following configuration options are available in the gears menu, and at `Ass
 * **Invert zoom** Toggles the mousewheel zoom direction.
 
 ## Automatic Backend
-The RelationsInspector comes with a set of attributes that allow you to inspect objects without writing a [backend class](https://github.com/seldomU/RIBackendUtil/wiki/Backend-development) for their type. The attributes are:
+The RelationsInspector comes with a set of attributes that allow you to inspect objects without writing a [backend class](#backend-development) for their type. The attributes are:
 
 * `AutoBackend `-- indicates that RI should make an automatic backend for the marked type
 * `Related `--  indicates that the marked object(s) are related to this object
@@ -71,9 +71,9 @@ With that, you can now inspect objects of your type. The backend dropdown list w
 
 ## Backend Development
 
-A backend is a C# class that tells the RelationsInspector (RI) what kind of relations it should display, how they should be displayed, and how the user should be allowed to modify them.
+A backend is a C# class that tells the RI what kind of relations it should display, how they should be displayed, and how the user should be allowed to modify them.
 
-RI ships with a few example backends, but for your own classes and usecases, you may need to define new backends. The following guide shows you how to do that. By extending the default backend and with the help of utility classes, you can easily pick and choose which backend features you want to customize. If you don't want to implement a backend for your types, try an [auto-generated](https://github.com/seldomU/RIBackendUtil/wiki/Automatic-Backend) one.
+RI ships with a few example backends, but for your own classes and usecases, you may need to define new backends. By extending the default backend and with the help of utility classes, you can easily pick and choose which backend features you want to customize. If you don't want to implement a backend for your types, try an [auto-generated](#automatic-backend) one.
 
 ### Getting started
 First, you need to decide on the type of your entities, relations and how to define a relation in your graph. As an example, we'll develop a GameObject hierarchy backend. It will accept GameObjects dragged from the hierarchy window and show their child GameObjects. In this case it seems straighforward:
@@ -84,20 +84,6 @@ First, you need to decide on the type of your entities, relations and how to def
 
 
 With that, we can implement our backend's first version.
-
-``` cs
-using UnityEngine;
-using System.Collections.Generic;
-using RelationsInspector.Backend.AutoBackend;
-
-[AutoBackend]
-public class Upgrade : MonoBehaviour
-{    
-    [Related]
-    public List<Upgrade> unlockedUpgrade; 
-    public int attackStrength;
-}
-```
 
 ``` cs
 using UnityEngine;
@@ -120,17 +106,15 @@ public class TestBackend1 : MinimalBackend<GameObject, string>
 }
 ```
 
-Save that to *Assets/Editor* or any other editor folder, wait for Unity to recompile the dll, and now it should be selectable in the RI. Drag scene objects into the window and you should see their hierarchy graph.
+Save that to *Assets/Editor* or any other editor folder, wait for Unity to recompile, and now the RI backend dropdown should have a new entry called *TestBackend1*. Select it, drag scene objects into the window and you'll see their hierarchy tree.
 
-We derive from *MinimalBackend* (one of the utility classes) instead of implementing *[IGraphBackend](https://github.com/seldomU/RIBackendUtil/wiki/IGraphBackend-members)* directly, because it contains default implementations of all interface members, and allows us to focus on the key properties: the entity- and relation type become generic arguments of the backend type, and the relation definition becomes the code of *GetRelations*.
+We derive from *MinimalBackend* (one of the utility classes) instead of implementing *[IGraphBackend](#igraphbackend-reference)* directly, because it contains default implementations of all interface members, and allows us to focus on the key properties: the entity- and relation type become generic arguments of the backend type, and the relation definition becomes the code of *GetRelations*.
 
 In the following sections, we'll add more features to the backend.
 
-### Extending your backend
+### Changing relations through context menus
 
-#### Changing relations through context menus
-
-Lets allow the user to modify the hierarchy by adding and removing relations. We'll do that with context menus for the entity and relation widgets. Add the following code:
+Let's allow the user to modify the hierarchy by adding and removing relations. We'll do that with context menus for the entity and relation widgets. Add the following code:
 
 ``` cs
 using UnityEngine;
@@ -174,9 +158,9 @@ Removing a relation is straightforward. Our deletion function disconnects the Ga
 
 Adding a relation requires one more step: the user has to select a second entity. That is handled by the *InitRelation* API call. *CreateRelation* is where we finally connect the transform and make the API add an edge to the graph.
 
-Depending on your usecase, there could be constraints on how entities can be related. The scene hierarchy does not allow the child of a gameobject to also be it's parent, or gameobjects to be their own parents. You have to enforce all such constraints in *CreateRelation*. Without such restictions, RI will happily any of the following: objects being related to themselves, multiple relations between a pair of objects, cyclic relations, disjoint subgraphs, object without relations.
+Depending on your usecase, there could be constraints on how entities can be related. The scene hierarchy does not allow the child of a gameobject to also be it's parent, or gameobjects to be their own parents. You have to enforce all such constraints in *CreateRelation*. Without such restictions, RI will happily allow any of the following: objects being related to themselves, multiple relations between a pair of objects, cyclic relations, disjoint subgraphs, object without relations.
 
-#### Adding a toolbar and GUI controls
+### Adding a toolbar and GUI controls
 The *OnGUI* backend method lets us draw GUI controls to the window, and expects us to return a Rect, describing the remaining space, which will be used for drawing the graph. 
 
 As an example control, we'll add a searchbar. We'll update the node selection based on the search string.
@@ -198,10 +182,10 @@ Add a variable ```string searchstring;``` to the class, also add this function:
 ```
 [(Complete file)](https://gist.github.com/seldomU/170de2c4634fcae5f3bf)
 
-Here we use the searchfield utility, which update the entity selecting through the api for us, based on the value of *searchstring*. At the end *base.OnGUI* calculates the remaining window space for us.
+Here we use the searchfield utility, which updates the entity selecting through the api for us, based on the value of *searchstring*. At the end *base.OnGUI* calculates the remaining window space for us.
 
-#### Adding/Removing entites
-You can add existing objects by dragging them into the RI window while holding down the CTRL key or passing them to the AddTargets or AddEntity API calls. The window toolbar is a good place for entity creation controls. Add this to your OnGUI method body:
+### Adding/Removing entites
+You can add existing objects by dragging them into the RI window while holding down the CTRL key or passing them to the *AddTargets* or *AddEntity* API calls. The window toolbar is a good place for entity creation controls. Add this to your OnGUI method body:
 ``` cs
     if ( GUILayout.Button("Add GameObject", EditorStyles.toolbarButton, GUILayout.ExpandWidth( false )) )
     {                    
@@ -225,9 +209,9 @@ Add this function:
 
 Unity cleans up the broken transform references that result from removing a GameObject. For other entity types, you have to do this yourself: use the API's FindRelations method and clean them all up before removing the entity, like it's done [here](https://github.com/seldomU/RIBackendUtil/blob/master/ScriptableObjectBackend.cs#L101).
 
-#### Node Widget UI
+### Node Widget UI
 
-The Backend is responsible for drawing the node widgets, it gets a DrawContent call for each node on the screen. That call comes with the node's entity, position and number of other parameters. It expects a Rect in return, which is used as the widget's bounding box when handling mouse events.
+The Backend is responsible for drawing the node widgets, it gets a DrawContent call for each node on the screen. That call comes with the node's entity, position and a number of other parameters. It expects a Rect in return, which is used as the widget's bounding box when handling mouse events.
 
 The default implementation of MinimalBackend looks like this:
 ``` cs
@@ -274,7 +258,7 @@ If you want to draw anything other than GUIContent, you can draw your controls o
 
 
 
-#### Layout caching
+### Layout caching
 RI can restore the layout of graphs you had opened before. By default, it will do that only for backends that use Unity objects as entities, where it can rely on unique IDs. If you want to overwrite the default behaviour for your backend, for example because you expect the graph contents to change significantly between views, you can put the SaveLayout attribute on your backend class. `[SaveLayout( false )]` will disable layout saving, `[SaveLayout( true )]` will enable it, even for entity types that are not Unity objects.
 
 ## RelationsInspectorAPI reference
@@ -369,7 +353,7 @@ To create a backend type, add a class to your project that implements this inter
 ``` cs
 void Awake( GetAPI getAPI )
 ```
-> Called by the backend constructor. Calling getAPI(1) returns a [RelationsInspectorAPI](https://github.com/seldomU/RIBackendUtil/wiki/RelationsInspectorAPI-members) object which allows the backend to make graph manipulations, like adding/removing entities or relations, changing the inspection targets or the active backend.
+> Called by the backend constructor. Calling getAPI(1) returns a [RelationsInspectorAPI](#relationsinspectorapi-reference) object which allows the backend to make graph manipulations, like adding/removing entities or relations, changing the inspection targets or the active backend.
 
 ``` cs
 IEnumerable<T> Init(object target);
