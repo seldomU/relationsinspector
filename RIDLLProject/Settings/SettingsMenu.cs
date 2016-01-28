@@ -16,6 +16,9 @@ namespace RelationsInspector
 			menu.AddItem( new GUIContent( "Documentation" ), false, () => Application.OpenURL( DocURL ) );
 			menu.AddItem( new GUIContent( "Discussion" ), false, () => Application.OpenURL( DiscussionURL ) );
 			menu.AddItem( new GUIContent( "About" ), false, () => AboutWindow.Spawn() );
+#if RIDEMO
+			menu.AddItem( new GUIContent( "Buy RI" ), false, () => UnityEditorInternal.AssetStore.Open("content/53147") );
+#endif
 			menu.ShowAsContext();
 		}
 	}
