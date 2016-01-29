@@ -19,6 +19,10 @@ namespace RelationsInspector
 		const string lightSkinName = "RIWindowLightSkin.asset";
 		const string SettingsFileName = "Settings.asset";
 
+		internal const string DocURL = @"https://github.com/seldomU/RIBackendUtil/wiki";
+		internal const string DiscussionURL = @"http://forum.unity3d.com/threads/demo-relations-inspector-asset.295319/";
+		internal const string StoreURL = @"content/53147";
+
 		public static string[] obligatoryFileNames = new[]
 		{
 			"ArrowHead.png",
