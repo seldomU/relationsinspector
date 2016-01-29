@@ -8,7 +8,7 @@ Each kind of relation graph is driven by a [backend](#backend-development) class
 
 ## Using the RI
 
-Typically, you drag and drop some assets (the target objects) into the RI window. The RI will pick a backend that fits their types and show a graph made by the backend from your target objects. If the auto-selected backend is not the one you want, you'll find a dropdown in the toolbar where you can choose between all backends that fit your target types.
+To open the window, select *Window*, then *RelationsInspector*, from Unity's top toolbar menu. Typically, you drag and drop some assets (the target objects) into the RI window. The RI will pick a backend that fits their types and show a graph made by the backend from your target objects. If the auto-selected backend is not the one you want, you'll find a dropdown in the toolbar where you can choose between all backends that fit your target types.
 Alternatively, you can use the [API](#relationsinspectorapi-reference) to set target objects and pick the backend type from within your tool code. 
 
 The toolbar also contains these controls:
