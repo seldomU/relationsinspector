@@ -22,7 +22,7 @@ Microsoft (R)-Buildmodul, Version 4.6.1055.0
 [Microsoft .NET Framework, Version 4.0.30319.42000]
 Copyright (C) Microsoft Corporation. Alle Rechte vorbehalten.
 
-Der Buildvorgang wurde am 19.01.2016 15:41:42 gestartet.
+Der Buildvorgang wurde am 29.01.2016 12:16:54 gestartet.
 Projekt "I:\code\RelationsInspector\RIDLLProject\RelationsInspectorLib.csproj" auf Knoten "1", Rebuild Ziel(e).
 CoreClean:
   Die Datei "I:\code\RelationsInspector\RIDLLProject\bin\Release\RelationsInspector.dll" wird gel”scht.
@@ -73,7 +73,7 @@ Verstrichene Zeit 00:00:00.36
 
 finished sys cmd C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
 
-step completed after 465 ms
+step completed after 471 ms
 entering step Deleting file I:\code\RelationsInspector\Assets\RelationsInspector\Editor\RelationsInspector.pdb
 step message: 
 step completed after 0 ms
@@ -82,10 +82,10 @@ step message:
 step completed after 0 ms
 entering step refreshing asset db
 step message: 
-step completed after 197 ms
+step completed after 209 ms
 entering step exporting asset package to I:\code\RelationsInspector\RelationsInspectorDemo.unitypackage
 step message: 
-step completed after 533 ms
+step completed after 591 ms
 entering step Deleting file I:\code\RelationsInspector\Assets\RelationsInspector\Editor\SourceCodeRI.zip
 step message: 
 step completed after 0 ms
