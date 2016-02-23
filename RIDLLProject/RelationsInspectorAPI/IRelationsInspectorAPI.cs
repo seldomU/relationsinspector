@@ -18,6 +18,7 @@ namespace RelationsInspector
 
 		// manipulate the graph through targets
 		void ResetTargets( object[] targets, bool delayed = true );
+		void ResetTargets( object[] targets, System.Type backendType, bool delayed = true );
 		void AddTargets( object[] targets, bool delayed = true );
 		object[] GetTargets();
 

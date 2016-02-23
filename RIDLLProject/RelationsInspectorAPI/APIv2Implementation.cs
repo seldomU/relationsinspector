@@ -36,6 +36,11 @@ namespace RelationsInspector
 			internalAPI.ResetTargets( targets, delayed );
 		}
 
+		public void ResetTargets( object[] targets, Type backendType, bool delayed = true )
+		{
+			internalAPI.ResetTargets( targets, backendType, delayed );
+		}
+
 		// if a graph exists, add targets. else create a new one from the targets
 		public void AddTargets( object[] targets, bool delayed = true )
 		{

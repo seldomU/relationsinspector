@@ -84,11 +84,19 @@ namespace RelationsInspector
 
 		public void ResetTargets( object[] targets, bool delayed = true )
 		{
+			ResetTargets( targets, null, delayed );
+		}
+
+		public void ResetTargets( object[] targets, Type backendType, bool delayed = true )
+		{
 			if ( !UserAcceptsTargetCount( targets.Length ) )
 				return;
 
-			targetHistory.RegisterState( targets, selectedBackendType );
-			Exec( () => SetTargetObjects( targets ), delayed );
+			if ( backendType != null && !BackendTypeUtil.IsBackendType( backendType ) )
+				throw new ArgumentException( backendType + " is not a valid backend type." );
+
+			targetHistory.RegisterState( targets, backendType );
+			Exec( () => SetTargetObjects( targets, backendType ), delayed );
 		}
 
 		// if numTargets exceeds the node limit, warn the user through a dialog
@@ -297,13 +305,17 @@ namespace RelationsInspector
 			UpdateBackend();
 		}
 
-		internal void SetTargetObjects( IEnumerable<object> targets )
+		internal void SetTargetObjects( IEnumerable<object> targets, Type backendType = null )
 		{
 			if ( targets == null )
 				targetObjects = null;
 			else
 				targetObjects = new HashSet<object>( targets.Where( o => !Util.IsBadRef( o ) ) );
 			UpdateBackend();
+
+			if(backendType != null )
+				selectedBackendType = backendType;
+
 			InitWorkspace();
 		}
 
