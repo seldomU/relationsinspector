@@ -26,6 +26,8 @@ namespace RelationsInspector
 
 		event System.Action OnUpdate;
 
+		public RelationsInspectorAPI GetAPI1 { get { return api1impl; } }
+
 		internal void ExecOnUpdate( System.Action action )
 		{
 			OnUpdate += action;
