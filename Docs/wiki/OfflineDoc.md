@@ -271,6 +271,11 @@ void ResetTargets(object[] targets, bool delayed = true );
 > Clears the current graph and creates a new one for the given targets. If `delayed` is true, execution happens during the next update.
 
 ``` cs
+void ResetTargets(object[] targets, Type backendType, bool delayed = true );
+```
+> Clears the current graph and creates a new one for the given targets and backend. If `delayed` is true, execution happens during the next update.
+
+``` cs
 void AddTargets(object[] targets, bool delayed = true );
 ```
 > Clears the current graph and creates a new one for the union of existing and added targets. If `delayed` is true, execution happens during the next update.
