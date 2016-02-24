@@ -1,0 +1,91 @@
+entering step Deleting file I:\code\RelationsInspector\Assets\RelationsInspector\Editor\RelationsInspector.dll
+step message: 
+step completed after 1 ms
+entering step Deleting file I:\code\RelationsInspector\Assets\RelationsInspector\Editor\SourceCodeRI.zip
+step message: 
+step completed after 0 ms
+entering step Deleting file Assets/RelationsInspector/Editor\RelationsInspectorResources\RIWindowLightSkin.asset
+step message: 
+step completed after 0 ms
+entering step Deleting file Assets/RelationsInspector/Editor\RelationsInspectorResources\RIWindowDarkSkin.asset
+step message: 
+step completed after 0 ms
+entering step Deleting file Assets/RelationsInspector/Editor\RelationsInspectorResources\Settings.asset
+step message: 
+step completed after 0 ms
+entering step Deleting directory Assets/RelationsInspector/Editor\LayoutCaches
+step message: 
+step completed after 0 ms
+entering step compiling RI DLL config /property:Configuration=Release;DefineConstants="RELEASE;RIDEMO"
+step message: running sys cmd: C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe with args System.String[]
+Microsoft (R)-Buildmodul, Version 4.6.1055.0
+[Microsoft .NET Framework, Version 4.0.30319.42000]
+Copyright (C) Microsoft Corporation. Alle Rechte vorbehalten.
+
+Der Buildvorgang wurde am 24.02.2016 01:33:02 gestartet.
+Projekt "I:\code\RelationsInspector\RIDLLProject\RelationsInspectorLib.csproj" auf Knoten "1", Rebuild Ziel(e).
+CoreClean:
+  Die Datei "I:\code\RelationsInspector\RIDLLProject\bin\Release\RelationsInspector.dll" wird gel”scht.
+  Die Datei "I:\code\RelationsInspector\RIDLLProject\bin\Release\RelationsInspector.pdb" wird gel”scht.
+  Die Datei "I:\code\RelationsInspector\RIDLLProject\bin\Release\UnityEditor.dll" wird gel”scht.
+  Die Datei "I:\code\RelationsInspector\RIDLLProject\bin\Release\UnityEngine.dll" wird gel”scht.
+  Die Datei "I:\code\RelationsInspector\RIDLLProject\bin\Release\Mono.Cecil.dll" wird gel”scht.
+  Die Datei "I:\code\RelationsInspector\RIDLLProject\bin\Release\nunit.framework.dll" wird gel”scht.
+  Die Datei "I:\code\RelationsInspector\RIDLLProject\bin\Release\Unity.DataContract.dll" wird gel”scht.
+  Die Datei "I:\code\RelationsInspector\RIDLLProject\bin\Release\ICSharpCode.NRefactory.dll" wird gel”scht.
+  Die Datei "I:\code\RelationsInspector\RIDLLProject\obj\Release\RelationsInspector.dll" wird gel”scht.
+  Die Datei "I:\code\RelationsInspector\RIDLLProject\obj\Release\RelationsInspector.pdb" wird gel”scht.
+  Die Datei "I:\code\RelationsInspector\RIDLLProject\obj\Release\RelationsInspectorLib.csprojResolveAssemblyReference.cache" wird gel”scht.
+ResolveAssemblyReferences:
+  Eine Ausschlussliste fr das TargetFramework-Profil wird generiert.
+CoreCompile:
+  C:\Windows\Microsoft.NET\Framework\v4.0.30319\Csc.exe /noconfig /nowarn:1701,1702 /nostdlib+ /errorreport:prompt /warn:4 /define:RELEASE;RIDEMO /highentropyva- /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Unity Subset v3.5\mscorlib.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Unity Subset v3.5\System.Core.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Unity Subset v3.5\System.Data.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Unity Subset v3.5\System.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Unity Subset v3.5\System.Xml.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Unity Subset v3.5\System.Xml.Linq.dll" /reference:"C:\Program Files (x86)\Unity4.3.0\Editor\Data\Managed\UnityEditor.dll" /reference:"C:\Program Files (x86)\Unity4.3.0\Editor\Data\Managed\UnityEngine.dll" /debug:pdbonly /filealign:512 /optimize+ /out:obj\Release\RelationsInspector.dll /target:library /utf8output AssemblyInfo.cs Backend\BackendDecoration.cs Backend\BackendUtil.cs Backend\IGraphBackendInternal.cs DemoRestriction.cs Graph\FoldUtil.cs Log.cs RelationDrawer\BasicRelation.cs RelationDrawer\RelationDrawUtil.cs EdgePlacement\EdgePlacement.cs EdgePlacement\StraightCirclePlacementProvider.cs EdgePlacement\StraightRectPlacementProvider.cs Graph\Relation.cs Graph\Graph.cs Graph\GraphExtensions.cs Graph\VertexData.cs RelationsInspectorAPI\APIv1Implementation.cs RelationsInspectorAPI\APIv2Implementation.cs RelationsInspectorAPI\IRelationsInspectorAPI.cs Layout\GraphLayoutAlgorithm.cs Layout\LayoutParams.cs Layout\LayoutType.cs Layout\TreeLayoutAlgorithm.cs Settings\ProjectSettings.cs Backend\AcceptTargetsAttribute.cs RelationsInspectorWindow.cs RelationsInspectorAPI\RIInternal.cs Serialization\GraphPosSerialization.cs Serialization\SaveLayoutAttribute.cs Serialization\VertexPosition.cs Serialization\VertexPositionStorage.cs Settings\AboutWindow.cs Settings\RelationsInspectorSettings.cs Settings\Settings.cs Settings\SettingsInspector.cs Settings\SettingsMenu.cs Style\EntityWidgetStyle.cs Style\MinimapStyle.cs Style\RelationDrawerStyle.cs Style\Skin.cs Style\SkinManager.cs RIStateHistory.cs Tools\Extensions\LinqExtensions.cs Tools\Extensions\RectExtensions.cs Tools\Extensions\StringExtensions.cs Tools\Extensions\TypeExtensions.cs Tools\Extensions\Vector2Extensions.cs Tools\Tweening\Easing.cs Tools\GLMaterials.cs Tools\GraphBuilder.cs Tools\GUIUtil.cs Tools\Tweening\Tween.cs Tools\TypeUtil.cs Tools\RNG.cs Tools\Tuple.cs Tools\Transform2d.cs Tools\Tweening\TweenCollection.cs Tools\Tweening\Tweener.cs Tools\Tweening\TweenUtil.cs Tools\Util.cs View\IRelationDrawer.cs View\IGraphView.cs View\IMView.cs View\IViewParent.cs View\Minimap.cs View\ViewUtil.cs Backend\IGraphBackend.cs WorkSpace\IWorkspace.cs WorkSpace\Workspace.cs
+Settings\RelationsInspectorSettings.cs(18,15): warning CS0649: Dem Feld 'RelationsInspector.RelationsInspectorSettings.repaintEachFrame' wird nie etwas zugewiesen, und es hat immer seinen Standardwert von 'false'. [I:\code\RelationsInspector\RIDLLProject\RelationsInspectorLib.csproj]
+_CopyFilesMarkedCopyLocal:
+  Die Datei wird von "C:\Program Files (x86)\Unity4.3.0\Editor\Data\Managed\UnityEditor.dll" in "bin\Release\UnityEditor.dll" kopiert.
+  Die Datei wird von "C:\Program Files (x86)\Unity4.3.0\Editor\Data\Managed\UnityEngine.dll" in "bin\Release\UnityEngine.dll" kopiert.
+  Die Datei wird von "C:\Program Files (x86)\Unity4.3.0\Editor\Data\Managed\Mono.Cecil.dll" in "bin\Release\Mono.Cecil.dll" kopiert.
+  Die Datei wird von "C:\Program Files (x86)\Unity4.3.0\Editor\Data\Managed\nunit.framework.dll" in "bin\Release\nunit.framework.dll" kopiert.
+  Die Datei wird von "C:\Program Files (x86)\Unity4.3.0\Editor\Data\Managed\Unity.DataContract.dll" in "bin\Release\Unity.DataContract.dll" kopiert.
+  Die Datei wird von "C:\Program Files (x86)\Unity4.3.0\Editor\Data\Managed\ICSharpCode.NRefactory.dll" in "bin\Release\ICSharpCode.NRefactory.dll" kopiert.
+CopyFilesToOutputDirectory:
+  Die Datei wird von "obj\Release\RelationsInspector.dll" in "bin\Release\RelationsInspector.dll" kopiert.
+  RelationsInspectorLib -> I:\code\RelationsInspector\RIDLLProject\bin\Release\RelationsInspector.dll
+  Die Datei wird von "obj\Release\RelationsInspector.pdb" in "bin\Release\RelationsInspector.pdb" kopiert.
+PostBuildEvent:
+  copy I:\code\RelationsInspector\RIDLLProject\bin\Release\RelationsInspector.dll "I:\code\RelationsInspector\Assets\RelationsInspector\Editor"
+  copy "I:\code\RelationsInspector\RIDLLProject\bin\Release\RelationsInspector.pdb" "I:\code\RelationsInspector\Assets\RelationsInspector\Editor"
+          1 Datei(en) kopiert.
+          1 Datei(en) kopiert.
+Die Erstellung des Projekts "I:\code\RelationsInspector\RIDLLProject\RelationsInspectorLib.csproj" ist abgeschlossen, Rebuild Ziel(e).
+
+Der Buildvorgang wurde erfolgreich ausgefhrt.
+
+"I:\code\RelationsInspector\RIDLLProject\RelationsInspectorLib.csproj" (Rebuild Ziel) (1) ->
+(CoreCompile Ziel) -> 
+  Settings\RelationsInspectorSettings.cs(18,15): warning CS0649: Dem Feld 'RelationsInspector.RelationsInspectorSettings.repaintEachFrame' wird nie etwas zugewiesen, und es hat immer seinen Standardwert von 'false'. [I:\code\RelationsInspector\RIDLLProject\RelationsInspectorLib.csproj]
+
+    1 Warnung(en)
+    0 Fehler
+
+Verstrichene Zeit 00:00:00.36
+
+
+finished sys cmd C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
+
+step completed after 470 ms
+entering step Deleting file I:\code\RelationsInspector\Assets\RelationsInspector\Editor\RelationsInspector.pdb
+step message: 
+step completed after 0 ms
+entering step Deleting file I:\code\RelationsInspector\Assets\RelationsInspector\Editor\RelationsInspector.dll.mdb
+step message: 
+step completed after 0 ms
+entering step refreshing asset db
+step message: 
+step completed after 202 ms
+entering step exporting asset package to I:\code\RelationsInspector\RelationsInspectorDemo.unitypackage
+step message: 
+step completed after 586 ms
+entering step Deleting file I:\code\RelationsInspector\Assets\RelationsInspector\Editor\SourceCodeRI.zip
+step message: 
+step completed after 0 ms
