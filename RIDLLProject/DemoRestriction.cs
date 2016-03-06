@@ -7,7 +7,7 @@ namespace RelationsInspector
 	static class DemoRestriction
 	{
 		static int inputEventCount = 0;
-		const int inputEventCountThreshold = 300;
+		const int inputEventCountThreshold = 500;
 		
 		public static void Run()
 		{
