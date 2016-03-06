@@ -136,7 +136,7 @@
     <VisualStudio AllowExistingFolder="true" />
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) "I:\code\RelationsInspector\Assets\RelationsInspector\Editor"
-copy "$(TargetDir)$(TargetName).pdb" "I:\code\RelationsInspector\Assets\RelationsInspector\Editor"</PostBuildEvent>
+    <PostBuildEvent>copy $(TargetPath) "I:\code\RelationsInspector\Assets\Plugins\Editor\RelationsInspector"
+copy "$(TargetDir)$(TargetName).pdb" "I:\code\RelationsInspector\Assets\Plugins\Editor\RelationsInspector"</PostBuildEvent>
   </PropertyGroup>
 </Project>

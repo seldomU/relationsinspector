@@ -5,16 +5,16 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C38CFD78-FF64-5009-F345-ADBF987E026F}</ProjectGuid>
+    <ProjectGuid>{3219B92A-AD39-20FD-EF13-B5E3BC755FF0}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+    <AssemblyName>Assembly-CSharp-Editor-firstpass</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
-    <UnityProjectType>Editor:5</UnityProjectType>
+    <UnityProjectType>EditorPlugins:7</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>4.3.0f4</UnityVersion>
     <RootNamespace></RootNamespace>
@@ -94,13 +94,23 @@
       <Project>{6056C4D6-E376-537E-C757-5E2481C312EA}</Project>
       <Name>UnityVS.RelationsInspector.CSharp.Plugins</Name>
     </ProjectReference>
-    <ProjectReference Include="UnityVS.RelationsInspector.CSharp.Editor.Plugins.csproj">
-      <Project>{3219B92A-AD39-20FD-EF13-B5E3BC755FF0}</Project>
-      <Name>UnityVS.RelationsInspector.CSharp.Editor.Plugins</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Stuff\Editor\BuildPackage.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\BackendUtils\BackendUtil.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\BackendUtils\DrawUtil.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\BackendUtils\MinimalBackend.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\BackendUtils\ScriptableObjectBackend.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\BackendUtils\ScriptableObjectBackendToolbar.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\Backends\AutoBackend\RIAutoBackend.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\Backends\AutoBackend\ReflectionUtil.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\Backends\HierarchyExample\SceneHierarchyBackend.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\Backends\HierarchyExample\TagBackend.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\Backends\SocialNetworkExample\Person.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\Backends\SocialNetworkExample\SocialNetworkBackend.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\Backends\SocialNetworkExample\StudyNetworkBackend.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\Backends\TypeGraphExample\TypeInheritanceBackend.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\Backends\TypeGraphExample\TypeUtility.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\RelationsInspectorMenuItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\Editor\RelationsInspector\README.txt" />

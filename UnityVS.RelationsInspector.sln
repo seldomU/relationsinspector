@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.RelationsInspector.CSharp", "UnityVS.RelationsInspector.CSharp.csproj", "{E8843C8F-F948-2DA4-4C71-DF4E5632E180}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.RelationsInspector.CSharp.Plugins", "UnityVS.RelationsInspector.CSharp.Plugins.csproj", "{6056C4D6-E376-537E-C757-5E2481C312EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.RelationsInspector.CSharp.Editor.Plugins", "UnityVS.RelationsInspector.CSharp.Editor.Plugins.csproj", "{3219B92A-AD39-20FD-EF13-B5E3BC755FF0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.RelationsInspector.CSharp.Editor", "UnityVS.RelationsInspector.CSharp.Editor.csproj", "{C38CFD78-FF64-5009-F345-ADBF987E026F}"
 EndProject
@@ -13,10 +15,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E8843C8F-F948-2DA4-4C71-DF4E5632E180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8843C8F-F948-2DA4-4C71-DF4E5632E180}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8843C8F-F948-2DA4-4C71-DF4E5632E180}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8843C8F-F948-2DA4-4C71-DF4E5632E180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6056C4D6-E376-537E-C757-5E2481C312EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6056C4D6-E376-537E-C757-5E2481C312EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6056C4D6-E376-537E-C757-5E2481C312EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6056C4D6-E376-537E-C757-5E2481C312EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3219B92A-AD39-20FD-EF13-B5E3BC755FF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3219B92A-AD39-20FD-EF13-B5E3BC755FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3219B92A-AD39-20FD-EF13-B5E3BC755FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3219B92A-AD39-20FD-EF13-B5E3BC755FF0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C38CFD78-FF64-5009-F345-ADBF987E026F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C38CFD78-FF64-5009-F345-ADBF987E026F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C38CFD78-FF64-5009-F345-ADBF987E026F}.Release|Any CPU.ActiveCfg = Release|Any CPU

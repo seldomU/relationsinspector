@@ -11,8 +11,8 @@ namespace RelationsInspector
 		// the assemblies in which we search for backends
 		static readonly Assembly[] backendSearchAssemblies = new[]
 		{
-			TypeUtil.GetAssemblyByName("Assembly-CSharp-Editor"),
-			typeof(RelationsInspectorWindow).Assembly
+			TypeUtil.GetAssemblyByName("Assembly-CSharp-Editor-firstpass"),
+			TypeUtil.GetAssemblyByName("Assembly-CSharp-Editor")
 		};
 
 		internal static readonly Dictionary<Type, Type> backendToDecorator = new Dictionary<Type, Type>
@@ -24,6 +24,7 @@ namespace RelationsInspector
 		internal static readonly HashSet<Type> backEndInterfaces = backendToDecorator.Keys.ToHashSet();
 
 		public static readonly Type[] backendTypes = backendSearchAssemblies
+			.Where(asm=>asm != null )
 			.SelectMany( asm => asm.GetTypes() )
 			.Where( t => IsBackendType( t ) )
 			.ToArray();

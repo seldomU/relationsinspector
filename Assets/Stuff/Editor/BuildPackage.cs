@@ -11,7 +11,7 @@ class BuildPackage
     const string projectPath = @"I:\code\RelationsInspector\";
 
     // root directory of the package
-    const string packageRootDir = @"Assets\RelationsInspector";
+    const string packageRootDir = @"Assets\Plugins";
 
     // log file path
     static string logDir = projectPath + @"BuildLogs\";
@@ -21,15 +21,15 @@ class BuildPackage
     const string msbuildPath = @"C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe";
     static string projectToBuild = projectPath + @"RIDLLProject\RelationsInspectorLib.csproj";
     const string buildTarget = @"/target:Rebuild";
-    const string relDllPath = @"Assets\RelationsInspector\Editor\RelationsInspector.dll";
-    const string relPDBPath = @"Assets\RelationsInspector\Editor\RelationsInspector.pdb";
-    const string relMDBPath = @"Assets\RelationsInspector\Editor\RelationsInspector.dll.mdb";
+    const string relDllPath = @"Assets\Plugins\Editor\RelationsInspector\RelationsInspector.dll";
+    const string relPDBPath = @"Assets\Plugins\Editor\RelationsInspector\RelationsInspector.pdb";
+    const string relMDBPath = @"Assets\Plugins\Editor\RelationsInspector\RelationsInspector.dll.mdb";
     static string dllPath = projectPath + relDllPath;
 
     // ri dll zip settings
     const string zipPath = @"C:\Program Files\7-Zip\7z";
     static string sourceCodePath = @"RIDLLProject\*";
-    public const string relSourceArchivePath = @"Assets\RelationsInspector\Editor\SourceCodeRI.zip";
+    public const string relSourceArchivePath = @"Assets\Plugins\Editor\RelationsInspector\SourceCodeRI.zip";
     static string absSourceArchivePath = projectPath + relSourceArchivePath;
     const string excludePatterns = "-xr!obj -xr!bin -xr!.vs -x!*.csproj -x!*.sln -x!*.suo -x!*.user -x!DemoRestriction.cs";
 
