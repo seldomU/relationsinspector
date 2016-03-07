@@ -338,8 +338,7 @@ namespace RelationsInspector
 			var style = SkinManager.GetSkin().tooltipStyle;
 			var contentSize = style.CalcSize( content );
 
-			float toolTipSpacing = 20;
-			var tooltipRectCenter = new Vector2( parentItemRect.center.x, parentItemRect.yMax + contentSize.y/2 + toolTipSpacing );
+			var tooltipRectCenter = FindTooltipRectPlacementInView( parentItemRect, contentSize, 20 );
 
 			var contentRect = Util.CenterRect( tooltipRectCenter, contentSize );
 
@@ -348,6 +347,36 @@ namespace RelationsInspector
 
 			EditorGUI.DrawRect( contentRect, SkinManager.GetSkin().windowColor );
 			style.Draw( contentRect, content, 0 );
+		}
+
+		Vector2 FindTooltipRectPlacementInView( Rect parentRect, Vector2 tooltipExtents, float yOffset )
+		{
+			// work with a slightly more narrow viewRect, so that the tooltip rect stays away from the border
+			var fullviewRect = parent.GetViewRect();
+			var viewRect = new Rect( fullviewRect.xMin + 20, fullviewRect.yMin, fullviewRect.width - 2 * 20, fullviewRect.height );
+
+			// get the tooltip's distance towards the viewRect border
+
+			// distance to bottom border if placed below parent
+			var clearanceYBottom = viewRect.yMax - (parentRect.yMax + yOffset + tooltipExtents.y);
+			// distance to top border, if placed above parent
+			var clearanceYTop = (parentRect.yMin - yOffset - tooltipExtents.y) - viewRect.yMin;
+			// distance to right border
+			var clearanceXRight = viewRect.xMax - ( parentRect.center.x + tooltipExtents.x / 2 );
+			// distance to left border
+			var clearanceXLeft = ( parentRect.center.x - tooltipExtents.x / 2 ) - viewRect.xMin;
+
+			// place tooltip below parent if it fits into the window. 
+			// If it does not fit, pick the side where more of the tooltip is visible.
+			bool placeBottom = clearanceYBottom > 0 || clearanceYBottom > clearanceYTop;
+			float xOffset = 0;
+			if ( clearanceXLeft < 0 ) xOffset += -clearanceXLeft;	// shift to the right
+			if ( clearanceXRight < 0 ) xOffset += clearanceXRight;  // shift to the left
+			
+			// have the tooltip leave the window when the parent does
+			xOffset = Mathf.Clamp( xOffset, -( parentRect.width / 2 + tooltipExtents.x / 2 ), ( parentRect.width / 2 + tooltipExtents.x / 2 ) );
+
+			return parentRect.center + new Vector2( xOffset, ( yOffset + tooltipExtents.y / 2 ) * ( placeBottom ? 1 : -1 ) );
 		}
 
 		void DrawEntity( T entity )
