@@ -13,6 +13,7 @@ namespace RelationsInspector.Backend.TypeHierarchy
 	[SaveLayout]
 	public class TypeInheritanceBackend : MinimalBackend<Type, TypeRelation>
 	{
+		static MonoScript[] behaviourTypeAssets = MonoImporter.GetAllRuntimeMonoScripts();
 		static bool includeInterfaces = false;
 		string searchstring;
 
@@ -110,6 +111,11 @@ namespace RelationsInspector.Backend.TypeHierarchy
 				var single = entities.First();
 				if( !api.GetTargets().Contains( single ) )
 					menu.AddItem( new GUIContent( "inspect type " + single.Name ), false, () => api.ResetTargets( new[] { single } ) );
+
+				var typeAsset = behaviourTypeAssets.FirstOrDefault( monoScript => monoScript.GetClass() == single );
+				if( typeAsset != null )
+					menu.AddItem( new GUIContent( "open " + single.Name ), false, () => AssetDatabase.OpenAsset( typeAsset ) );
+				// UnityEditorInternal.InternalEditorUtility.OpenFileAtLineExternal
 			}
 		}
 
