@@ -1,6 +1,19 @@
-release: 1.0.5862.27937 on Jan 19th 2016 at 15:30, revision 760780a
-demo: 1.0.5872.22010 same rev
+2016.01.19 rev 760780a
+Release: 1.0.5862.27937
+Demo: 1.0.5872.22010
 
 2016.02.24 rev 02c0305
 Release 1.0.5897.2780
 Demo 1.0.5898.2791
+Changes:
+	- ResetTargets now also accepts a backend type along with the targets
+	- added GetAPI1 property to API
+
+2016.03.10 rev b58da13
+Release 1.1.0
+Demo 1.1.0
+Changes:
+	- moved base directory from RelationsInspector to Plugins/RelationsInspector
+	- add API methods GetEntities and GetRelations
+	- tooltip placement now takes window borders into consideration
+	- minor improvements to example backends
