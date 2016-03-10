@@ -281,11 +281,6 @@ void AddTargets(object[] targets, bool delayed = true );
 > Clears the current graph and creates a new one for the union of existing and added targets. If `delayed` is true, execution happens during the next update.
 
 ``` cs
-object[] GetTargets()
-```
-> Returns the current target objects.
-
-``` cs
 void SetBackend(Type backendType, bool delayed = true );
 ```
 > Enforces selection of the given backend type. If `delayed` is true, execution happens during the next update.
@@ -345,6 +340,23 @@ void RemoveRelation(object sourceEntity, object targetEntity, object tag, bool d
 void InitRelation(object[] sourceEntity, object tag, bool delayed = true );
 ```
 > Makes the UI initiate the creation of a new relation. The user then gets to pick the target entity, which will result in call to the backend's `CreateEntity`. If `delayed` is true, execution happens during the next update.
+
+#### Graph querying
+
+``` cs
+object[] GetTargets()
+```
+> Returns the current target objects.
+
+``` cs
+IEnumerable<object> GetEntities();
+```
+> Returns all of the graph's entities.
+
+``` cs
+IEnumerable<object> GetRelations();
+```
+> Returns all of the graph's relations.
 
 ``` cs
 object[] FindRelations(object entity);
