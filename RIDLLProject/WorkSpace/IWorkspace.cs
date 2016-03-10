@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RelationsInspector
@@ -11,6 +12,9 @@ namespace RelationsInspector
 		void OnSelectionChange();
 		void OnDestroy();
 		void OnEvent( Event e );
+
+		IEnumerable<object> GetEntities();
+		IEnumerable<object> GetRelations();
 
 		void AddTargets( object[] targetsToAdd, Vector2 pos );
 		void AddEntity( object vertex, Vector2 position );

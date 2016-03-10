@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RelationsInspector
@@ -20,7 +21,11 @@ namespace RelationsInspector
 		void ResetTargets( object[] targets, bool delayed = true );
 		void ResetTargets( object[] targets, System.Type backendType, bool delayed = true );
 		void AddTargets( object[] targets, bool delayed = true );
+
+		// querying the graph
 		object[] GetTargets();
+		IEnumerable<object> GetEntities();
+		IEnumerable<object> GetRelations();
 
 		#region direct graph manipulation
 
@@ -64,8 +69,13 @@ namespace RelationsInspector
 
 		// manipulate the graph through targets
 		void ResetTargets( object[] targets, bool delayed = true );
+		void ResetTargets( object[] targets, System.Type backendType, bool delayed = true );
 		void AddTargets( object[] targets, bool delayed = true );
+
+		// querying the graph
 		object[] GetTargets();
+		IEnumerable<object> GetEntities();
+		IEnumerable<object> GetRelations();
 
 		#region direct graph manipulation
 

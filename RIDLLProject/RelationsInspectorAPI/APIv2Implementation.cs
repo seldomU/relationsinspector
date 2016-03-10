@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RelationsInspector
@@ -50,6 +51,16 @@ namespace RelationsInspector
 		public object[] GetTargets()
 		{
 			return internalAPI.GetTargets();
+		}
+
+		public IEnumerable<object> GetEntities()
+		{
+			return internalAPI.GetEntities();
+		}
+
+		public IEnumerable<object> GetRelations()
+		{
+			return internalAPI.GetRelations();
 		}
 
 		// manipulate the graph directly

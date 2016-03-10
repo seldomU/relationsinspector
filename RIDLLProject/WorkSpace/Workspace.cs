@@ -265,6 +265,24 @@ namespace RelationsInspector
 
 		#region implementing IWorkspace
 
+		IEnumerable<object> IWorkspace.GetEntities()
+		{
+			if ( graph == null )
+				yield break;
+
+			foreach ( var entity in graph.Vertices )
+				yield return entity;
+		}
+
+		IEnumerable<object> IWorkspace.GetRelations()
+		{
+			if ( graph == null )
+				yield break;
+
+			foreach ( var relation in graph.Edges )
+				yield return relation;
+		}
+
 		void IWorkspace.AddTargets( object[] targetsToAdd, Vector2 pos )
 		{
 			if ( targetsToAdd == null )

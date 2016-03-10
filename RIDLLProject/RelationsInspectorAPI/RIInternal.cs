@@ -133,6 +133,16 @@ namespace RelationsInspector
 			return targetObjects.ToArray();
 		}
 
+		public IEnumerable<object> GetEntities()
+		{
+			return ( workspace == null ) ? Enumerable.Empty<object>() : workspace.GetEntities();
+		}
+
+		public IEnumerable<object> GetRelations()
+		{
+			return ( workspace == null ) ? Enumerable.Empty<object>() : workspace.GetRelations();
+		}
+
 		// manipulate the graph directly
 		public void AddEntity( object entity, Vector2 position, bool delayed = true )
 		{
