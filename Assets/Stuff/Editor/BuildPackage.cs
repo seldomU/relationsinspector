@@ -130,20 +130,20 @@ class BuildPackage
 
         // use the dll version as build id
         // if the dll is missing, use the date instead
-        string buildId;
-        try
+        string buildId = "unknownVersion";
+		string dateStr = DateTime.Now.ToString( "yyyy-MM-dd-HH-mm-ss" );
+
+		try
         {
             buildId = System.Reflection.AssemblyName.GetAssemblyName( relDllPath ).Version.ToString();
         }
         catch (Exception e)
         {
             log += "\nFailed to retrieve assembly version: " + e.ToString();
-            // fall back to date-based naming
-            buildId = DateTime.Now.ToString( "yyyy-MM-dd-HH-mm-ss" ) + ".txt";
         }
 
         // copy the package
-        string buildDir = logDir + "Log" + buildId + @"\";
+        string buildDir = logDir + "Log" + buildId + "_" + dateStr + @"\";
         Directory.CreateDirectory( buildDir );
         string packageName = buildSettings[ mode ].packageName;
         log += TryCopy( projectPath + packageName, buildDir + packageName );
