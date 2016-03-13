@@ -12,6 +12,8 @@ namespace RelationsInspector
 		{
 			get { return EditorGUIUtility.GetBuiltinSkin(EditorSkin.Inspector).window; }
 		}*/
+		public static string ProjectPath = GetProjectPath();
+
 		public static Rect rectZero = new Rect( 0, 0, 0, 0 );
 
 		public static System.Action IdleAction = () => { };
@@ -131,6 +133,7 @@ namespace RelationsInspector
 
 		internal static string AbsolutePathToAssetPath( string path )
 		{
+			// asset paths use forward slashes as directory seperators
 			path = path.Replace( "\\", "/" );
 			var assetsPath = Application.dataPath;
 			if ( path == null || !path.StartsWith( assetsPath ) )
@@ -139,18 +142,26 @@ namespace RelationsInspector
 			return "Assets" + path.Substring( assetsPath.Length );
 		}
 
-		internal static string AssetToSystemPath( string path )
+		internal static string AssetToSystemPath( string assetPath )
 		{
-			var assetsPath = Application.dataPath;
-			if ( path == null || !path.StartsWith( "Assets" ) )
-				throw new System.ArgumentException( "path is " + path );
+			if ( assetPath == null || !assetPath.StartsWith( "Assets" ) )
+				throw new System.ArgumentException( "path is " + assetPath );
 
-			return assetsPath.Replace( "Assets", "" ) + path;
+			string fixedSeperatorPath = assetPath.Replace( "/", System.IO.Path.DirectorySeparatorChar.ToString() );
+
+			return System.IO.Path.Combine( ProjectPath, assetPath );
 		}
 
-		internal static bool AssetPathExists( string path )
+		static string GetProjectPath()
 		{
-			return System.IO.File.Exists( AssetToSystemPath( path ) );
+			string dataPath = Application.dataPath;
+			
+			// make sure that there is a directory seperator at the end
+			// otherwise this will be considered as a file path
+			if ( !dataPath.EndsWith( System.IO.Path.DirectorySeparatorChar.ToString() ) )
+				dataPath += System.IO.Path.DirectorySeparatorChar;
+
+			return System.IO.Directory.GetParent( dataPath ).FullName;
 		}
 
 		internal static void ForceCreateAsset( Object obj, string path )
