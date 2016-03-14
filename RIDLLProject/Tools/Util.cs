@@ -142,6 +142,7 @@ namespace RelationsInspector
 			return "Assets" + path.Substring( assetsPath.Length );
 		}
 
+		// asset path -> a full system path
 		internal static string AssetToSystemPath( string assetPath )
 		{
 			if ( assetPath == null || !assetPath.StartsWith( "Assets" ) )
@@ -149,19 +150,14 @@ namespace RelationsInspector
 
 			string fixedSeperatorPath = assetPath.Replace( "/", System.IO.Path.DirectorySeparatorChar.ToString() );
 
-			return System.IO.Path.Combine( ProjectPath, assetPath );
+			return System.IO.Path.Combine( GetProjectPath(), fixedSeperatorPath );
 		}
 
-		static string GetProjectPath()
+		// returns the path of the directory that contains the assets folder
+		internal static string GetProjectPath()
 		{
-			string dataPath = Application.dataPath;
-			
-			// make sure that there is a directory seperator at the end
-			// otherwise this will be considered as a file path
-			if ( !dataPath.EndsWith( System.IO.Path.DirectorySeparatorChar.ToString() ) )
-				dataPath += System.IO.Path.DirectorySeparatorChar;
-
-			return System.IO.Directory.GetParent( dataPath ).FullName;
+			string fixedSeperatorDataPath = Application.dataPath.Replace( "/", System.IO.Path.DirectorySeparatorChar.ToString() );
+			return System.IO.Directory.GetParent( fixedSeperatorDataPath ).FullName;
 		}
 
 		internal static void ForceCreateAsset( Object obj, string path )
