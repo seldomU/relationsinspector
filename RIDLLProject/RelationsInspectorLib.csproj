@@ -83,6 +83,7 @@
     <Compile Include="Layout\LayoutParams.cs" />
     <Compile Include="Layout\LayoutType.cs" />
     <Compile Include="Layout\TreeLayoutAlgorithm.cs" />
+    <Compile Include="RIBackendPackageInfo.cs" />
     <Compile Include="Settings\ProjectSettings.cs" />
     <Compile Include="Backend\AcceptTargetsAttribute.cs" />
     <Compile Include="RelationsInspectorWindow.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="View\Minimap.cs" />
     <Compile Include="View\ViewUtil.cs" />
     <Compile Include="Backend\IGraphBackend.cs" />
+    <Compile Include="WelcomeWindow.cs" />
     <Compile Include="WorkSpace\IWorkspace.cs" />
     <Compile Include="WorkSpace\Workspace.cs" />
   </ItemGroup>

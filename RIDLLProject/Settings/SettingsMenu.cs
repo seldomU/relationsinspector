@@ -10,9 +10,7 @@ namespace RelationsInspector
 			var menu = new GenericMenu();
 			menu.AddItem( new GUIContent( "Settings" ), false, () => Selection.activeObject = Settings.Instance );
 			menu.AddItem( new GUIContent( "Skin" ), false, () => Selection.activeObject = SkinManager.GetSkin() );
-			menu.AddItem( new GUIContent( "Documentation" ), false, () => Application.OpenURL( ProjectSettings.DocURL ) );
-			menu.AddItem( new GUIContent( "Discussion" ), false, () => Application.OpenURL( ProjectSettings.DiscussionURL ) );
-			menu.AddItem( new GUIContent( "About" ), false, () => AboutWindow.Spawn() );
+			menu.AddItem( new GUIContent( "About" ), false, () => WelcomeWindow.Spawn() );
 #if RIDEMO
 			menu.AddItem( new GUIContent( "Buy RI" ), false, () => UnityEditorInternal.AssetStore.Open( ProjectSettings.StoreURL ) );
 #endif

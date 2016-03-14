@@ -9,11 +9,14 @@ namespace RelationsInspector
 		public const string DefaultBackendClassName = "SceneHierarchyBackend";
 		public const string AutoBackendClassName = "RIAutoBackend";
 		public const string AutoBackendAttributeName = "AutoBackendAttribute"; // has to live in the game dll
+		public const string BackendInstallPath = "Assets/Editor/GraphBackends/";
 
 		public const string EditorPrefsProjectPrefix = "Relations inspector";
 
-		public const string resourcesDirectoryName = "RelationsInspectorResources";
-		public const string layoutCacheDirectoryName = "LayoutCaches";
+		const string resourcesDirectoryName = "RelationsInspectorResources";
+		const string packagesDirectoryName = "Packages";
+		const string layoutCacheDirectoryName = "LayoutCaches";
+		const string welcomeWindowFolderName = "WelcomeWindow";
 
 		const string darkSkinName = "RIWindowDarkSkin.asset";
 		const string lightSkinName = "RIWindowLightSkin.asset";
@@ -36,6 +39,8 @@ namespace RelationsInspector
 
 		public static string RIBasePath { get; private set; }
 		public static string ResourcesPath { get; private set; }
+		public static string WelcomeWindowResourcePath { get; private set; }
+		public static string PackagesPath { get; private set; }
 		public static string LayoutCachesPath { get; private set; }
 		public static string SettingsPath { get; private set; }
 		public static string LightSkinPath { get; private set; }
@@ -46,6 +51,8 @@ namespace RelationsInspector
 			RIBasePath = GetRIBasePath();
 			LayoutCachesPath = GetAbsoluteRIDirectoryPath( layoutCacheDirectoryName );
 			ResourcesPath = GetAbsoluteRIDirectoryPath( resourcesDirectoryName );
+			PackagesPath = GetAbsoluteRIDirectoryPath( packagesDirectoryName );
+			WelcomeWindowResourcePath = Path.Combine( ResourcesPath, welcomeWindowFolderName );
 			SettingsPath = Path.Combine( ResourcesPath, SettingsFileName );
 			LightSkinPath = Path.Combine( ResourcesPath, lightSkinName );
 			DarkSkinPath = Path.Combine( ResourcesPath, darkSkinName );
