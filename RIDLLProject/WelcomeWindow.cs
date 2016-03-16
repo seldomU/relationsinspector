@@ -3,7 +3,6 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using RelationsInspector.Extensions;
 
 namespace RelationsInspector
 {
@@ -37,7 +36,7 @@ namespace RelationsInspector
 		static Texture RITitleTextImage = GetTexture( EditorGUIUtility.isProSkin ? "RITitleTextWhite" : "RITitleTextBlack" );
 
 		Vector2 scrollPosition;
-		static Vector2 defaultWindowSize = new Vector2( 400, 500 );
+		static Vector2 windowSize = new Vector2( 400, 500 );
 
 		public GUIStyle listHeaderStyle;
 		public GUIStyle mainTitleStyle;
@@ -57,7 +56,6 @@ namespace RelationsInspector
 		public float integrationIconHorSpacing = 30;
 		public float packageCheckBoxWidth = 1;
 		public float packageRowVerticalSpace = 8;
-		//public float packageContentSpaceLeft = 20;
 
 		RIBackendPackageInfo[] packageInfos;
 
@@ -133,7 +131,7 @@ namespace RelationsInspector
 
 			// draw Title
 			GUILayout.BeginHorizontal();
-			GUILayout.Space( ( position.width - RITitleTextImage.width ) / 2 );//titleSpaceLeft );
+			GUILayout.Space( ( position.width - RITitleTextImage.width ) / 2 );
 			GUI.DrawTexture( ReserveRect( RITitleTextImage.width, RITitleTextImage.height ), RITitleTextImage );
 			GUILayout.EndHorizontal();
 
@@ -151,8 +149,7 @@ namespace RelationsInspector
 			var iconRect = ReserveRect( new Vector2( listIconSize, listIconSize ) );
 			GUILayout.Space( integrationIconHorSpacing );
 			GUI.DrawTexture( iconRect, IntegrationIcon );
-			//if ( GUI.Button( iconRect, GUIContent.none, GUIStyle.none ) )
-			//	item.onClick.Invoke();
+
 			GUILayout.Label( "Installable Addons", listHeaderStyle );
 			GUILayout.EndHorizontal();
 
@@ -174,7 +171,6 @@ namespace RelationsInspector
 			{
 				GUILayout.Space( linkBarSpacing );
 				var rect = ReserveRect( new Vector2( toolbarIconSize, toolbarIconSize ) );
-				//GUI.DrawTexture( rect, item.icon );
 				if ( GUI.Button( rect, new GUIContent( "", null, item.title ), item.getStyle() ) )
 					item.onClick.Invoke();
 			}
@@ -219,15 +215,15 @@ namespace RelationsInspector
 		internal static void Spawn()
 		{
 			var window = GetWindow<WelcomeWindow>( true, windowTitle, true );
-			window.minSize = window.maxSize = defaultWindowSize;
-			window.position = new Rect( 100, 100, defaultWindowSize.x, defaultWindowSize.y );
+			window.minSize = window.maxSize = windowSize;
+			window.position = new Rect( 100, 100, windowSize.x, windowSize.y );
 		}
 
 		#region utility
 
 		string GetFullPackagePath( string packageName )
 		{
-			string directoryPath = Util.AssetToSystemPath( ProjectSettings.PackagesPath );	//Path.Combine( Application.dataPath, ProjectSettings.PackagesPath );
+			string directoryPath = Util.AssetToSystemPath( ProjectSettings.PackagesPath );
 			string filePath = Path.Combine( directoryPath, packageName + ".unitypackage" );
 			Debug.Log( filePath );
 			return filePath;
@@ -274,7 +270,6 @@ namespace RelationsInspector
 			var style = new GUIStyle();
 			style.normal.background = GetTexture( name );
 			style.hover.background = GetTexture( name + "_hover" );
-			//style.onHover.background = GetTexture( "Twitter" ); //name + "_hover" );
 			stylesCache[ id ] = style;
 			return style;
 		}
