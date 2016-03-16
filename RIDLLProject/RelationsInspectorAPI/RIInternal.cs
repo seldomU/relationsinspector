@@ -159,7 +159,7 @@ namespace RelationsInspector
 				return;
 
 			var assignableEntity = MakeAssignableEntities( new[] { entity }, selectedBackendType ).FirstOrDefault();
-			Exec( () => workspace.RemoveEntity( entity ), delayed );
+			Exec( () => workspace.RemoveEntity( assignableEntity ), delayed );
 		}
 
 		internal void ExpandEntity( object entity, bool delayed = true )

@@ -82,8 +82,6 @@ namespace RelationsInspector
 			if ( !ShouldGraphOfTypeBeSerialized( backendType ) )
 				return;
 
-			bool saveByDefault = typeof( UnityEngine.Object ).IsAssignableFrom( typeof( T ) );
-
 			var storage = GetVertexPositionStorage( graph );
 			string path = GetStorageFilePath( GetViewId( seeds, backendType ), backendType );
 			Util.ForceCreateAsset( storage, path );
