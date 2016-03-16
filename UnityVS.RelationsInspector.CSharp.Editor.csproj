@@ -76,9 +76,6 @@
     <Reference Include="Unity.PackageManager">
       <HintPath>Library\UnityAssemblies\Unity.PackageManager.dll</HintPath>
     </Reference>
-    <Reference Include="RelationsInspector">
-      <HintPath>Assets\Plugins\Editor\RelationsInspector\RelationsInspector.dll</HintPath>
-    </Reference>
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>Assets\UnityVS\Editor\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
@@ -87,6 +84,9 @@
     </Reference>
     <Reference Include="UnityVS.VersionSpecific">
       <HintPath>Assets\UnityVS\Editor\UnityVS.VersionSpecific.dll</HintPath>
+    </Reference>
+    <Reference Include="RelationsInspector">
+      <HintPath>Assets\Plugins\Editor\RelationsInspector\RelationsInspector.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Stuff\Editor\BuildPackage.cs" />
+    <Compile Include="Assets\Stuff\Editor\GeneratePackageMetadata.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\Editor\RelationsInspector\README.txt" />

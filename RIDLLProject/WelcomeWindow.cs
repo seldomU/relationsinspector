@@ -22,20 +22,22 @@ namespace RelationsInspector
 
 		static ContentItem[] headlineContent = new ContentItem[]
 		{
-		new ContentItem() { title = "Documentation", getStyle = () => GetButtonStyle("Documentation" ), onClick = () => Application.OpenURL("") },
-		new ContentItem() { title = "Discussion", getStyle = () => GetButtonStyle("Discussion" ), onClick = () => Application.OpenURL("") },
-		new ContentItem() { title = "Videos", getStyle = () => GetButtonStyle("Youtube" ), onClick = () => Application.OpenURL("") },
-		new ContentItem() { title = "Twitter", getStyle = () => GetButtonStyle("Twitter" ), onClick = () => Application.OpenURL("") },
-		new ContentItem() { title = "Buy full version", getStyle = () => GetButtonStyle("Buy" ), onClick = () => Application.OpenURL("") }
+		new ContentItem() { title = "Documentation", getStyle = () => GetButtonStyle("Documentation" ), onClick = () => Application.OpenURL( ProjectSettings.DocURL ) }
+		,new ContentItem() { title = "Discussion", getStyle = () => GetButtonStyle("Discussion" ), onClick = () => Application.OpenURL( ProjectSettings.DiscussionURL ) }
+		,new ContentItem() { title = "Videos", getStyle = () => GetButtonStyle("Youtube" ), onClick = () => Application.OpenURL(ProjectSettings.YoutubeURL) }
+		,new ContentItem() { title = "Twitter", getStyle = () => GetButtonStyle("Twitter" ), onClick = () => Application.OpenURL(ProjectSettings.TwitterURL) }
+#if RIDEMO
+		,new ContentItem() { title = "Buy full version", getStyle = () => GetButtonStyle("Buy" ), onClick = () => UnityEditorInternal.AssetStore.Open( ProjectSettings.StoreDemoURL ) }
+#endif
 		};
 
 		const string windowTitle = "Welcome to RelationsInspector";
 
 		static Texture IntegrationIcon = GetTexture( "Integration" );
-		static Texture RITitleTextImage = GetTexture( "RITitleText" );
+		static Texture RITitleTextImage = GetTexture( EditorGUIUtility.isProSkin ? "RITitleTextWhite" : "RITitleTextBlack" );
 
 		Vector2 scrollPosition;
-		static Vector2 defaultWindowSize = new Vector2( 400, 600 );
+		static Vector2 defaultWindowSize = new Vector2( 400, 500 );
 
 		public GUIStyle listHeaderStyle;
 		public GUIStyle mainTitleStyle;
@@ -116,12 +118,10 @@ namespace RelationsInspector
 		void OnEnable()
 		{
 			string[] packageFolderAssetPaths = Directory.GetFiles( Util.AssetToSystemPath( ProjectSettings.PackagesPath ), "*.asset" );
-			Debug.Log( ProjectSettings.PackagesPath );
-			Debug.Log( Util.AssetToSystemPath( ProjectSettings.PackagesPath ) );
-			Debug.Log( packageFolderAssetPaths.ToDelimitedString() );
 			packageInfos = packageFolderAssetPaths
 				.Select( path => Util.LoadAsset<RIBackendPackageInfo>( Util.AbsolutePathToAssetPath( path ) ) )
-				.Where(asset => asset != null ) // might not be of type RIBackendPackageInfo
+				.Where( asset => asset != null ) // might not be of type RIBackendPackageInfo
+				.OrderBy( asset => asset.metaData.rank )
 				.ToArray();
 		}
 
@@ -133,47 +133,46 @@ namespace RelationsInspector
 
 			// draw Title
 			GUILayout.BeginHorizontal();
-			GUILayout.Space( titleSpaceLeft );  //( EditorGUIUtility.currentViewWidth - RITitleTextImage.width ) / 2;
+			GUILayout.Space( ( position.width - RITitleTextImage.width ) / 2 );//titleSpaceLeft );
 			GUI.DrawTexture( ReserveRect( RITitleTextImage.width, RITitleTextImage.height ), RITitleTextImage );
 			GUILayout.EndHorizontal();
 
 			string version = GetType().Assembly.GetName().Version.ToString();
 #if RIDEMO
-            version += "demo";
+            version += " Demo";
 #endif
 			GUILayout.Label( version, versionLabelStyle );
 
 			GUILayout.Space( headerToListSpace );
 
+			// draw integrations header
+			GUILayout.BeginHorizontal();
+			GUILayout.Space( integrationIconHorSpacing );
+			var iconRect = ReserveRect( new Vector2( listIconSize, listIconSize ) );
+			GUILayout.Space( integrationIconHorSpacing );
+			GUI.DrawTexture( iconRect, IntegrationIcon );
+			//if ( GUI.Button( iconRect, GUIContent.none, GUIStyle.none ) )
+			//	item.onClick.Invoke();
+			GUILayout.Label( "Installable Addons", listHeaderStyle );
+			GUILayout.EndHorizontal();
 
 			scrollPosition = GUILayout.BeginScrollView( scrollPosition );
 			{
-				// draw integrations header
-				GUILayout.BeginHorizontal();
-				GUILayout.Space( integrationIconHorSpacing );
-				var iconRect = ReserveRect( new Vector2( listIconSize, listIconSize ) );
-				GUILayout.Space( integrationIconHorSpacing );
-				GUI.DrawTexture( iconRect, IntegrationIcon );
-				//if ( GUI.Button( iconRect, GUIContent.none, GUIStyle.none ) )
-				//	item.onClick.Invoke();
-				GUILayout.Label( "Integration packs", listHeaderStyle );
-				GUILayout.EndHorizontal();
-
 				// integrations
 				foreach ( var pInfo in packageInfos )
-				{
-					DrawPackageContent( pInfo );
-				}
+					DrawPackageContent( pInfo.metaData );
 			}
 			GUILayout.EndScrollView();
 
 			GUILayout.FlexibleSpace();
 
-			// link toolbar
+			// link bar
+			GUILayout.Space( toolbarTopSpace );
 			GUILayout.BeginHorizontal();
+			float linkBarSpacing = ( position.width - ( headlineContent.Length * toolbarIconSize ) ) / ( headlineContent.Length + 1 );
 			foreach ( var item in headlineContent )
 			{
-				GUILayout.Space( toolbarItemHorSpacing );
+				GUILayout.Space( linkBarSpacing );
 				var rect = ReserveRect( new Vector2( toolbarIconSize, toolbarIconSize ) );
 				//GUI.DrawTexture( rect, item.icon );
 				if ( GUI.Button( rect, new GUIContent( "", null, item.title ), item.getStyle() ) )
@@ -187,7 +186,7 @@ namespace RelationsInspector
 			GUILayout.Space( toolbarTopSpace );
 		}
 
-		void DrawPackageContent( RIBackendPackageInfo pInfo )
+		void DrawPackageContent( RIBackendPackageMetaData pInfo )
 		{
 			GUILayout.Space( packageRowVerticalSpace );
 			// title and install/uninstall control
@@ -217,6 +216,13 @@ namespace RelationsInspector
 			GUILayout.Label( pInfo.description, packageDescriptionStyle );
 		}
 
+		internal static void Spawn()
+		{
+			var window = GetWindow<WelcomeWindow>( true, windowTitle, true );
+			window.minSize = window.maxSize = defaultWindowSize;
+			window.position = new Rect( 100, 100, defaultWindowSize.x, defaultWindowSize.y );
+		}
+
 		#region utility
 
 		string GetFullPackagePath( string packageName )
@@ -227,13 +233,13 @@ namespace RelationsInspector
 			return filePath;
 		}
 
-		bool PackageIsInstalled( RIBackendPackageInfo packageInfo )
+		bool PackageIsInstalled( RIBackendPackageMetaData packageInfo )
 		{
 			string packageInstallPath = Util.AssetToSystemPath( GetPackageInstallPath( packageInfo ) );
 			return System.IO.Directory.Exists( packageInstallPath );
 		}
 
-		string GetPackageInstallPath( RIBackendPackageInfo packageInfo )
+		string GetPackageInstallPath( RIBackendPackageMetaData packageInfo )
 		{
 			return ProjectSettings.BackendInstallPath + packageInfo.folderName;
 		}
@@ -273,25 +279,6 @@ namespace RelationsInspector
 			return style;
 		}
 
-		#endregion
-
-		//[MenuItem( "Window/RelationsInspector/Welcome" )]
-		internal static void Spawn()
-		{
-			var window = GetWindow<WelcomeWindow>( true, windowTitle, true );
-			window.position = new Rect( 100, 100, defaultWindowSize.x, defaultWindowSize.y );
-		}
-
-		/*
-		[MenuItem( "Window/Create x" )]
-		static void CreateX()
-		{
-			Selection.activeObject = GetWindow<WelcomeWindow>();
-			
-			//var packageInfo = ScriptableObject.CreateInstance<RIBackendPackageInfo>();
-			//AssetDatabase.CreateAsset( packageInfo, "Assets/info.asset" );
-			//AssetDatabase.SaveAssets();
-			
-		}*/
+#endregion
 	}
 }

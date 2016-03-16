@@ -92,7 +92,6 @@
     <Compile Include="Serialization\SaveLayoutAttribute.cs" />
     <Compile Include="Serialization\VertexPosition.cs" />
     <Compile Include="Serialization\VertexPositionStorage.cs" />
-    <Compile Include="Settings\AboutWindow.cs" />
     <Compile Include="Settings\RelationsInspectorSettings.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsInspector.cs" />
@@ -132,7 +131,6 @@
     <Compile Include="WorkSpace\IWorkspace.cs" />
     <Compile Include="WorkSpace\Workspace.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />

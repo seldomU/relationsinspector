@@ -24,7 +24,9 @@ namespace RelationsInspector
 
 		internal const string DocURL = @"https://github.com/seldomU/RIBackendUtil/wiki/RelationsInspector-Manual";
 		internal const string DiscussionURL = @"http://forum.unity3d.com/threads/relationsinspector-reveal-structures-in-your-project-demo.382792/";
-		internal const string StoreURL = @"content/53147";
+		internal const string YoutubeURL = @"https://www.youtube.com/channel/UC8LKk1BHomtq-ElMTGNYzJw/videos";
+		internal const string TwitterURL = @"https://twitter.com/seldomU";
+		internal const string StoreDemoURL = @"content/53147";
 
 		public static string[] obligatoryFileNames = new[]
 		{
