@@ -271,19 +271,6 @@ class BuildPackage
             steps.Add( DeleteFileStep( projectPath + relMDBPath ) );
         }
 
-		// regenerate the metadata for backend packages
-		steps.Add( new BuildStep()
-		{
-			title = "generating backend package metadata",
-			action = () =>
-			{
-				GeneratePackageMetadata.Run();
-				return string.Empty;
-			},
-			isCompleted = () => true,
-			maxDuration = 1000
-		} );
-
         // refresh the asset db
         steps.Add( new BuildStep()
         {

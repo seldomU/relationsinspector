@@ -6,45 +6,101 @@ using System.IO;
 
 namespace RelationsInspector
 {
+	[InitializeOnLoad]
 	public class WelcomeWindow : EditorWindow
 	{
-		interface IContent { void Draw(); }
-
-		struct ContentItem
+		class RIBackendPackageMetaData
 		{
 			public string title;
-			public System.Func<GUIStyle> getStyle;
+			public string description;
+			public string packageName;
+			public string folderName;
+			public float rank;
+		}
+
+		struct ImageButtonContent
+		{
+			public string title;
+			public string bStTexName;   // button style's base texture name
 			public System.Action onClick;
 		}
 
-		static Dictionary<string, GUIStyle> stylesCache = new Dictionary<string, GUIStyle>();
-
-		static ContentItem[] headlineContent = new ContentItem[]
+		static RIBackendPackageMetaData[] packageMetadata = new RIBackendPackageMetaData[]
 		{
-		new ContentItem() { title = "Documentation", getStyle = () => GetButtonStyle("Documentation" ), onClick = () => Application.OpenURL( ProjectSettings.DocURL ) }
-		,new ContentItem() { title = "Discussion", getStyle = () => GetButtonStyle("Discussion" ), onClick = () => Application.OpenURL( ProjectSettings.DiscussionURL ) }
-		,new ContentItem() { title = "Videos", getStyle = () => GetButtonStyle("Youtube" ), onClick = () => Application.OpenURL(ProjectSettings.YoutubeURL) }
-		,new ContentItem() { title = "Twitter", getStyle = () => GetButtonStyle("Twitter" ), onClick = () => Application.OpenURL(ProjectSettings.TwitterURL) }
+			new RIBackendPackageMetaData()
+			{
+				title = "S-Quest quest editor",
+				description =
+				"Displays the dependencies between quests\n" +
+				"and lets you create and edit them.",
+				packageName = "SQuest",
+				folderName = "SQuest",
+				rank = 10
+			}
+			,
+			new RIBackendPackageMetaData()
+			{
+				title = "Asset reference and dependencies",
+				description =
+					"A graph showing where an asset is referenced.\n" +
+					"A graph showing an asset's dependencies.",
+				packageName = "AssetReferences",
+				folderName = "AssetReferenceBackend",
+				rank = 20
+			}
+			,
+			new RIBackendPackageMetaData()
+			{
+				title = "Project view (Example)",
+				description =
+					"Shows a tree of all project assets,\n" +
+					"like Unity's projectview.",
+				packageName = "ProjectView",
+				folderName = "ProjectView",
+				rank = 40
+			}
+		};
+
+		static string[] textureNames = new[]
+{
+			TNameDoc,
+			TNameDoc + Hover,
+			TNameDiscussion,
+			TNameDiscussion + Hover,
+			TNameVideo,
+			TNameVideo + Hover,
+			TNameTwitter,
+			TNameTwitter + Hover,
+			TNameBuy,
+			TNameBuy + Hover,
+			TNameIntegration,
+			TNameTitleWhite,
+			TNameTitleBlack
+		};
+
+		const string TNameDoc = "Documentation";
+		const string TNameDiscussion = "Discussion";
+		const string TNameVideo = "Youtube";
+		const string TNameTwitter = "Twitter";
+		const string TNameBuy = "Buy";
+		const string TNameIntegration = "Integration";
+		const string TNameTitleWhite = "RITitleTextWhite";
+		const string TNameTitleBlack = "RITitleTextBlack";
+		const string Hover = "_hover";
+
+		static ImageButtonContent[] headlineContent = new ImageButtonContent[]
+		{
+		new ImageButtonContent() { title = "Documentation", bStTexName = TNameDoc, onClick = () => Application.OpenURL( ProjectSettings.DocURL ) }
+		,new ImageButtonContent() { title = "Discussion", bStTexName = TNameDiscussion, onClick = () => Application.OpenURL( ProjectSettings.DiscussionURL ) }
+		,new ImageButtonContent() { title = "Videos", bStTexName = TNameVideo, onClick = () => Application.OpenURL(ProjectSettings.YoutubeURL) }
+		,new ImageButtonContent() { title = "Twitter", bStTexName = TNameTwitter, onClick = () => Application.OpenURL(ProjectSettings.TwitterURL) }
 #if RIDEMO
-		,new ContentItem() { title = "Buy full version", getStyle = () => GetButtonStyle("Buy" ), onClick = () => UnityEditorInternal.AssetStore.Open( ProjectSettings.StoreDemoURL ) }
+		,new ContentItem() { title = "Buy full version", bStTexName = TNameBuy, onClick = () => UnityEditorInternal.AssetStore.Open( ProjectSettings.StoreDemoURL ) }
 #endif
 		};
 
 		const string windowTitle = "Welcome to RelationsInspector";
-
-		static Texture IntegrationIcon = GetTexture( "Integration" );
-		static Texture RITitleTextImage = GetTexture( EditorGUIUtility.isProSkin ? "RITitleTextWhite" : "RITitleTextBlack" );
-
-		Vector2 scrollPosition;
 		static Vector2 windowSize = new Vector2( 400, 500 );
-
-		public GUIStyle listHeaderStyle;
-		public GUIStyle mainTitleStyle;
-		public GUIStyle tooltipStyle;
-		public GUIStyle packageTitleStyle;
-		public GUIStyle packageDescriptionStyle;
-		public GUIStyle packageInstallToggleStyle;
-		public GUIStyle versionLabelStyle;
 
 		public float titleSpaceLeft = 45;
 		public float toolbarIconSize = 32;
@@ -57,87 +113,134 @@ namespace RelationsInspector
 		public float packageCheckBoxWidth = 1;
 		public float packageRowVerticalSpace = 8;
 
-		RIBackendPackageInfo[] packageInfos;
+		public GUIStyle listHeaderStyle;
+		public GUIStyle mainTitleStyle;
+		public GUIStyle tooltipStyle;
+		public GUIStyle packageTitleStyle;
+		public GUIStyle packageDescriptionStyle;
+		public GUIStyle packageInstallToggleStyle;
+		public GUIStyle versionLabelStyle;
+
+		Dictionary<string, GUIStyle> buttonStyles = new Dictionary<string, GUIStyle>();
+		Dictionary<string, Texture2D> textureByName = new Dictionary<string, Texture2D>();
+
+		Vector2 scrollPosition;
+		double nextRepaintTime;
+		bool resourcesLoaded;
+		bool stylesInitialized;
+
+		static WelcomeWindow()
+		{
+			string prefsKey = "RIWelcomeWindow" + typeof( WelcomeWindow ).Assembly.GetName().Version.ToString();
+			bool freshlyInstalled = EditorPrefs.GetBool( prefsKey, true );
+			if ( freshlyInstalled )
+			{
+				EditorPrefs.SetBool( prefsKey, false );
+				SpawnWindow();
+			}
+		}
+
+		bool LoadAllTextures()
+		{
+			foreach ( var name in textureNames )
+			{
+				if ( textureByName.ContainsKey( name ) )
+					continue;
+
+				var texture = GetTexture( name );
+				if ( texture == null )
+				{
+					Debug.Log( "missing texture " + name );
+					return false;
+				}
+
+				textureByName[ name ] = texture;
+			}
+			return true;
+		}
 
 		void Update()
 		{
-			Repaint();
+			// repaint 5 times a second to make tooltip more responsive
+			if ( EditorApplication.timeSinceStartup > nextRepaintTime )
+			{
+				nextRepaintTime = EditorApplication.timeSinceStartup + 0.2f;
+				Repaint();
+			}
 		}
 
 		void InitStyles()
 		{
-			if ( listHeaderStyle == null )
-			{
-				listHeaderStyle = new GUIStyle( GUI.skin.label );
-				listHeaderStyle.fontSize = 17;
-				listHeaderStyle.contentOffset = new Vector2( -15, 5 );
-				listHeaderStyle.padding.bottom = 15;
-			}
+			listHeaderStyle = new GUIStyle( GUI.skin.label );
+			listHeaderStyle.fontSize = 17;
+			listHeaderStyle.contentOffset = new Vector2( -15, 5 );
+			listHeaderStyle.padding.bottom = 15;
 
-			if ( mainTitleStyle == null )
-			{
-				mainTitleStyle = new GUIStyle( GUI.skin.label );
-				mainTitleStyle.fontSize = 26;
-				mainTitleStyle.alignment = TextAnchor.MiddleCenter;
-			}
+			mainTitleStyle = new GUIStyle( GUI.skin.label );
+			mainTitleStyle.fontSize = 26;
+			mainTitleStyle.alignment = TextAnchor.MiddleCenter;
 
-			if ( tooltipStyle == null )
-			{
-				tooltipStyle = new GUIStyle( GUI.skin.label );
-				tooltipStyle.alignment = TextAnchor.MiddleCenter;
-			}
+			tooltipStyle = new GUIStyle( GUI.skin.label );
+			tooltipStyle.alignment = TextAnchor.MiddleCenter;
 
-			if ( packageTitleStyle == null )
-			{
-				packageTitleStyle = new GUIStyle( GUI.skin.label );
-				packageTitleStyle.fontStyle = FontStyle.Bold;
-			}
+			packageTitleStyle = new GUIStyle( GUI.skin.label );
+			packageTitleStyle.fontStyle = FontStyle.Bold;
 
-			if ( packageDescriptionStyle == null )
-			{
-				packageDescriptionStyle = new GUIStyle( GUI.skin.label );
-				packageDescriptionStyle.padding.left = 81;
-			}
+			packageDescriptionStyle = new GUIStyle( GUI.skin.label );
+			packageDescriptionStyle.padding.left = 81;
 
-			if ( packageInstallToggleStyle == null )
-			{
-				packageInstallToggleStyle = new GUIStyle( GUI.skin.toggle );
-				packageInstallToggleStyle.margin.left = 40;
-				packageInstallToggleStyle.margin.right = 25;
-			}
+			packageInstallToggleStyle = new GUIStyle( GUI.skin.toggle );
+			packageInstallToggleStyle.margin.left = 40;
+			packageInstallToggleStyle.margin.right = 25;
 
-			if ( versionLabelStyle == null )
+			versionLabelStyle = new GUIStyle( GUI.skin.label );
+			versionLabelStyle.margin.left = 288;
+
+			foreach ( var x in headlineContent )
 			{
-				versionLabelStyle = new GUIStyle( GUI.skin.label );
-				versionLabelStyle.margin.left = 288;
+				var style = new GUIStyle();
+				style.normal.background = textureByName[ x.bStTexName ];
+				style.hover.background = textureByName[ x.bStTexName + Hover ];
+				buttonStyles[ x.bStTexName ] = style;
 			}
 		}
-
+	
 		void OnEnable()
 		{
-			string[] packageFolderAssetPaths = Directory.GetFiles( Util.AssetToSystemPath( ProjectSettings.PackagesPath ), "*.asset" );
-			packageInfos = packageFolderAssetPaths
-				.Select( path => Util.LoadAsset<RIBackendPackageInfo>( Util.AbsolutePathToAssetPath( path ) ) )
-				.Where( asset => asset != null ) // might not be of type RIBackendPackageInfo
-				.OrderBy( asset => asset.metaData.rank )
-				.ToArray();
+			resourcesLoaded = false;
+			stylesInitialized = false;
 		}
 
 		void OnGUI()
 		{
-			InitStyles();
+			if ( !resourcesLoaded )
+			{
+				if ( !LoadAllTextures() )
+				{
+					GUILayout.Label( "Window resources are missing" );
+					return;
+				}
+				resourcesLoaded = true;
+			}
+
+			if ( !stylesInitialized )
+			{
+				InitStyles();
+				stylesInitialized = true;
+			}
 
 			GUILayout.Space( toolbarToHeaderSpace );
 
 			// draw Title
 			GUILayout.BeginHorizontal();
-			GUILayout.Space( ( position.width - RITitleTextImage.width ) / 2 );
-			GUI.DrawTexture( ReserveRect( RITitleTextImage.width, RITitleTextImage.height ), RITitleTextImage );
+			var titleTexture = EditorGUIUtility.isProSkin ? textureByName[ TNameTitleWhite ] : textureByName[ TNameTitleBlack ];
+			GUILayout.Space( ( position.width - titleTexture.width ) / 2 );
+			GUI.DrawTexture( ReserveRect( titleTexture.width, titleTexture.height ), titleTexture );
 			GUILayout.EndHorizontal();
 
 			string version = GetType().Assembly.GetName().Version.ToString();
 #if RIDEMO
-            version += " Demo";
+			version += " Demo";
 #endif
 			GUILayout.Label( version, versionLabelStyle );
 
@@ -148,7 +251,7 @@ namespace RelationsInspector
 			GUILayout.Space( integrationIconHorSpacing );
 			var iconRect = ReserveRect( new Vector2( listIconSize, listIconSize ) );
 			GUILayout.Space( integrationIconHorSpacing );
-			GUI.DrawTexture( iconRect, IntegrationIcon );
+			GUI.DrawTexture( iconRect, textureByName[TNameIntegration] );
 
 			GUILayout.Label( "Installable Addons", listHeaderStyle );
 			GUILayout.EndHorizontal();
@@ -156,8 +259,8 @@ namespace RelationsInspector
 			scrollPosition = GUILayout.BeginScrollView( scrollPosition );
 			{
 				// integrations
-				foreach ( var pInfo in packageInfos )
-					DrawPackageContent( pInfo.metaData );
+				foreach ( var pInfo in packageMetadata )
+					DrawPackageContent( pInfo );
 			}
 			GUILayout.EndScrollView();
 
@@ -171,7 +274,7 @@ namespace RelationsInspector
 			{
 				GUILayout.Space( linkBarSpacing );
 				var rect = ReserveRect( new Vector2( toolbarIconSize, toolbarIconSize ) );
-				if ( GUI.Button( rect, new GUIContent( "", null, item.title ), item.getStyle() ) )
+				if ( GUI.Button( rect, new GUIContent( "", null, item.title ), buttonStyles[item.bStTexName] ) )
 					item.onClick.Invoke();
 			}
 			GUILayout.EndHorizontal();
@@ -212,7 +315,7 @@ namespace RelationsInspector
 			GUILayout.Label( pInfo.description, packageDescriptionStyle );
 		}
 
-		internal static void Spawn()
+		internal static void SpawnWindow()
 		{
 			var window = GetWindow<WelcomeWindow>( true, windowTitle, true );
 			window.minSize = window.maxSize = windowSize;
@@ -257,21 +360,6 @@ namespace RelationsInspector
 		{
 			string texturePath = Path.Combine( ProjectSettings.WelcomeWindowResourcePath, name + ".png" );
 			return Util.LoadAsset<Texture2D>( texturePath );
-		}
-
-		static GUIStyle GetButtonStyle( string name )
-		{
-			string id = "buttonStyle" + name;
-
-			if ( stylesCache.ContainsKey( id ) )
-				return stylesCache[ id ];
-
-			// not cached. create it
-			var style = new GUIStyle();
-			style.normal.background = GetTexture( name );
-			style.hover.background = GetTexture( name + "_hover" );
-			stylesCache[ id ] = style;
-			return style;
 		}
 
 #endregion

@@ -83,7 +83,6 @@
     <Compile Include="Layout\LayoutParams.cs" />
     <Compile Include="Layout\LayoutType.cs" />
     <Compile Include="Layout\TreeLayoutAlgorithm.cs" />
-    <Compile Include="RIBackendPackageInfo.cs" />
     <Compile Include="Settings\ProjectSettings.cs" />
     <Compile Include="Backend\AcceptTargetsAttribute.cs" />
     <Compile Include="RelationsInspectorWindow.cs" />
