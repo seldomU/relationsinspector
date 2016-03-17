@@ -29,13 +29,22 @@ namespace RelationsInspector
 		{
 			new RIBackendPackageMetaData()
 			{
+				title = "InventoryMaster crafting",
+				description =
+				"Displays item crafting relations\n" +
+				"and blueprints.",
+				packageName = "InventoryMaster",
+				folderName = "InventoryMaster",
+			}
+			,
+			new RIBackendPackageMetaData()
+			{
 				title = "S-Quest quest editor",
 				description =
 				"Displays the dependencies between quests\n" +
 				"and lets you create and edit them.",
 				packageName = "SQuest",
 				folderName = "SQuest",
-				rank = 10
 			}
 			,
 			new RIBackendPackageMetaData()
@@ -46,7 +55,6 @@ namespace RelationsInspector
 					"A graph showing an asset's dependencies.",
 				packageName = "AssetReferences",
 				folderName = "AssetReferenceBackend",
-				rank = 20
 			}
 			,
 			new RIBackendPackageMetaData()
@@ -57,7 +65,6 @@ namespace RelationsInspector
 					"like Unity's projectview.",
 				packageName = "ProjectView",
 				folderName = "ProjectView",
-				rank = 40
 			}
 		};
 
