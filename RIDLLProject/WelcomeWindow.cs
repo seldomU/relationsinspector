@@ -15,7 +15,6 @@ namespace RelationsInspector
 			public string description;
 			public string packageName;
 			public string folderName;
-			public float rank;
 		}
 
 		struct ImageButtonContent
@@ -102,7 +101,7 @@ namespace RelationsInspector
 		,new ImageButtonContent() { title = "Videos", bStTexName = TNameVideo, onClick = () => Application.OpenURL(ProjectSettings.YoutubeURL) }
 		,new ImageButtonContent() { title = "Twitter", bStTexName = TNameTwitter, onClick = () => Application.OpenURL(ProjectSettings.TwitterURL) }
 #if RIDEMO
-		,new ContentItem() { title = "Buy full version", bStTexName = TNameBuy, onClick = () => UnityEditorInternal.AssetStore.Open( ProjectSettings.StoreDemoURL ) }
+		,new ImageButtonContent() { title = "Buy full version", bStTexName = TNameBuy, onClick = () => UnityEditorInternal.AssetStore.Open( ProjectSettings.StoreDemoURL ) }
 #endif
 		};
 
