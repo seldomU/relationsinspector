@@ -13,7 +13,7 @@ namespace RelationsInspector
 		public float posInitRange = 5f; // range of random values used to generate initial vertex x and y coordinates
 		public int numIterations = 200;  // run the algorithm this many times
 		public float initalMaxMove = 1 / 5f;  // move range of the first iteration (tempature). relative to ideal distance
-		public float gravityStrength = 0.7f;
+		public float gravityStrength = 3f;
 	}
 
 	internal class GraphLayoutAlgorithm<T, P> where T : class
@@ -137,7 +137,7 @@ namespace RelationsInspector
 			float distance = Mathf.Max( displacement.magnitude, Mathf.Epsilon );    // avoid division by 0
 			Vector2 direction = displacement / distance;
 
-			return direction * settings.gravityStrength * degree[ vertex ]; // add distance factor?
+			return direction * settings.gravityStrength * distance * distance;
 		}
 	}
 }
