@@ -200,7 +200,12 @@ namespace RelationsInspector
 				}
 			}
 
-			// draw view controls
+#if DEBUG
+			if ( GUILayout.Button( "DumpTopo", EditorStyles.toolbarButton, GUILayout.ExpandWidth( false ) ) )
+				TopologySerializer<T,P>.DumpTopology( graph );
+#endif
+
+				// draw view controls
 			if ( view != null )
 			{
 				GUILayout.FlexibleSpace();
