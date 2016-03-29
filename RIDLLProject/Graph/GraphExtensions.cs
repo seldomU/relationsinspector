@@ -87,7 +87,10 @@ namespace RelationsInspector
 
 				unexplored.UnionWith( successors );
 			}
-			return true;
+
+			// subgraphs that have no roots (and thus contain cycles) haven't been visited yet
+			// if any exists, this is not a tree
+			return graph.Vertices.All( v => visited.Contains( v ) );
 		}
 	}
 }
