@@ -137,7 +137,7 @@ namespace RelationsInspector
 			float distance = Mathf.Max( displacement.magnitude, Mathf.Epsilon );    // avoid division by 0
 			Vector2 direction = displacement / distance;
 
-			return direction * settings.gravityStrength * distance * distance;
+			return direction * settings.gravityStrength * distance;
 		}
 	}
 }
