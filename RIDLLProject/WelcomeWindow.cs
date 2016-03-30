@@ -279,7 +279,7 @@ namespace RelationsInspector
 			GUILayout.Space( integrationIconHorSpacing );
 			GUI.DrawTexture( iconRect, textureByName[TNameIntegration] );
 
-			GUILayout.Label( "Installable Addons", listHeaderStyle );
+			GUILayout.Label( "Installable Add-ons", listHeaderStyle );
 			GUILayout.EndHorizontal();
 
 			scrollPosition = GUILayout.BeginScrollView( scrollPosition );
