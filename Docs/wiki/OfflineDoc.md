@@ -31,10 +31,26 @@ The rest of the window contains the graph and its minimap, as well as  backend-s
 * dragging the graph-area while the left mouse button is pressed, selects all entities in the drag area
 * right clicking on entity- and relation widgets may open a context menu, allowing the folding/expanding of subgraphs as well as backend-specific actions
 
-### Skin
+## Add-ons
+A number of backends can be installed through RI's welcome window, which you can access through the gears menu. Some of them require a specific Unity version or a third party asset to be present. Currently these are:
+
+* **InventoryMaster crafting**
+	* Displays item crafting relations and blueprints.
+* **S-Quest quest editor**
+	* Displays the dependencies between quests and lets you create and edit them.
+* **Asset reference and dependencies**
+	* A graph showing where an asset is referenced. A graph showing an asset's dependencies.
+* **uGUI events**
+	* Shows the scene's uGUI event components and all their listeners.
+* **project view**
+	* Shows a tree of all project assets, like Unity's projectview.
+* **type hierarchy**
+	* Shows inheritance relations between types.
+
+## Skin
 RI ships with a light and a dark skin, which fit in with Unity's two skins. Each skin contains style settings for the entity widget, relations and the minimap. You can access the active skin through the gears menu (far right on the toolbar) or find them at `Assets/RelationsInspector/Editor/RelationsInspectorResources`. Since backends have full control over drawing the entity widget, they may choose to ignore the skin. By default, the selected nodes are marked by a blue or yellow outline, expandable nodes are marked by a red outline.
 
-### Settings
+## Settings
 The following configuration options are available in the gears menu, and at `Assets/RelationsInspector/Editor/RelationsInspectorResources/Settings`
 * **Cache layouts** if enabled, the layout of graphs you had opened before will be restored. Otherwise the default layout will be generated each time a graph is loaded.		
 * **Max graph nodes** At this threshold the graph generator will stop expanding nodes, to accomodate CPU and screen space limitations. The threshold is also applied to each manual node expansion.
