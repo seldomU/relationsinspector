@@ -76,6 +76,9 @@
     <Reference Include="Unity.PackageManager">
       <HintPath>Library\UnityAssemblies\Unity.PackageManager.dll</HintPath>
     </Reference>
+    <Reference Include="RelationsInspector">
+      <HintPath>Assets\Plugins\Editor\RelationsInspector\RelationsInspector.dll</HintPath>
+    </Reference>
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>Assets\UnityVS\Editor\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
@@ -84,9 +87,6 @@
     </Reference>
     <Reference Include="UnityVS.VersionSpecific">
       <HintPath>Assets\UnityVS\Editor\UnityVS.VersionSpecific.dll</HintPath>
-    </Reference>
-    <Reference Include="RelationsInspector">
-      <HintPath>Assets\Plugins\Editor\RelationsInspector\RelationsInspector.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Plugins\Editor\RelationsInspector\BackendUtils\BackendUtil.cs" />
+    <Compile Include="Assets\Plugins\Editor\RelationsInspector\BackendUtils\ColorLegendWidget.cs" />
     <Compile Include="Assets\Plugins\Editor\RelationsInspector\BackendUtils\DrawUtil.cs" />
     <Compile Include="Assets\Plugins\Editor\RelationsInspector\BackendUtils\MinimalBackend.cs" />
     <Compile Include="Assets\Plugins\Editor\RelationsInspector\BackendUtils\ScriptableObjectBackend.cs" />
