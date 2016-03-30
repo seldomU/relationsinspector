@@ -51,6 +51,9 @@ namespace RelationsInspector
 
 		// set node selection
 		void SelectEntityNodes( System.Predicate<object> doSelect, bool delayed = true );
+
+		// get the skin
+		RelationInspectorSkin GetSkin();
 	}
 
 	internal interface RelationsInspectorAPI2
@@ -101,5 +104,8 @@ namespace RelationsInspector
 
 		// set node selection
 		void SelectEntityNodes( System.Predicate<object> doSelect, bool delayed = true );
+
+		// get the skin
+		RelationInspectorSkin GetSkin();
 	}
 }

@@ -114,5 +114,10 @@ namespace RelationsInspector
 		{
 			internalAPI.SelectEntityNodes( doSelect, delayed );
 		}
+
+		public RelationInspectorSkin GetSkin()
+		{
+			return SkinManager.GetSkin();
+		}
 	}
 }
