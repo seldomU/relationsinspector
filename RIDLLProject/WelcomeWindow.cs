@@ -58,12 +58,32 @@ namespace RelationsInspector
 			,
 			new RIBackendPackageMetaData()
 			{
+				title = "uGUI Events",
+				description = 
+					"Shows the scene's uGUI event components\n" +
+					"and all their listeners.",
+				packageName = "UGUIEvents",
+				folderName = "UGUIEvents"
+			}
+			,
+			new RIBackendPackageMetaData()
+			{
 				title = "Project view (Example)",
 				description =
 					"Shows a tree of all project assets,\n" +
 					"like Unity's projectview.",
 				packageName = "ProjectView",
 				folderName = "ProjectView",
+			}
+			,
+			new RIBackendPackageMetaData()
+			{
+				title = "Type hierarchy",
+				description = 
+					"Shows inheritance relations\n" +
+					"between types.",
+				packageName = "TypeHierarchy",
+				folderName = "TypeHierarchy"
 			}
 		};
 
@@ -334,7 +354,6 @@ namespace RelationsInspector
 		{
 			string directoryPath = Util.AssetToSystemPath( ProjectSettings.PackagesPath );
 			string filePath = Path.Combine( directoryPath, packageName + ".unitypackage" );
-			Debug.Log( filePath );
 			return filePath;
 		}
 
