@@ -108,9 +108,5 @@
     <Compile Include="Assets\Plugins\Editor\RelationsInspector\Backends\HierarchyExample\TagBackend.cs" />
     <Compile Include="Assets\Plugins\Editor\RelationsInspector\RelationsInspectorMenuItem.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Plugins\Editor\RelationsInspector\README.txt" />
-    <None Include="Assets\Plugins\Editor\RelationsInspector\changelog.txt" />
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
