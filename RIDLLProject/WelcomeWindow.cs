@@ -28,6 +28,16 @@ namespace RelationsInspector
 		{
 			new RIBackendPackageMetaData()
 			{
+				title = "Inventory Pro items",
+				description = 
+				"Displays item crafting relations,\n" +
+				"blueprints and more.",
+				packageName = "InventoryPro",
+				folderName = "InventoryPro"
+			}
+			,
+			new RIBackendPackageMetaData()
+			{
 				title = "InventoryMaster crafting",
 				description =
 				"Displays item crafting relations\n" +
