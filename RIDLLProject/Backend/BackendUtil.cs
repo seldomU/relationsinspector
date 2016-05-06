@@ -199,5 +199,10 @@ namespace RelationsInspector
 			var attr = backendType.GetCustomAttributes<IconAttribute>( false ).FirstOrDefault();
 			return attr == null ? null : attr.iconPath;
 		}
+
+		internal static bool DoHide( Type backendType )
+		{
+			return backendType.GetCustomAttributes<HideAttribute>( false ).Any();
+		}
 	}
 }

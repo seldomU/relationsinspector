@@ -33,7 +33,7 @@ namespace RelationsInspector
 			this.window = window;
 
 			// all closed backend types are eligible
-			validBackendTypes = allBackendTypes = BackendTypeUtil.backendTypes.Where( t => !t.IsOpen() ).ToList();
+			validBackendTypes = allBackendTypes = BackendTypeUtil.backendTypes.Where( t => !t.IsOpen() && !BackendTypeUtil.DoHide( t ) ).ToList();
 
 			targetHistory = new RIStateHistory();
 
