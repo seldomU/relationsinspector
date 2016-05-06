@@ -412,17 +412,28 @@ namespace RelationsInspector
 			GUI.enabled = true;
 
 			// backend selector
-			int selectedBackendId = selectedBackendType != null ? validBackendTypes.IndexOf( selectedBackendType ) : -1;
-			float popupWidth = selectedBackendType == null ? 150 : EditorStyles.toolbarPopup.CalcSize( new GUIContent( selectedBackendType.Name ) ).x + 5;
-			EditorGUI.BeginChangeCheck();
-			selectedBackendId = EditorGUILayout.Popup( selectedBackendId, validBackendTypes.Select( TypeName ).ToArray(), EditorStyles.toolbarPopup, GUILayout.Width( popupWidth ) );
-			if ( EditorGUI.EndChangeCheck() )
+			string backendSelectText = ( selectedBackendType != null ) ?
+				BackendTypeUtil.GetTitle( selectedBackendType ) :
+				"Select graph type";
+
+			var backendSelectContent = new GUIContent( backendSelectText, null, "Select graph type" );
+			var backendSelectButtonRect = GUILayoutUtility.GetRect( backendSelectContent, EditorStyles.toolbarButton );
+
+			if ( GUILayout.Button( backendSelectContent, EditorStyles.toolbarDropDown ) )
 			{
-				var newSelection = validBackendTypes[ selectedBackendId ];
-				// don't save constructed types (because we can't deserialize them yet)
-				if ( !newSelection.GetGenericArguments().Any() )
-					GUIUtil.SetPrefsBackendType( PrefsKeyDefaultBackend, newSelection );
-				SetBackend( newSelection );
+				var window = EditorWindow.CreateInstance<BackendSelectWindow>();
+				window.backendTypes = validBackendTypes.ToArray();
+				window.selectedBackendType = selectedBackendType;
+				window.OnSelectBackend = ( newSelection ) =>
+				{
+					// don't save constructed types (because we can't deserialize them yet)
+					if ( !newSelection.GetGenericArguments().Any() )
+						GUIUtil.SetPrefsBackendType( PrefsKeyDefaultBackend, newSelection );
+					SetBackend( newSelection );
+				};
+
+				var size = new Vector2(300, 250);
+				window.ShowAsDropDown( GUIUtil.GUIToScreenRect( backendSelectButtonRect ), size );
 			}
 
 			GUILayout.FlexibleSpace();
@@ -438,13 +449,6 @@ namespace RelationsInspector
 				SettingsMenu.Create();
 
 			EditorGUILayout.EndHorizontal();
-		}
-
-		string TypeName( Type t )
-		{
-			if ( !t.IsGenericType )
-				return t.Name;
-			return t.Name.Remove( t.Name.IndexOf( '`' ) ) + " of " + t.GetGenericArguments()[ 0 ].Name;
 		}
 
 		internal void Update()

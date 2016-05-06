@@ -100,5 +100,13 @@ namespace RelationsInspector
 
 			return (Enum) values.GetValue( selected_index );
 		}
+
+		public static Rect GUIToScreenRect( Rect rect )
+		{
+			Vector2 origin = GUIUtility.GUIToScreenPoint( new Vector2( rect.x, rect.y ) );
+			rect.x = origin.x;
+			rect.y = origin.y;
+			return rect;
+		}
 	}
 }

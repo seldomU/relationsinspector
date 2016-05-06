@@ -154,5 +154,50 @@ namespace RelationsInspector
 			var attr = backendType.GetCustomAttributes<AcceptTargetsAttribute>( true ).FirstOrDefault();
 			return ( attr == null ) ? null : attr.type;
 		}
+
+		internal static string GetTitle( Type backendType )
+		{
+			string title = GetAttributeTitle( backendType );
+			if ( string.IsNullOrEmpty( title ) )
+				title = TypeName( backendType );
+			return title;
+		}
+
+		internal static string TypeName( Type t )
+		{
+			if ( !t.IsGenericType )
+				return t.Name;
+			return t.Name.Remove( t.Name.IndexOf( '`' ) ) + " of " + t.GetGenericArguments()[ 0 ].Name;
+		}
+
+		internal static string GetAttributeTitle( Type backendType )
+		{
+			var attr = backendType.GetCustomAttributes<TitleAttribute>( false ).FirstOrDefault();
+			return (attr == null) ? null : attr.title;
+		}
+
+		internal static string GetDocumentationURL( Type backendType )
+		{
+			var attr = backendType.GetCustomAttributes<DocumentationAttribute>( false ).FirstOrDefault();
+			return ( attr == null ) ? null : attr.url;
+		}
+
+		internal static string GetVersion( Type backendType )
+		{
+			var attr = backendType.GetCustomAttributes<VersionAttribute>( false ).FirstOrDefault();
+			return ( attr == null ) ? null : attr.version;
+		}
+
+		internal static string GetDescription( Type backendType )
+		{
+			var attr = backendType.GetCustomAttributes<DescriptionAttribute>( false ).FirstOrDefault();
+			return ( attr == null ) ? null : attr.description;
+		}
+
+		internal static string GetIconPath( Type backendType )
+		{
+			var attr = backendType.GetCustomAttributes<IconAttribute>( false ).FirstOrDefault();
+			return attr == null ? null : attr.iconPath;
+		}
 	}
 }

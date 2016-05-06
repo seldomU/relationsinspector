@@ -62,8 +62,14 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Backend\BackendDecoration.cs" />
+    <Compile Include="Backend\BackendSelectWindow.cs" />
     <Compile Include="Backend\BackendUtil.cs" />
+    <Compile Include="Backend\DescriptionAttribute.cs" />
+    <Compile Include="Backend\DocumentationAttribute.cs" />
+    <Compile Include="Backend\IconAttribute.cs" />
     <Compile Include="Backend\IGraphBackendInternal.cs" />
+    <Compile Include="Backend\TitleAttribute.cs" />
+    <Compile Include="Backend\VersionAttribute.cs" />
     <Compile Include="DemoRestriction.cs" />
     <Compile Include="Graph\FoldUtil.cs" />
     <Compile Include="Log.cs" />
