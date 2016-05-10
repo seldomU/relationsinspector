@@ -411,15 +411,17 @@ namespace RelationsInspector
 				InitWorkspace();
 			GUI.enabled = true;
 
+			GUILayout.FlexibleSpace();
+
 			// backend selector
 			string backendSelectText = ( selectedBackendType != null ) ?
 				BackendTypeUtil.GetTitle( selectedBackendType ) :
 				"Select graph type";
 
 			var backendSelectContent = new GUIContent( backendSelectText, null, "Select graph type" );
-			var backendSelectButtonRect = GUILayoutUtility.GetRect( backendSelectContent, EditorStyles.toolbarButton );
+			var backendSelectButtonRect = GUILayoutUtility.GetRect( backendSelectContent, EditorStyles.toolbarDropDown, GUILayout.ExpandWidth( false ) );
 
-			if ( GUILayout.Button( backendSelectContent, EditorStyles.toolbarDropDown ) )
+			if ( GUI.Button( backendSelectButtonRect, backendSelectContent, EditorStyles.toolbarDropDown ) )
 			{
 				var window = EditorWindow.CreateInstance<BackendSelectWindow>();
 				window.backendTypes = validBackendTypes.ToArray();
