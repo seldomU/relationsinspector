@@ -11,6 +11,9 @@ namespace RelationsInspector.Backend.Scene
 		public string value;
 	}
 
+	[Title("GameObject tags")]
+	[Version("1.0.0")]
+	[Description("Shows all tags used in the scene," + "and the GameObjects that use them.")]
 	public class TagBackend : MinimalBackend<object, string>
 	{
 		List<Tag> tagObjects = new List<Tag>();

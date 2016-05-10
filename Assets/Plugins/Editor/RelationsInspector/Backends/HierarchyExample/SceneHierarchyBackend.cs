@@ -6,7 +6,10 @@ using UnityEditor;
 namespace RelationsInspector.Backend.Scene
 {
 	// don't save layouts. graphs will have identical seeds (scene obj), but different content
-	[SaveLayout( false )]
+	[Title("Scene hierarchy")]
+	[Version("1.0.0")]
+	[Description("Shows the scene's root GameObjects and their children.")]
+    [SaveLayout( false )]
 	public class SceneHierarchyBackend : IGraphBackend<Object, string>
 	{
 		RelationsInspectorAPI api;
