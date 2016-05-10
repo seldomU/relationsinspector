@@ -28,6 +28,26 @@ namespace RelationsInspector
 		{
 			new RIBackendPackageMetaData()
 			{
+				title = "PlayMaker FSM communication",
+				description =
+				"Displays PlayMaker state machines\n" +
+				"and the events and variables sent between them.",
+				packageName = "PlayMakerFSMCommunication",
+				folderName = "PlayMaker"
+			}
+			,
+			new RIBackendPackageMetaData()
+			{
+				title = "Dialogue System",
+				description =
+				"Displays conversations\n" +
+				"and the references between them.",
+				packageName = "DialogueSystem",
+				folderName = "DialogueSystem"
+			}
+			,
+			new RIBackendPackageMetaData()
+			{
 				title = "Inventory Pro items",
 				description = 
 				"Displays item crafting relations,\n" +
