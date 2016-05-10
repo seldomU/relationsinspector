@@ -1,3 +1,13 @@
+### Version 1.1.2
+* Date 2016.05.10
+* Revision 45fa9fc
+* Changes
+	* added backend for PlayMaker inter-FSM communication
+	* added backends for Dialogue System
+	* project view backend can now prune the tree and highlight nodes based on asset types and scene-dependency
+	* added backend attributes: Title, Version, Description, Documentation, Icon and Hide
+	* backend selection dropdown makes use of the attributes above
+
 ### Version 1.1.1
 * Date 2016.03.30
 * Revision 3823222
