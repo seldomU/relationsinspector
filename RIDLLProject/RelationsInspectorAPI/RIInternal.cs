@@ -432,9 +432,8 @@ namespace RelationsInspector
 					SetBackend( newSelection );
 				};
 
-				window.minSize = new Vector2( 300, 100 );
-				window.maxSize = new Vector2( 300, 250 );
-				var size = new Vector2(300, 150);
+				var size = new Vector2( 340, 150 );
+				window.minSize = window.maxSize = size;
 				window.ShowAsDropDown( GUIUtil.GUIToScreenRect( backendSelectButtonRect ), size );
 			}
 

@@ -14,8 +14,9 @@ namespace RelationsInspector
 		public Action<Type> OnSelectBackend;
 
 		// styling
-		const float titleWidth = 200f;
-		const float versionWidth = 45f;
+		const float TitleWidth = 224f;
+		const float VersionWidth = 45f;
+		const float IconSize = 16;
 
 		GUIStyle scrollBoxStyle;
 		GUIStyle backendTitleStyle;
@@ -79,13 +80,22 @@ namespace RelationsInspector
 
 		void DrawTypeRow( Type t )
 		{
+			// icon
+			var iconRect = GUILayoutUtility.GetRect( IconSize, IconSize );
+			var icon = backendIcons[ t ];
+			if( icon != null )
+				GUI.DrawTexture( iconRect, icon, ScaleMode.StretchToFill, true );
+
 			// title (if clicked, return the type and close the window)
 			string titleText = BackendTypeUtil.GetTitle( t );
 			if ( t == selectedBackendType )
-				titleText = "<b>" + titleText + @"</b>";
+			{
+				string color = EditorGUIUtility.isProSkin ? "white" : "grey";
+				titleText = string.Format("<color=\"{0}\">{1}</color>", color, titleText);
+			}
 
-			var titleContent = new GUIContent( titleText, backendIcons[t], BackendTypeUtil.GetDescription( t ) );
-			bool select = GUILayout.Button( titleContent, backendTitleStyle, GUILayout.Width(titleWidth) );
+			var titleContent = new GUIContent( titleText, null, BackendTypeUtil.GetDescription( t ) );
+			bool select = GUILayout.Button( titleContent, backendTitleStyle, GUILayout.Width(TitleWidth) );
 			if ( select )
 			{
 				OnSelectBackend( t );
@@ -97,7 +107,7 @@ namespace RelationsInspector
 			if ( string.IsNullOrEmpty( version ) )
 				version = string.Empty;
 
-			GUILayout.Label( version, GUILayout.Width( versionWidth ) );
+			GUILayout.Label( version, GUILayout.Width( VersionWidth ) );
 
 			// doc URL (if clicked: open)
 			string docURL = BackendTypeUtil.GetDocumentationURL( t );
