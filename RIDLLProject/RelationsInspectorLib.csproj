@@ -66,6 +66,7 @@
     <Compile Include="Backend\BackendUtil.cs" />
     <Compile Include="Backend\DescriptionAttribute.cs" />
     <Compile Include="Backend\DocumentationAttribute.cs" />
+    <Compile Include="Backend\HideAttribute.cs" />
     <Compile Include="Backend\IconAttribute.cs" />
     <Compile Include="Backend\IGraphBackendInternal.cs" />
     <Compile Include="Backend\TitleAttribute.cs" />
