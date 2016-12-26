@@ -1,0 +1,54 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+      <Configuration>Release</Configuration>
+      <RIProjPath>I:\code\RelationsInspector\</RIProjPath>
+      <DllSourcePath>$(RIProjPath)RIDLLProject\</DllSourcePath>
+      <RIDllTargetPath>$(RIAssetBasePath)RelationsInspector.dll</RIDllTargetPath>
+      <DllBuildScriptPath>$(DllSourcePath)RelationsInspectorLib.csproj</DllBuildScriptPath>
+      <RIAssetBasePath>$(RIProjPath)Assets\Plugins\Editor\RelationsInspector\</RIAssetBasePath>
+      <RIAssetResourcesPath>$(RIAssetBasePath)RelationsInspectorResources\</RIAssetResourcesPath>
+      <LightSkinPath>$(RIAssetResourcesPath)RIWindowLightSkin.asset</LightSkinPath>
+      <DarkSkinPath>$(RIAssetResourcesPath)RIWindowDarkSkin.asset</DarkSkinPath>
+      <SettingsPath>$(RIAssetResourcesPath)Settings.asset</SettingsPath>
+      <SourceArchivePath>$(RIAssetBasePath)SourceCodeRI.zip</SourceArchivePath>
+      <LayoutCachesPath>$(RIAssetBasePath)LayoutCaches</LayoutCachesPath>
+      <ZipToolPath>"C:\Program Files\7-Zip\7z"</ZipToolPath>
+      <SourceZipExcludePatterns>-xr!obj -xr!bin -xr!.vs -x!*.csproj -x!*.sln -x!*.suo -x!*.user -x!DemoRestriction.cs</SourceZipExcludePatterns>
+      <UnityEditorBinaryPath>"C:\Program Files (x86)\Unity4.3.0\Editor\Unity.exe"</UnityEditorBinaryPath>
+      <RIPackageRootDir>Assets\Plugins</RIPackageRootDir>
+      <PackageTargetPath>RelationsInspector.unitypackage</PackageTargetPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <RIUserFile Include="$(LightSkinPath)" />
+    <RIUserFile Include="$(DarkSkinPath)" />
+    <RIUserFile Include="$(SettingsPath)" />
+    <RIUserFile Include="$(LayoutCachesPath)" />
+  </ItemGroup>
+
+  <Target Name="Binary">
+
+    <!-- delete user files: skins, settings, layout caches -->
+    <Delete Files="@(RIUserFile)" />
+
+    <!-- build the dll -->
+    <Delete Files="$(RIDllTargetPath)" />
+    <MsBuild Projects="$(DllBuildScriptPath)" Properties="Configuration=$(Configuration)"/>
+
+    <!-- remove debug symbol files -->
+    <Delete Condition="'$(Configuration)'!='Debug'" Files="$(RIAssetBasePath)RelationsInspector.pdb; $(RIAssetBasePath)RelationsInspector.dll.mdb;" />
+
+    <!-- zip the dll sources -->
+    <Delete Files="$(SourceArchivePath)" />
+    <Exec Condition="'$(Configuration)'=='Release'" Command="$(ZipToolPath) a -tzip $(SourceArchivePath) $(DllSourcePath)* $(SourceZipExcludePatterns)"/>
+
+    <!-- create the package -->
+    <Exec Command="$(UnityEditorBinaryPath) -batchmode -projectPath $(RIProjPath) -exportPackage $(RIPackageRootDir) $(PackageTargetPath) -quit" />
+
+    <!-- store the package -->
+    <!-- store the log? -->
+
+  </Target>
+
+</Project>

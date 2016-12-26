@@ -1,0 +1,213 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+      <!-- editor binaries -->
+      <Unity43EditorBinaryPath>"C:\Program Files (x86)\Unity4.3.0\Editor\Unity.exe"</Unity43EditorBinaryPath>
+      <Unity461EditorBinaryPath>"C:\Program Files (x86)\Unity4.6.1\Editor\Unity.exe"</Unity461EditorBinaryPath>
+      <Unity50EditorBinaryPath>"C:\Program Files\Unity5\Editor\Unity.exe"</Unity50EditorBinaryPath>
+      <Unity52EditorBinaryPath>"C:\Program Files\Unity5.2\Editor\Unity.exe"</Unity52EditorBinaryPath>
+      <Unity53EditorBinaryPath>"C:\Program Files\Unity5.3\Editor\Unity.exe"</Unity53EditorBinaryPath>
+      <Unity54EditorBinaryPath>"C:\Program Files\Unity5.4\Editor\Unity.exe"</Unity54EditorBinaryPath>
+
+      <!-- RI base folders -->
+      <RIProjPath>I:\code\RelationsInspector\</RIProjPath>
+      <RIPackagesPath>$(RIProjPath)Assets\Plugins\Editor\RelationsInspector\Packages\</RIPackagesPath>
+      <RIAddonProjRootPath>I:\code\RelationsInspectorTestProjects\</RIAddonProjRootPath>
+
+      <!-- asset ref backend -->
+      <AssetRefProjPath>$(RIAddonProjRootPath)ObjectDependency\</AssetRefProjPath>
+      <AssetRefPackageName>AssetReferences.unitypackage</AssetRefPackageName>
+      <AssetRefPackageRootDir>Assets\Editor\GraphBackends\AssetReferenceBackend</AssetRefPackageRootDir>
+
+      <!--dialog system-->
+      <DialogueSytemProjPath>$(RIAddonProjRootPath)Integrations\DialogueSystem\</DialogueSytemProjPath>
+      <DialogueSytemPackageName>DialogueSystem.unitypackage</DialogueSytemPackageName>
+      <DialogueSytemPackageRootDir>Assets\Editor\Graphbackends\DialogueSystem</DialogueSytemPackageRootDir>
+
+      <!-- inventory master -->
+      <InvMasterProjPath>$(RIAddonProjRootPath)Integrations\InventoryMaster\</InvMasterProjPath>
+      <InvMasterPackageName>InventoryMaster.unitypackage</InvMasterPackageName>
+      <InvMasterPackageRootDir>Assets\Editor\Graphbackends\InventoryMaster</InvMasterPackageRootDir>
+
+      <!-- inventory pro -->
+      <InvProProjPath>$(RIAddonProjRootPath)Integrations\InventoryProIntegration\</InvProProjPath>
+      <InvProPackageName>InventoryPro.unitypackage</InvProPackageName>
+      <InvProPackageRootDir>Assets\Editor\Graphbackends\InventoryPro</InvProPackageRootDir>
+
+      <!-- playmaker FSM communication -->
+      <PMFSMCommProjPath>$(RIAddonProjRootPath)Integrations\PlayMaker\</PMFSMCommProjPath>
+      <PMFSMCommPackageName>PlayMakerFSMCommunication.unitypackage</PMFSMCommPackageName>
+      <PMFSMCommPackageRootDir>Assets\Editor\Graphbackends\PlayMaker</PMFSMCommPackageRootDir>
+
+      <!-- project view -->
+      <ProjViewProjPath>$(RIAddonProjRootPath)ProjectView\</ProjViewProjPath>
+      <ProjViewPackageName>ProjectView.unitypackage</ProjViewPackageName>
+      <ProjViewPackageRootDir>Assets\Editor\Graphbackends\ProjectView</ProjViewPackageRootDir>
+
+      <!-- squest -->
+      <SQuestProjPath>$(RIAddonProjRootPath)Integrations\SQuestIntegration\</SQuestProjPath>
+      <SQuestPackageName>SQuest.unitypackage</SQuestPackageName>
+      <SQuestPackageRootDir>Assets\Editor\GraphBackends\SQuest</SQuestPackageRootDir>
+
+      <!-- type hierarchy -->
+      <TypeHierarchyProjPath>$(RIAddonProjRootPath)TypeHierarchy\</TypeHierarchyProjPath>
+      <TypeHierarchyPackageName>TypeHierarchy.unitypackage</TypeHierarchyPackageName>
+      <TypeHierarchyPackageRootDir>Assets\Editor\Graphbackends\TypeHierarchy</TypeHierarchyPackageRootDir>
+
+      <!-- uGUI events -->
+      <UGUIEventsProjPath>$(RIAddonProjRootPath)EventInspector\</UGUIEventsProjPath>
+      <UGUIEventsPackageName>UGUIEvents.unitypackage</UGUIEventsPackageName>
+      <UGUIEventsPackageRootDir>Assets\Editor\Graphbackends\UGUIEvents</UGUIEventsPackageRootDir>
+    </PropertyGroup>
+
+    <!-- all addons -->
+    <Target Name="AllAddons" DependsOnTargets="BuildAssetRefBackend461;BuildDialogueSystemBackend;BuildInvMasterBackend;BuildInvProBackend;BuildPlayMakerBackend;BuildProjViewBackend;BuildSQuestBackend;BuildTypeHierarchyBackend;BuildUGUIEventsBackend">
+
+    </Target>
+
+    <!-- asset ref backend -->
+    <Target Name="BuildAssetRefBackend461">
+      <MSBuild
+        Projects="AddOnTemplate.msbuild"
+        Properties="
+          UnityBinary=$(Unity461EditorBinaryPath);
+          RIPackagesPath=$(RIPackagesPath);
+          ProjPath=$(AssetRefProjPath);
+          PackageName=$(AssetRefPackageName);
+          PackageRootDir=$(AssetRefPackageRootDir)
+          " />
+    </Target>
+
+    <!-- dialogue system -->
+    <Target Name="BuildDialogueSystemBackend">
+      <MSBuild
+        Projects="AddOnTemplate.msbuild"
+        Properties="
+          UnityBinary=$(Unity53EditorBinaryPath);
+          RIPackagesPath=$(RIPackagesPath);
+          ProjPath=$(DialogueSytemProjPath);
+          PackageName=$(DialogueSytemPackageName);
+          PackageRootDir=$(DialogueSytemPackageRootDir)
+          " />
+    </Target>
+
+    <!-- inventory master backend -->
+    <Target Name="BuildInvMasterBackend">
+      <MSBuild
+        Projects="AddOnTemplate.msbuild"
+        Properties="
+          UnityBinary=$(Unity53EditorBinaryPath);
+          RIPackagesPath=$(RIPackagesPath);
+          ProjPath=$(InvMasterProjPath);
+          PackageName=$(InvMasterPackageName);
+          PackageRootDir=$(InvMasterPackageRootDir)
+          " />
+    </Target>
+
+    <Target Name="OpenInvMasterBackend">
+      <Exec Command="$(Unity53EditorBinaryPath) -projectPath $(XProjPath)"/>
+    </Target>
+
+    <!-- inventory Pro backend -->
+    <Target Name="BuildInvProBackend">
+      <MSBuild
+        Projects="AddOnTemplate.msbuild"
+        Properties="
+          UnityBinary=$(Unity53EditorBinaryPath);
+          RIPackagesPath=$(RIPackagesPath);
+          ProjPath=$(InvProProjPath);
+          PackageName=$(InvProPackageName);
+          PackageRootDir=$(InvProPackageRootDir)
+          " />
+    </Target>
+
+    <Target Name="OpenInvProBackend">
+      <Exec Command="$(Unity53EditorBinaryPath) -projectPath $(InvProProjPath)"/>
+    </Target>
+
+    <!-- playmaker FSM communication backend -->
+    <Target Name="BuildPlayMakerBackend">
+      <MSBuild
+        Projects="AddOnTemplate.msbuild"
+        Properties="
+          UnityBinary=$(Unity53EditorBinaryPath);
+          RIPackagesPath=$(RIPackagesPath);
+          ProjPath=$(PMFSMCommProjPath);
+          PackageName=$(PMFSMCommPackageName);
+          PackageRootDir=$(PMFSMCommPackageRootDir)
+          " />
+    </Target>
+
+    <Target Name="OpenPMFSMCommBackend">
+      <Exec Command="$(Unity53EditorBinaryPath) -projectPath $(PMFSMCommProjPath)"/>
+    </Target>
+
+    <!-- project view backend -->
+    <Target Name="BuildProjViewBackend">
+      <MSBuild
+        Projects="AddOnTemplate.msbuild"
+        Properties="
+          UnityBinary=$(Unity53EditorBinaryPath);
+          RIPackagesPath=$(RIPackagesPath);
+          ProjPath=$(ProjViewProjPath);
+          PackageName=$(ProjViewPackageName);
+          PackageRootDir=$(ProjViewPackageRootDir)
+          " />
+    </Target>
+
+    <Target Name="OpenProjViewBackend">
+      <Exec Command="$(Unity53EditorBinaryPath) -projectPath $(ProjViewProjPath)"/>
+    </Target>
+
+    <!-- SQuest backend -->
+    <Target Name="BuildSQuestBackend">
+      <MSBuild
+        Projects="AddOnTemplate.msbuild"
+        Properties="
+          UnityBinary=$(Unity53EditorBinaryPath);
+          RIPackagesPath=$(RIPackagesPath);
+          ProjPath=$(SQuestProjPath);
+          PackageName=$(SQuestPackageName);
+          PackageRootDir=$(SQuestPackageRootDir)
+          " />
+    </Target>
+
+    <Target Name="OpenSQuestBackend">
+      <Exec Command="$(Unity53EditorBinaryPath) -projectPath $(SQuestProjPath)"/>
+    </Target>
+
+    <!-- type hierarchy backend -->
+    <Target Name="BuildTypeHierarchyBackend">
+      <MSBuild
+        Projects="AddOnTemplate.msbuild"
+        Properties="
+          UnityBinary=$(Unity53EditorBinaryPath);
+          RIPackagesPath=$(RIPackagesPath);
+          ProjPath=$(TypeHierarchyProjPath);
+          PackageName=$(TypeHierarchyPackageName);
+          PackageRootDir=$(TypeHierarchyPackageRootDir)
+          " />
+    </Target>
+
+    <Target Name="OpenTypeHierarchyBackend">
+      <Exec Command="$(Unity53EditorBinaryPath) -projectPath $(TypeHierarchyProjPath)"/>
+    </Target>
+
+    <!-- uGUI events backend -->
+    <Target Name="BuildUGUIEventsBackend">
+      <MSBuild
+        Projects="AddOnTemplate.msbuild"
+        Properties="
+          UnityBinary=$(Unity53EditorBinaryPath);
+          RIPackagesPath=$(RIPackagesPath);
+          ProjPath=$(UGUIEventsProjPath);
+          PackageName=$(UGUIEventsPackageName);
+          PackageRootDir=$(UGUIEventsPackageRootDir)
+          " />
+    </Target>
+
+    <Target Name="OpenUGUIEventsBackend">
+      <Exec Command="$(Unity53EditorBinaryPath) -projectPath $(UGUIEventsProjPath)"/>
+    </Target>
+
+</Project>

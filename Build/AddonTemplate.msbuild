@@ -1,0 +1,20 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+      <UnityBinary>"C:\Program Files (x86)\Unity4.3.0\Editor\Unity.exe"</UnityBinary>
+      <RIPackagesPath></RIPackagesPath>
+      <ProjPath>a</ProjPath>
+      <PackageName>b</PackageName>
+      <PackageRootDir>c</PackageRootDir>
+    </PropertyGroup>
+
+    <!-- asset ref backend -->
+    <Target Name="BuildPackage">
+      <!-- build package -->
+      <Exec Command="$(UnityBinary) -batchmode -projectPath $(ProjPath) -exportPackage $(PackageRootDir) $(PackageName) -quit" />
+      <!-- copy and delete package (move doesn't work) -->
+      <Copy SourceFiles="$(ProjPath)\$(PackageName)" DestinationFolder="$(RIPackagesPath)"/>
+      <Delete Files="$(ProjPath)\$(PackageName)"/>
+    </Target>
+    
+</Project>
