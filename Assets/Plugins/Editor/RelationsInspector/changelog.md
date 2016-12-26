@@ -1,3 +1,10 @@
+### Version 1.1.3
+* Date 27.12.2016
+* Revision 8eee8081
+* Changes
+  * fixed Asset-reference package compile error in Unity 5.4 and up
+  * fixed uGUI event backend error due engine-internal changes
+
 ### Version 1.1.2
 * Date 2016.05.10
 * Revision 45fa9fc
@@ -14,7 +21,7 @@
 * Changes
 	* graph layout: increase gravity. disjunct subgraphs will now be closer together
 	* tree detection: fixed false positive when there are disjunct subtrees
-	* added graph backend packages 
+	* added graph backend packages
 		* InventoryMaster
 		* S-Quest
 		* Asset references and dependency
@@ -23,7 +30,7 @@
 		* type hierarchy
 	* added Welcome window, where addons can be managed
 
-### Version 1.1.0 
+### Version 1.1.0
 * Date 2016.03.10
 * Revision b58da13
 * Changes
