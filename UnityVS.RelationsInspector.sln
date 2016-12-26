@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.RelationsInspector.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.RelationsInspector.CSharp.Editor.Plugins", "UnityVS.RelationsInspector.CSharp.Editor.Plugins.csproj", "{3219B92A-AD39-20FD-EF13-B5E3BC755FF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.RelationsInspector.CSharp.Editor", "UnityVS.RelationsInspector.CSharp.Editor.csproj", "{C38CFD78-FF64-5009-F345-ADBF987E026F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RelationsInspectorLib", "RIDLLProject\RelationsInspectorLib.csproj", "{8564B945-82F3-4C72-9661-3D6A6B311764}"
 EndProject
 Global
@@ -23,10 +21,6 @@ Global
 		{3219B92A-AD39-20FD-EF13-B5E3BC755FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3219B92A-AD39-20FD-EF13-B5E3BC755FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3219B92A-AD39-20FD-EF13-B5E3BC755FF0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C38CFD78-FF64-5009-F345-ADBF987E026F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C38CFD78-FF64-5009-F345-ADBF987E026F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C38CFD78-FF64-5009-F345-ADBF987E026F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C38CFD78-FF64-5009-F345-ADBF987E026F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8564B945-82F3-4C72-9661-3D6A6B311764}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8564B945-82F3-4C72-9661-3D6A6B311764}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8564B945-82F3-4C72-9661-3D6A6B311764}.Release|Any CPU.ActiveCfg = Release|Any CPU
