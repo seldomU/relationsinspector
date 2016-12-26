@@ -17,7 +17,7 @@
       <SourceZipExcludePatterns>-xr!obj -xr!bin -xr!.vs -x!*.csproj -x!*.sln -x!*.suo -x!*.user -x!DemoRestriction.cs</SourceZipExcludePatterns>
       <UnityEditorBinaryPath>"C:\Program Files (x86)\Unity4.3.0\Editor\Unity.exe"</UnityEditorBinaryPath>
       <RIPackageRootDir>Assets\Plugins</RIPackageRootDir>
-      <PackageTargetPath>RelationsInspector.unitypackage</PackageTargetPath>
+      <PackageTargetPath>RelationsInspector$(Configuration).unitypackage</PackageTargetPath>
   </PropertyGroup>
 
   <ItemGroup>
