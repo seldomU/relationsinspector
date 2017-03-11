@@ -7,7 +7,8 @@
       <Unity50EditorBinaryPath>"C:\Program Files\Unity5\Editor\Unity.exe"</Unity50EditorBinaryPath>
       <Unity52EditorBinaryPath>"C:\Program Files\Unity5.2\Editor\Unity.exe"</Unity52EditorBinaryPath>
       <Unity53EditorBinaryPath>"C:\Program Files\Unity5.3\Editor\Unity.exe"</Unity53EditorBinaryPath>
-      <Unity54EditorBinaryPath>"C:\Program Files\Unity5.4\Editor\Unity.exe"</Unity54EditorBinaryPath>
+		  <Unity54EditorBinaryPath>"C:\Program Files\Unity 5.4\Editor\Unity.exe"</Unity54EditorBinaryPath>
+		  <Unity55EditorBinaryPath>"C:\Program Files\Unity 5.5\Editor\Unity.exe"</Unity55EditorBinaryPath>
 
       <!-- RI base folders -->
       <RIProjPath>I:\code\RelationsInspector\</RIProjPath>
@@ -164,7 +165,7 @@
       <MSBuild
         Projects="AddOnTemplate.msbuild"
         Properties="
-          UnityBinary=$(Unity53EditorBinaryPath);
+          UnityBinary=$(Unity55EditorBinaryPath);
           RIPackagesPath=$(RIPackagesPath);
           ProjPath=$(SQuestProjPath);
           PackageName=$(SQuestPackageName);
