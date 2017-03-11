@@ -2,6 +2,7 @@
 
   <PropertyGroup>
       <Configuration>Release</Configuration>
+      <DemoMode>Demo</DemoMode>
       <RIProjPath>I:\code\RelationsInspector\</RIProjPath>
       <DllSourcePath>$(RIProjPath)RIDLLProject\</DllSourcePath>
       <RIDllTargetPath>$(RIAssetBasePath)RelationsInspector.dll</RIDllTargetPath>
@@ -17,7 +18,8 @@
       <SourceZipExcludePatterns>-xr!obj -xr!bin -xr!.vs -x!*.csproj -x!*.sln -x!*.suo -x!*.user -x!DemoRestriction.cs</SourceZipExcludePatterns>
       <UnityEditorBinaryPath>"C:\Program Files (x86)\Unity4.3.0\Editor\Unity.exe"</UnityEditorBinaryPath>
       <RIPackageRootDir>Assets\Plugins</RIPackageRootDir>
-      <PackageTargetPath>RelationsInspector$(Configuration).unitypackage</PackageTargetPath>
+      <PackageTargetPath>RelationsInspector$(DemoMode).unitypackage</PackageTargetPath>
+      <DefineConstants></DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,14 +36,14 @@
 
     <!-- build the dll -->
     <Delete Files="$(RIDllTargetPath)" />
-    <MsBuild Projects="$(DllBuildScriptPath)" Properties="Configuration=$(Configuration)"/>
+    <MsBuild Projects="$(DllBuildScriptPath)" Properties="Configuration=$(Configuration);DefineConstants=$(DefineConstants)" Targets="Rebuild"/>
 
     <!-- remove debug symbol files -->
     <Delete Condition="'$(Configuration)'!='Debug'" Files="$(RIAssetBasePath)RelationsInspector.pdb; $(RIAssetBasePath)RelationsInspector.dll.mdb;" />
 
     <!-- zip the dll sources -->
     <Delete Files="$(SourceArchivePath)" />
-    <Exec Condition="'$(Configuration)'=='Release'" Command="$(ZipToolPath) a -tzip $(SourceArchivePath) $(DllSourcePath)* $(SourceZipExcludePatterns)"/>
+    <Exec Condition="'$(DemoMode)'=='Release'" Command="$(ZipToolPath) a -tzip $(SourceArchivePath) $(DllSourcePath)* $(SourceZipExcludePatterns)"/>
 
     <!-- create the package -->
     <Exec Command="$(UnityEditorBinaryPath) -batchmode -projectPath $(RIProjPath) -exportPackage $(RIPackageRootDir) $(PackageTargetPath) -quit" />

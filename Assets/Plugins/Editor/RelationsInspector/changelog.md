@@ -1,5 +1,11 @@
+### Version 1.1.4
+* Date 2017.03.11
+* Revision ccae6f9
+* Changes
+	* updated S-Quest backend to reflect S-Quest changes
+
 ### Version 1.1.3
-* Date 27.12.2016
+* Date 2016.12.27
 * Revision 8eee8081
 * Changes
   * fixed Asset-reference package compile error in Unity 5.4 and up

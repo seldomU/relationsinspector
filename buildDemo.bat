@@ -1,6 +1,1 @@
-SET riPath=I:\code\RelationsInspector
-SET unityPath=C:\Program Files (x86)\Unity4.3.0\Editor\Unity.exe
-
-REM export the package. the fist quote is the command window title
-START "" "%unityPath%" -batchmode -projectPath %riPath% -executeMethod BuildPackage.Demo -quit
-
+"C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe" MainPackage.msbuild /t:Binary /p:DefineConstants="RIDEMO" /p:Configuration=Release /p:DemoMode=Demo
