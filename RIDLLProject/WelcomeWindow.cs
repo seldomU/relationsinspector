@@ -189,7 +189,7 @@ namespace RelationsInspector
 		{
 			string prefsKey = "RIWelcomeWindow" + typeof( WelcomeWindow ).Assembly.GetName().Version.ToString();
 			bool freshlyInstalled = EditorPrefs.GetBool( prefsKey, true );
-			if ( true)//freshlyInstalled )
+			if ( freshlyInstalled )
 			{
 				EditorPrefs.SetBool( prefsKey, false );
 				SpawnWindow();
