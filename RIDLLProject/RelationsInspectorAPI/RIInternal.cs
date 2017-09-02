@@ -37,9 +37,12 @@ namespace RelationsInspector
 
 			targetHistory = new RIStateHistory();
 
-			var fallbackBackendType = TypeUtil
-				.GetAssemblyByName( "Assembly-CSharp-Editor-firstpass" )
-				.GetType( ProjectSettings.DefaultBackendClassName, false, true );
+			var firstPassEditorDll = TypeUtil.GetAssemblyByName( "Assembly-CSharp-Editor-firstpass" );
+
+			Type fallbackBackendType = ( firstPassEditorDll != null ) ?
+				firstPassEditorDll.GetType( ProjectSettings.DefaultBackendClassName, false, true )
+				:
+				null;
 
 			if ( fallbackBackendType == null )
 				fallbackBackendType = validBackendTypes.FirstOrDefault();

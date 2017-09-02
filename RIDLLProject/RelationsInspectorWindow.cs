@@ -126,6 +126,7 @@ namespace RelationsInspector
 		void OnEnable()
 		{
 			InitWindow();
+			WelcomeWindow.SpawnOnFreshInstall();
 #if RIDEMO
 			DemoRestriction.OnEnable();
 #endif// RIDEMO

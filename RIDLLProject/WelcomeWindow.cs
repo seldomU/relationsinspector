@@ -185,11 +185,11 @@ namespace RelationsInspector
 		bool resourcesLoaded;
 		bool stylesInitialized;
 
-		static WelcomeWindow()
+		public static void SpawnOnFreshInstall()
 		{
 			string prefsKey = "RIWelcomeWindow" + typeof( WelcomeWindow ).Assembly.GetName().Version.ToString();
 			bool freshlyInstalled = EditorPrefs.GetBool( prefsKey, true );
-			if ( freshlyInstalled )
+			if ( true)//freshlyInstalled )
 			{
 				EditorPrefs.SetBool( prefsKey, false );
 				SpawnWindow();
