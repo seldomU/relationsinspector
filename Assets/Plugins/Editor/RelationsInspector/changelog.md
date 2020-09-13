@@ -1,3 +1,9 @@
+### Version 1.1.5
+* Date 2017.09.02
+* Revision cc835a1
+* Changes
+	* fixed EditorPrefs error in Welcome window for Unity 2017.1
+
 ### Version 1.1.4
 * Date 2017.03.11
 * Revision ccae6f9
