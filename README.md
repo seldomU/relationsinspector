@@ -22,7 +22,7 @@ This is a node based editor and viewer that can be connected to all kinds of dat
 
 ## Usage
 
-If you simply want to use RelationsInspector, [install it](https://assetstore.unity.com/packages/tools/utilities/relationsinspector-53147) through the asset store. If you want to add support for your use case, [see the documentation](https://github.com/seldomU/RIBackendUtil/wiki/RelationsInspector-Manual#backend-development). If you want to change the tool's internal library, this repository is for you.
+If you simply want to use RelationsInspector, [install it](https://assetstore.unity.com/packages/tools/utilities/relationsinspector-53147) through the asset store. If you want to add support for your use case, [see the documentation](https://github.com/seldomU/RIBackendUtil/wiki/RelationsInspector-Manual#backend-development) for the [utility classes](https://github.com/seldomU/RIBackendUtil). If you want to change the tool's internal library, this repository is for you.
 
 ### Build
 
