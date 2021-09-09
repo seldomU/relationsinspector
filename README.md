@@ -1,6 +1,8 @@
 <p align="center">
 
-  <h2 align="center">RelationsInspector</h2>
+  <img src="Docs/icon.png" alt="Logo"/>
+  <br/>
+  <h3 align="center">RelationsInspector</h3>
 
   <p align="center">
     An editor extension for the Unity game engine.
