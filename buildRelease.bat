@@ -1,1 +1,0 @@
-"C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe" MainPackage.msbuild /t:Binary /p:Configuration=Release /p:DemoMode=Release

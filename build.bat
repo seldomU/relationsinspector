@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe" MainPackage.msbuild /t:Binary /p:Configuration=Release /p:DemoMode=Release /p:UnityEditorBinaryPath="C:\Program Files (x86)\Unity 5.5\Editor\Unity.exe"
